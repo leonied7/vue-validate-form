@@ -2,9 +2,9 @@
   "private": true,
   "name": "form-validate",
   "version": "1.0.0",
-  "main": "dist/how-long-till-lunch.cjs.js",
-  "module": "dist/how-long-till-lunch.esm.js",
-  "browser": "dist/how-long-till-lunch.umd.js",
+  "main": "dist/form-validate.cjs.js",
+  "module": "dist/form-validate.esm.js",
+  "browser": "dist/form-validate.umd.js",
   "repository": "https://github.com/leonied7/form-validate.git",
   "author": {
     "name": "Denis",
