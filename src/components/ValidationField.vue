@@ -11,7 +11,7 @@
         required: true,
       },
       modelValue: {
-        require: true,
+        required: true,
       },
       rules: {
         type: Object,
