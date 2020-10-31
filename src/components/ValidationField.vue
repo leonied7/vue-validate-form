@@ -2,14 +2,15 @@
   export default {
     name: "ValidationField",
     model: {
-      event: "change",
+      prop: 'modelValue',
+      event: "update:modelValue",
     },
     props: {
       name: {
         type: String,
         required: true,
       },
-      value: {
+      modelValue: {
         require: true,
       },
       rules: {
@@ -21,10 +22,8 @@
       props() {
         const props = {};
         Object.defineProperty(props, "model", {
-          get: () => this.value,
-          set: (value) => {
-            this.$emit("change", value);
-          },
+          get: () => this.modelValue,
+          set: this.onModelChange,
         });
         return props;
       },
@@ -32,7 +31,7 @@
         return this.defaultValues[this.name];
       },
       defaultValue() {
-        return this.providedDefaultValue !== undefined ? this.providedDefaultValue : this.value;
+        return this.providedDefaultValue !== undefined ? this.providedDefaultValue : this.modelValue;
       }
     },
     inject: ["addField", "removeField", "updateField", "setValue", "defaultValues"],
@@ -40,12 +39,12 @@
       rules(rules) {
         this.updateField(this.name, { name:this.name, rules });
       },
-      value: {
+      modelValue: {
         immediate: true,
         handler(value, oldValue) {
           const defaultValue = this.defaultValue;
           if(oldValue === undefined && defaultValue !== value) {
-            return this.$emit("change", defaultValue);
+            return this.onModelChange(defaultValue);
           }
           this.setValue(this.name, value);
         },
@@ -67,6 +66,9 @@
     methods: {
       onInit(name) {
         this.addField({ name, rules: this.rules, defaultValue: this.defaultValue });
+      },
+      onModelChange(value) {
+        this.$emit("update:modelValue", value);
       },
     },
     render() {
