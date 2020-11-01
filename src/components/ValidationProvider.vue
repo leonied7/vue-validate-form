@@ -1,6 +1,5 @@
 <script>
 // import isEqual from "lodash.isequal";
-//TODO: mb need add inner default values
 
 export default {
   name: 'ValidationProvider',
@@ -10,7 +9,8 @@ export default {
       updateField: this.updateField,
       removeField: this.removeField,
       setValue: this.setValue,
-      defaultValues: this.defaultValues
+      getFieldDefaultValues: (name) => this.defaultValues[name],
+      getFieldErrors: (name) => this.errors[name]
     };
   },
   props: {
@@ -36,16 +36,18 @@ export default {
   methods: {
     onSubmit() {
       Object.entries(this.fields).forEach(([name, rules]) => {
+        this.errors[name] = [];
         const value = this.values[name];
-        if (rules.required) {
-          this.$set(this.errors, name, value ? '' : 'Error');
+        if (rules.required && !value) {
+          this.setFieldError(name, 'Error');
         }
       });
-      this.$emit('submit');
+      this.$emit('submit', {}, { setErrors: this.setErrors });
     },
     addField({ name, rules, defaultValue }) {
       this.$set(this.fields, name, rules);
       this.$set(this.innerDefaultValues, name, defaultValue);
+      this.$set(this.errors, name, []);
       this.$delete(this.dirtyFields, name);
     },
     updateField(oldName, { name, rules }) {
@@ -79,6 +81,14 @@ export default {
       value === this.innerDefaultValues[name]
         ? this.$delete(this.dirtyFields, name)
         : this.$set(this.dirtyFields, name, true);
+    },
+    setErrors(errors) {
+      Object.entries(errors).forEach(([name, error]) => {
+        this.setFieldError(name, error);
+      });
+    },
+    setFieldError(name, message) {
+      this.errors[name].push(message);
     }
   },
   render() {
