@@ -36,19 +36,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      Object.entries(this.fields).forEach(([name, rules]) => {
-        this.errors[name] = [];
-        const value = this.values[name];
-        Object.entries(rules).forEach(([ruleName, options]) => {
-          const validator = validators[ruleName];
-          if (!validator) {
-            throw new Error(`validator '${ruleName}' must be registered`);
-          }
-          if (validator(value) !== options.value) {
-            this.setFieldError(name, options.message);
-          }
-        });
-      });
       if (Object.values(this.errors).some((errors) => !errors.length)) {
         this.$emit('submit', {}, { setErrors: this.setErrors });
       }
@@ -90,6 +77,7 @@ export default {
       value === this.innerDefaultValues[name]
         ? this.$delete(this.dirtyFields, name)
         : this.$set(this.dirtyFields, name, true);
+      this.validateField(name);
     },
     setErrors(errors) {
       Object.entries(errors).forEach(([name, error]) => {
@@ -98,6 +86,20 @@ export default {
     },
     setFieldError(name, message) {
       this.errors[name].push(message);
+    },
+    validateField(name) {
+      this.errors[name] = [];
+      const rules = this.fields[name];
+      const value = this.values[name];
+      Object.entries(rules).forEach(([ruleName, options]) => {
+        const validator = validators[ruleName];
+        if (!validator) {
+          throw new Error(`validator '${ruleName}' must be registered`);
+        }
+        if (validator(value) !== options.value) {
+          this.setFieldError(name, options.message);
+        }
+      });
     }
   },
   render() {
