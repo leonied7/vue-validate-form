@@ -1,5 +1,6 @@
 <script>
 // import isEqual from "lodash.isequal";
+import { validators } from '../validators';
 
 export default {
   name: 'ValidationProvider',
@@ -38,11 +39,19 @@ export default {
       Object.entries(this.fields).forEach(([name, rules]) => {
         this.errors[name] = [];
         const value = this.values[name];
-        if (rules.required && !value) {
-          this.setFieldError(name, 'Error');
-        }
+        Object.entries(rules).forEach(([ruleName, options]) => {
+          const validator = validators[ruleName];
+          if (!validator) {
+            throw new Error(`validator '${ruleName}' must be registered`);
+          }
+          if (validator(value) !== options.value) {
+            this.setFieldError(name, options.message);
+          }
+        });
       });
-      this.$emit('submit', {}, { setErrors: this.setErrors });
+      if (Object.values(this.errors).some((errors) => !errors.length)) {
+        this.$emit('submit', {}, { setErrors: this.setErrors });
+      }
     },
     addField({ name, rules, defaultValue }) {
       this.$set(this.fields, name, rules);
