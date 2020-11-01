@@ -56,7 +56,7 @@ export default {
       immediate: true,
       handler(name, oldName) {
         if (oldName === undefined) {
-          this.addField({ name, rules: this.rules, defaultValue: this.defaultValue })
+          this.addField({ name, rules: this.rules, defaultValue: this.defaultValue });
         } else {
           this.updateField(oldName, { name, rules: this.rules });
         }
