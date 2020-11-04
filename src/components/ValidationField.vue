@@ -49,25 +49,18 @@ export default {
     rules(rules) {
       this.updateField(this.name, { name: this.name, rules });
     },
-    name: {
-      immediate: true,
-      handler(name, oldName) {
-        if (oldName === undefined) {
-          this.addField({ name, rules: this.rules, defaultValue: this.defaultValue });
-        } else {
-          this.updateField(oldName, { name, rules: this.rules });
-        }
-      }
+    name(name, oldName) {
+      this.updateField(oldName, { name, rules: this.rules });
     },
-    modelValue: {
-      immediate: true,
-      handler(value, oldValue) {
-        const defaultValue = this.defaultValue;
-        if (oldValue === undefined && defaultValue !== value) {
-          return this.onModelChange(defaultValue);
-        }
-        this.setValue(this.name, value);
-      }
+    modelValue(value) {
+      this.setValue(this.name, value);
+    }
+  },
+  mounted() {
+    const defaultValue = this.defaultValue;
+    this.addField({ name: this.name, rules: this.rules, defaultValue });
+    if (defaultValue !== this.modelValue) {
+      this.onModelChange(defaultValue);
     }
   },
   beforeDestroy() {
@@ -76,11 +69,9 @@ export default {
   methods: {
     onModelChange(value) {
       this.$emit('update:modelValue', value);
-      if (!this.hasModelValue) {
-        return this.setValue(this.name, value);
-      }
       this.$nextTick(() => {
-        this.setValue(this.name, this.computedModelValue);
+        value = this.hasModelValue ? this.computedModelValue : value;
+        this.setValue(this.name, value);
       });
     }
   },
