@@ -33,16 +33,11 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/main.js',
+    external: ['lodash.isequal', 'lodash.get', 'lodash.set'],
     output: [
       { file: pkg.main, format: 'cjs', exports: 'named' },
       { file: pkg.module, format: 'es', exports: 'named' }
     ],
-    plugins: [
-      VuePlugin(),
-      babel({
-        babelHelpers: 'bundled',
-        exclude: ['node_modules/**']
-      })
-    ]
+    plugins: [VuePlugin()]
   }
 ];
