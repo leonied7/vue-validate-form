@@ -1,5 +1,7 @@
 <script>
-// import isEqual from "lodash.isequal";
+import isEqual from 'lodash.isequal';
+import get from 'lodash.get';
+import set from 'lodash.set';
 import { validators } from '../validators';
 
 export default {
@@ -10,7 +12,8 @@ export default {
       updateField: this.updateField,
       removeField: this.removeField,
       setValue: this.setValue,
-      getFieldDefaultValues: (name) => this.defaultValues[name],
+      getFieldDefaultValues: (name) => get(this.defaultValues, name),
+      getFieldValues: (name) => this.flatValues[name],
       getFieldErrors: (name) => this.errors[name]
     };
   },
@@ -23,7 +26,7 @@ export default {
   data() {
     return {
       fields: {},
-      values: {},
+      flatValues: {},
       errors: {},
       dirtyFields: {},
       innerDefaultValues: {}
@@ -32,6 +35,12 @@ export default {
   computed: {
     isDirty() {
       return !!Object.keys(this.dirtyFields).length;
+    },
+    values() {
+      return Object.entries(this.flatValues).reduce((result, [name, value]) => {
+        set(result, name, value);
+        return result;
+      }, {});
     }
   },
   methods: {
@@ -53,7 +62,7 @@ export default {
     removeField(name) {
       this.$delete(this.fields, name);
       this.$delete(this.innerDefaultValues, name);
-      this.$delete(this.values, name);
+      this.$delete(this.flatValues, name);
       this.$delete(this.errors, name);
       this.$set(this.dirtyFields, name, true);
     },
@@ -67,13 +76,13 @@ export default {
       this.$delete(this.dirtyFields, from);
       this.$set(this.innerDefaultValues, to, this.innerDefaultValues[from]);
       this.$delete(this.innerDefaultValues, from);
-      this.$set(this.values, to, this.values[from]);
-      this.$delete(this.values, from);
+      this.$set(this.flatValues, to, this.flatValues[from]);
+      this.$delete(this.flatValues, from);
       this.$set(this.errors, to, this.errors[from]);
       this.$delete(this.errors, from);
     },
     setValue(name, value) {
-      this.$set(this.values, name, value);
+      this.$set(this.flatValues, name, value);
       value === this.innerDefaultValues[name]
         ? this.$delete(this.dirtyFields, name)
         : this.$set(this.dirtyFields, name, true);
@@ -90,13 +99,13 @@ export default {
     validateField(name) {
       this.errors[name] = [];
       const rules = this.fields[name];
-      const value = this.values[name];
+      const value = this.flatValues[name];
       Object.entries(rules).forEach(([ruleName, options]) => {
         const validator = validators[ruleName];
         if (!validator) {
           throw new Error(`validator '${ruleName}' must be registered`);
         }
-        if (validator(value) !== options.value) {
+        if (!isEqual(validator(value), options.value)) {
           this.setFieldError(name, options.message);
         }
       });
