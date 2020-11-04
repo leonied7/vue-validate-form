@@ -7,6 +7,7 @@ export default {
     'updateField',
     'setValue',
     'getFieldDefaultValues',
+    'getFieldValues',
     'getFieldErrors'
   ],
   model: {
@@ -20,7 +21,7 @@ export default {
     },
     modelValue: {
       type: null,
-      required: true
+      default: undefined
     },
     rules: {
       type: Object,
@@ -36,21 +37,17 @@ export default {
     },
     errors() {
       return this.getFieldErrors(this.name);
+    },
+    hasModelValue() {
+      return this.modelValue !== undefined;
+    },
+    computedModelValue() {
+      return this.hasModelValue ? this.modelValue : this.getFieldValues(this.name);
     }
   },
   watch: {
     rules(rules) {
       this.updateField(this.name, { name: this.name, rules });
-    },
-    modelValue: {
-      immediate: true,
-      handler(value, oldValue) {
-        const defaultValue = this.defaultValue;
-        if (oldValue === undefined && defaultValue !== value) {
-          return this.onModelChange(defaultValue);
-        }
-        this.setValue(this.name, value);
-      }
     },
     name: {
       immediate: true,
@@ -61,6 +58,16 @@ export default {
           this.updateField(oldName, { name, rules: this.rules });
         }
       }
+    },
+    modelValue: {
+      immediate: true,
+      handler(value, oldValue) {
+        const defaultValue = this.defaultValue;
+        if (oldValue === undefined && defaultValue !== value) {
+          return this.onModelChange(defaultValue);
+        }
+        this.setValue(this.name, value);
+      }
     }
   },
   beforeDestroy() {
@@ -69,11 +76,17 @@ export default {
   methods: {
     onModelChange(value) {
       this.$emit('update:modelValue', value);
+      if (!this.hasModelValue) {
+        return this.setValue(this.name, value);
+      }
+      this.$nextTick(() => {
+        this.setValue(this.name, this.computedModelValue);
+      });
     }
   },
   render() {
     return this.$scopedSlots.default({
-      modelValue: this.modelValue,
+      modelValue: this.computedModelValue,
       onChange: this.onModelChange
     });
   }
