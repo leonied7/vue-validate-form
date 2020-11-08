@@ -1,19 +1,19 @@
 {
-  "name": "vue-form-validate",
+  "name": "vue-validate-form",
   "version": "0.0.3",
-  "main": "dist/vue-form-validate.cjs.js",
-  "module": "dist/vue-form-validate.esm.js",
-  "browser": "dist/vue-form-validate.umd.js",
-  "repository": "https://github.com/leonied7/vue-form-validate.git",
+  "main": "dist/vue-validate-form.cjs.js",
+  "module": "dist/vue-validate-form.esm.js",
+  "browser": "dist/vue-validate-form.umd.js",
+  "repository": "https://github.com/leonied7/vue-validate-form.git",
   "author": {
     "name": "Denis",
     "email": "kdnn@mail.ru"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/leonied7/vue-form-validate/issues"
+    "url": "https://github.com/leonied7/vue-validate-form/issues"
   },
-  "homepage": "https://github.com/leonied7/vue-form-validate#readme",
+  "homepage": "https://github.com/leonied7/vue-validate-form#readme",
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
     "lodash.get": "^4.4.2",
