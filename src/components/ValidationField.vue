@@ -7,7 +7,7 @@ export default {
     'updateField',
     'setValue',
     'getFieldDefaultValues',
-    'getFieldValues',
+    'getFieldValue',
     'getFieldErrors'
   ],
   model: {
@@ -32,6 +32,9 @@ export default {
     providedDefaultValue() {
       return this.getFieldDefaultValues(this.name);
     },
+    providedValue() {
+      return this.getFieldValue(this.name);
+    },
     defaultValue() {
       return this.providedDefaultValue !== undefined ? this.providedDefaultValue : this.modelValue;
     },
@@ -42,7 +45,7 @@ export default {
       return this.modelValue !== undefined;
     },
     computedModelValue() {
-      return this.hasModelValue ? this.modelValue : this.getFieldValues(this.name);
+      return this.hasModelValue ? this.modelValue : this.providedValue;
     }
   },
   watch: {
@@ -54,6 +57,9 @@ export default {
     },
     modelValue(value) {
       this.setValue(this.name, value);
+    },
+    providedValue(value) {
+      this.onModelChange(value);
     }
   },
   mounted() {
@@ -78,7 +84,8 @@ export default {
   render() {
     return this.$scopedSlots.default({
       modelValue: this.computedModelValue,
-      onChange: this.onModelChange
+      onChange: this.onModelChange,
+      errors: this.errors
     });
   }
 };

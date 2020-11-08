@@ -2,6 +2,7 @@
 import isEqual from 'lodash.isequal';
 import get from 'lodash.get';
 import set from 'lodash.set';
+import cloneDeep from 'lodash.clonedeep';
 import { validators } from '../validators';
 
 export default {
@@ -12,9 +13,9 @@ export default {
       updateField: this.updateField,
       removeField: this.removeField,
       setValue: this.setValue,
-      getFieldDefaultValues: (name) => get(this.defaultValues, name),
-      getFieldValues: (name) => this.flatValues[name],
-      getFieldErrors: (name) => this.errors[name]
+      getFieldDefaultValues: this.getFieldDefaultValues,
+      getFieldValue: (name) => this.flatValues[name],
+      getFieldErrors: this.getFieldErrors
     };
   },
   props: {
@@ -29,7 +30,8 @@ export default {
       flatValues: {},
       errors: {},
       dirtyFields: {},
-      innerDefaultValues: {}
+      innerDefaultValues: {},
+      defaultValuesByField: {}
     };
   },
   computed: {
@@ -41,17 +43,23 @@ export default {
         set(result, name, value);
         return result;
       }, {});
+    },
+    existsErrors() {
+      return Object.values(this.errors).some((errors) => errors.length);
     }
+  },
+  created() {
+    this.innerDefaultValues = cloneDeep(this.defaultValues);
   },
   methods: {
     onSubmit() {
-      if (Object.values(this.errors).some((errors) => !errors.length)) {
-        this.$emit('submit', {}, { setErrors: this.setErrors });
+      if (!this.existsErrors) {
+        this.$emit('submit', this.values, { setErrors: this.setErrors, reset: this.reset });
       }
     },
     addField({ name, rules, defaultValue }) {
       this.$set(this.fields, name, rules);
-      this.$set(this.innerDefaultValues, name, defaultValue);
+      this.$set(this.defaultValuesByField, name, defaultValue);
       this.$set(this.errors, name, []);
       this.$delete(this.dirtyFields, name);
     },
@@ -61,7 +69,7 @@ export default {
     },
     removeField(name) {
       this.$delete(this.fields, name);
-      this.$delete(this.innerDefaultValues, name);
+      this.$delete(this.defaultValuesByField, name);
       this.$delete(this.flatValues, name);
       this.$delete(this.errors, name);
       this.$set(this.dirtyFields, name, true);
@@ -74,8 +82,8 @@ export default {
       this.$delete(this.fields, from);
       this.$set(this.dirtyFields, to, this.dirtyFields[from]);
       this.$delete(this.dirtyFields, from);
-      this.$set(this.innerDefaultValues, to, this.innerDefaultValues[from]);
-      this.$delete(this.innerDefaultValues, from);
+      this.$set(this.defaultValuesByField, to, this.defaultValuesByField[from]);
+      this.$delete(this.defaultValuesByField, from);
       this.$set(this.flatValues, to, this.flatValues[from]);
       this.$delete(this.flatValues, from);
       this.$set(this.errors, to, this.errors[from]);
@@ -83,7 +91,7 @@ export default {
     },
     setValue(name, value) {
       this.$set(this.flatValues, name, value);
-      value === this.innerDefaultValues[name]
+      value === this.defaultValuesByField[name]
         ? this.$delete(this.dirtyFields, name)
         : this.$set(this.dirtyFields, name, true);
       this.validateField(name);
@@ -109,6 +117,20 @@ export default {
           this.setFieldError(name, options.message);
         }
       });
+    },
+    getFieldDefaultValues(name, defaultValue) {
+      return get(this.innerDefaultValues, name, defaultValue);
+    },
+    getFieldErrors(name) {
+      return this.errors[name];
+    },
+    reset(values) {
+      this.innerDefaultValues = cloneDeep(values);
+      Object.entries(this.defaultValuesByField).forEach(([name, value]) => {
+        const defaultValue = this.getFieldDefaultValues(name, value);
+        this.defaultValuesByField[name] = defaultValue;
+        this.setValue(name, defaultValue);
+      });
     }
   },
   render() {
@@ -117,7 +139,7 @@ export default {
       values: this.values,
       isDirty: this.isDirty,
       errors: this.errors,
-      innerDefaultValues: this.innerDefaultValues,
+      defaultValues: this.defaultValuesByField,
       fields: this.fields,
       dirtyFields: this.dirtyFields
     });
