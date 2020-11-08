@@ -27,6 +27,7 @@
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-html": "^0.2.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
+    "del-cli": "^3.0.1",
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -44,9 +45,15 @@
   },
   "scripts": {
     "build": "rollup -c",
+    "clean": "del dist\\**",
     "dev": "rollup -c dev-rollup.config.js -w",
     "lint": "eslint src/** *.js",
     "release": "standard-version -a"
+  },
+  "standard-version": {
+    "scripts": {
+      "postchangelog": "yarn lint && yarn clean && yarn build && git add dist"
+    }
   },
   "files": [
     "dist"
