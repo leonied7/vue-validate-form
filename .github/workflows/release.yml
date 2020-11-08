@@ -2,14 +2,14 @@
 
 name: Create Release
 
-#on:
-  #push:
-    #tags:
-      #- 'v*'
 on:
   push:
-    branches:
-      - master
+    tags:
+      - '*'
+#on:
+  #push:
+    #branches:
+      #- master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -29,3 +29,8 @@ jobs:
 
       - name: Build
         run: yarn build
+
+      - name:
+        run: yarn publish
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

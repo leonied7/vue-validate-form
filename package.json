@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "vue-form-validate",
   "version": "0.0.2",
   "main": "dist/vue-form-validate.cjs.js",
