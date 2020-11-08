@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/leonied7/vue-form-validate/compare/v0.0.2...v0.0.3) (2020-11-08)
+
+
+### Features
+
+* add github action ([b3207fb](https://github.com/leonied7/vue-form-validate/commit/b3207fbc1df5925b0d3968bc3a79b48b49fe2cf8))
+* add reset method ([d2d3e91](https://github.com/leonied7/vue-form-validate/commit/d2d3e913f85239aed2e2e8e04e37136c087c2b8f))
+
+
+### Bug Fixes
+
+* add lodash.clonedeep to external ([1374f4a](https://github.com/leonied7/vue-form-validate/commit/1374f4a883b3f23001dbe8e1c294aa1527220a1d))
+* release yml syntax ([b51be1f](https://github.com/leonied7/vue-form-validate/commit/b51be1f3b3b35f97e5d62739c5191fe6ee151ab5))
+
 ### 0.0.2 (2020-11-04)
 
 

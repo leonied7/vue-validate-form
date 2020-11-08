@@ -1,6 +1,6 @@
 {
   "name": "vue-form-validate",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/vue-form-validate.cjs.js",
   "module": "dist/vue-form-validate.esm.js",
   "browser": "dist/vue-form-validate.umd.js",
