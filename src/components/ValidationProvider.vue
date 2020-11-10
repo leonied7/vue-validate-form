@@ -124,7 +124,9 @@ export default {
       return this.errors[name];
     },
     reset(values) {
-      this.innerDefaultValues = cloneDeep(values);
+      if (values) {
+        this.innerDefaultValues = cloneDeep(values);
+      }
       Object.entries(this.defaultValuesByField).forEach(([name, value]) => {
         const defaultValue = this.getFieldDefaultValues(name, value);
         this.defaultValuesByField[name] = defaultValue;
@@ -135,6 +137,7 @@ export default {
   render() {
     return this.$scopedSlots.default({
       handleSubmit: this.onSubmit,
+      reset: this.reset,
       values: this.values,
       isDirty: this.isDirty,
       errors: this.errors,
