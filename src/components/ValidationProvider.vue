@@ -138,6 +138,8 @@ export default {
     return this.$scopedSlots.default({
       handleSubmit: this.onSubmit,
       reset: this.reset,
+      setErrors: this.setErrors,
+      setFieldError: this.setFieldError,
       values: this.values,
       isDirty: this.isDirty,
       errors: this.errors,
