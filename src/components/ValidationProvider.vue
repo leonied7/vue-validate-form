@@ -1,5 +1,4 @@
 <script>
-import isEqual from 'lodash.isequal';
 import get from 'lodash.get';
 import set from 'lodash.set';
 import cloneDeep from 'lodash.clonedeep';
@@ -113,7 +112,7 @@ export default {
         if (!validator) {
           throw new Error(`validator '${ruleName}' must be registered`);
         }
-        if (!isEqual(validator(value), options.value)) {
+        if (!validator(value, options.params)) {
           this.setFieldError(name, options.message);
         }
       });
