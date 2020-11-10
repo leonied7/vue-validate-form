@@ -12,7 +12,7 @@ export default {
       updateField: this.updateField,
       removeField: this.removeField,
       setValue: this.setValue,
-      setFieldError: this.setFieldError,
+      setFieldError: this.setError,
       getFieldDefaultValues: this.getFieldDefaultValues,
       getFieldValue: (name) => this.flatValues[name],
       getFieldErrors: this.getFieldErrors
@@ -57,7 +57,7 @@ export default {
         this.validateField(name);
       });
       if (!this.existsErrors) {
-        this.$emit('submit', this.values, { setErrors: this.setErrors, reset: this.reset });
+        this.$emit('submit', this.values, { setError: this.setError, reset: this.reset });
       }
     },
     addField({ name, rules, defaultValue }) {
@@ -99,12 +99,10 @@ export default {
         : this.$set(this.dirtyFields, name, true);
       this.validateField(name);
     },
-    setErrors(errors) {
-      Object.entries(errors).forEach(([name, error]) => {
-        this.setFieldError(name, error);
-      });
-    },
-    setFieldError(name, message) {
+    setError(name, message) {
+      if (this.errors[name] === undefined) {
+        throw new Error(`field '${name}' must be registered for set error`);
+      }
       this.errors[name].push(message);
     },
     validateField(name) {
@@ -117,7 +115,7 @@ export default {
           throw new Error(`validator '${ruleName}' must be registered`);
         }
         if (!validator(value, options.params)) {
-          this.setFieldError(name, options.message);
+          this.setError(name, options.message);
         }
       });
     },
@@ -142,8 +140,7 @@ export default {
     return this.$scopedSlots.default({
       handleSubmit: this.onSubmit,
       reset: this.reset,
-      setErrors: this.setErrors,
-      setFieldError: this.setFieldError,
+      setError: this.setError,
       values: this.values,
       isDirty: this.isDirty,
       errors: this.errors,
