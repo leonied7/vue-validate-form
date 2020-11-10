@@ -6,6 +6,7 @@ export default {
     'removeField',
     'updateField',
     'setValue',
+    'setFieldError',
     'getFieldDefaultValues',
     'getFieldValue',
     'getFieldErrors'
@@ -79,12 +80,16 @@ export default {
         value = this.hasModelValue ? this.computedModelValue : value;
         this.setValue(this.name, value);
       });
+    },
+    setError(message) {
+      this.setFieldError(this.name, message);
     }
   },
   render() {
     return this.$scopedSlots.default({
-      modelValue: this.computedModelValue,
       onChange: this.onModelChange,
+      setError: this.setError,
+      modelValue: this.computedModelValue,
       errors: this.errors
     });
   }

@@ -12,6 +12,7 @@ export default {
       updateField: this.updateField,
       removeField: this.removeField,
       setValue: this.setValue,
+      setFieldError: this.setFieldError,
       getFieldDefaultValues: this.getFieldDefaultValues,
       getFieldValue: (name) => this.flatValues[name],
       getFieldErrors: this.getFieldErrors
