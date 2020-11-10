@@ -53,6 +53,9 @@ export default {
   },
   methods: {
     onSubmit() {
+      Object.keys(this.fields).forEach((name) => {
+        this.validateField(name);
+      });
       if (!this.existsErrors) {
         this.$emit('submit', this.values, { setErrors: this.setErrors, reset: this.reset });
       }
