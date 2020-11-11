@@ -51,10 +51,10 @@ export default {
   },
   watch: {
     rules(rules) {
-      this.updateField(this.name, { name: this.name, rules });
+      this.updateField(this.name, { name: this.name, rules, focus: this.onFocus });
     },
     name(name, oldName) {
-      this.updateField(oldName, { name, rules: this.rules });
+      this.updateField(oldName, { name, rules: this.rules, focus: this.onFocus });
     },
     modelValue(value) {
       this.setValue(this.name, value);
@@ -65,7 +65,7 @@ export default {
   },
   mounted() {
     const defaultValue = this.defaultValue;
-    this.addField({ name: this.name, rules: this.rules, defaultValue });
+    this.addField({ name: this.name, rules: this.rules, defaultValue, focus: this.onFocus });
     if (defaultValue !== this.modelValue) {
       this.onModelChange(defaultValue);
     }
@@ -83,6 +83,12 @@ export default {
     },
     setError(message) {
       this.setFieldError(this.name, message);
+    },
+    onFocus() {
+      this.$emit('should-focus', {
+        name: this.name,
+        field: this
+      });
     }
   },
   render() {

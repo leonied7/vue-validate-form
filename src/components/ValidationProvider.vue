@@ -44,6 +44,10 @@ export default {
         return result;
       }, {});
     },
+    firstInvalidField() {
+      const name = Object.keys(this.fields).find((name) => this.errors[name].length);
+      return this.fields[name];
+    },
     existsErrors() {
       return Object.values(this.errors).some((errors) => errors.length);
     }
@@ -56,18 +60,27 @@ export default {
       Object.keys(this.fields).forEach((name) => {
         this.validateField(name);
       });
-      if (!this.existsErrors) {
-        this.$emit('submit', this.values, { setError: this.setError, reset: this.reset });
+      if (this.existsErrors) {
+        return this.focusFirstInvalidField();
       }
+
+      this.$emit('submit', this.values, {
+        setError: this.setError,
+        reset: this.reset,
+        focusFirstInvalidField: this.focusFirstInvalidField
+      });
     },
-    addField({ name, rules, defaultValue }) {
-      this.$set(this.fields, name, rules);
+    focusFirstInvalidField() {
+      return this.firstInvalidField.focus();
+    },
+    addField({ name, rules, defaultValue, focus }) {
+      this.$set(this.fields, name, { rules, focus });
       this.$set(this.defaultValuesByField, name, defaultValue);
       this.$set(this.errors, name, []);
       this.$delete(this.dirtyFields, name);
     },
-    updateField(oldName, { name, rules }) {
-      this.$set(this.fields, oldName, rules);
+    updateField(oldName, { name, rules, focus }) {
+      this.$set(this.fields, oldName, { rules, focus });
       this.replaceFieldName(oldName, name);
     },
     removeField(name) {
@@ -107,7 +120,7 @@ export default {
     },
     validateField(name) {
       this.errors[name] = [];
-      const rules = this.fields[name];
+      const rules = this.fields[name].rules;
       const value = this.flatValues[name];
       Object.entries(rules).forEach(([ruleName, options]) => {
         const validator = validators[ruleName];
@@ -145,7 +158,6 @@ export default {
       isDirty: this.isDirty,
       errors: this.errors,
       defaultValues: this.defaultValuesByField,
-      fields: this.fields,
       dirtyFields: this.dirtyFields
     });
   }
