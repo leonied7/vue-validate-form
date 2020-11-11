@@ -61,16 +61,16 @@ export default {
         this.validateField(name);
       });
       if (this.existsErrors) {
-        return this.focusFirstInvalidField();
+        return this.focusInvalidField();
       }
 
       this.$emit('submit', this.values, {
         setError: this.setError,
         reset: this.reset,
-        focusFirstInvalidField: this.focusFirstInvalidField
+        focusInvalidField: this.focusInvalidField
       });
     },
-    focusFirstInvalidField() {
+    focusInvalidField() {
       return this.firstInvalidField.focus();
     },
     addField({ name, rules, defaultValue, focus }) {
