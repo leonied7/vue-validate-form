@@ -2,7 +2,7 @@
 import get from 'lodash.get';
 import set from 'lodash.set';
 import cloneDeep from 'lodash.clonedeep';
-import { validators } from '../validators';
+import { validators } from '../validators.js';
 
 export default {
   name: 'ValidationProvider',
@@ -76,6 +76,7 @@ export default {
     addField({ name, rules, defaultValue, focus }) {
       this.$set(this.fields, name, { rules, focus });
       this.$set(this.defaultValuesByField, name, defaultValue);
+      this.$set(this.flatValues, name, defaultValue);
       this.$set(this.errors, name, []);
       this.$delete(this.dirtyFields, name);
     },
