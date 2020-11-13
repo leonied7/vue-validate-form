@@ -4,6 +4,7 @@ import minLength from './minLength';
 import maxLength from './maxLength';
 import min from './min';
 import max from './max';
+import pattern from './pattern';
 
 export default {
   email,
@@ -11,5 +12,6 @@ export default {
   minLength,
   maxLength,
   min,
-  max
+  max,
+  pattern
 };
