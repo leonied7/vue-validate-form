@@ -4,13 +4,13 @@ import babel from '@rollup/plugin-babel';
 import VuePlugin from 'rollup-plugin-vue';
 import pkg from './package.json';
 
-export default [
-  // browser-friendly UMD build
-  {
-    input: 'src/index.js',
+// browser-friendly UMD build
+function getBrowserConfig(input, outputFile) {
+  return {
+    input,
     output: {
       name: 'VueFormValidate',
-      file: pkg.browser,
+      file: outputFile,
       format: 'umd',
       exports: 'named'
     },
@@ -23,21 +23,36 @@ export default [
         exclude: ['node_modules/**']
       })
     ]
-  },
+  };
+}
 
-  // CommonJS (for Node) and ES module (for bundlers) build.
-  // (We could have three entries in the configuration array
-  // instead of two, but it's quicker to generate multiple
-  // builds from a single configuration where possible, using
-  // an array for the `output` option, where we can specify
-  // `file` and `format` for each target)
-  {
-    input: 'src/index.js',
+// CommonJS (for Node) build.
+function getCommonJSConfig(input, outputFile) {
+  return {
+    input,
     external: ['lodash.get', 'lodash.set', 'lodash.clonedeep'],
-    output: [
-      { file: pkg.main, format: 'cjs', exports: 'named' },
-      { file: pkg.module, format: 'es', exports: 'named' }
-    ],
+    output: { file: outputFile, format: 'cjs', exports: 'named' },
     plugins: [VuePlugin()]
-  }
+  };
+}
+
+// ES module (for bundlers) build.
+function getEsConfig(input, outputFile) {
+  return {
+    input,
+    external: ['lodash.get', 'lodash.set', 'lodash.clonedeep'],
+    output: { file: outputFile, format: 'es', exports: 'named' },
+    plugins: [VuePlugin()]
+  };
+}
+
+export default [
+  getBrowserConfig('src/index.js', pkg.browser),
+  getBrowserConfig('src/validators/index.js', 'dist/validators.umd.js'),
+
+  getCommonJSConfig('src/index.js', pkg.main),
+  getCommonJSConfig('src/validators/index.js', 'dist/validators.cjs.js'),
+
+  getEsConfig('src/index.js', pkg.module),
+  getEsConfig('src/validators/index.js', 'dist/validators.esm.js')
 ];
