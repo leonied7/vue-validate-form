@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4-alpha.3](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.2...v0.0.4-alpha.3) (2020-11-13)
+
+
+### Features
+
+* add pattern validator ([b353974](https://github.com/leonied7/vue-validate-form/commit/b353974c0d3726e80598109f0b250da73e424e8b))
+* add validators ([4d9b0d2](https://github.com/leonied7/vue-validate-form/commit/4d9b0d28b0c03ec482a3282a688cfa0a035417c9))
+* build validators ([6fe05fb](https://github.com/leonied7/vue-validate-form/commit/6fe05fb61b7a56463ff1f86aa0f0bf7b11aea18e))
+
+
+### Bug Fixes
+
+* rename main.js => index.js ([2192b4e](https://github.com/leonied7/vue-validate-form/commit/2192b4ea0899a9496a9e6b2089394bd982176f2f))
+* set flatValue by field on addField ([5d2db79](https://github.com/leonied7/vue-validate-form/commit/5d2db79e147c60bc6e22459afb87e140fc222aa7))
+* trigger validateField only if value changed ([5be8593](https://github.com/leonied7/vue-validate-form/commit/5be859369a182841e219475150d9437c2ac9512e))
+
 ### [0.0.4-alpha.2](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.1...v0.0.4-alpha.2) (2020-11-13)
 
 

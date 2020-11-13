@@ -80,6 +80,7 @@ var script = {
     addField({ name, rules, defaultValue, focus }) {
       this.$set(this.fields, name, { rules, focus });
       this.$set(this.defaultValuesByField, name, defaultValue);
+      this.$set(this.flatValues, name, defaultValue);
       this.$set(this.errors, name, []);
       this.$delete(this.dirtyFields, name);
     },
@@ -110,7 +111,10 @@ var script = {
       this.$delete(this.errors, from);
     },
     setValue(name, value) {
-      this.$set(this.flatValues, name, value);
+      if (this.flatValues[name] === value) {
+        return;
+      }
+      this.flatValues[name] = value;
       value === this.defaultValuesByField[name]
         ? this.$delete(this.dirtyFields, name)
         : this.$set(this.dirtyFields, name, true);
