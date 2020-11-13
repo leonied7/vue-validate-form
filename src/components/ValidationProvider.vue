@@ -107,7 +107,10 @@ export default {
       this.$delete(this.errors, from);
     },
     setValue(name, value) {
-      this.$set(this.flatValues, name, value);
+      if (this.flatValues[name] === value) {
+        return;
+      }
+      this.flatValues[name] = value;
       value === this.defaultValuesByField[name]
         ? this.$delete(this.dirtyFields, name)
         : this.$set(this.dirtyFields, name, true);
