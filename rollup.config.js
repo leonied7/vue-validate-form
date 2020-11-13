@@ -5,11 +5,11 @@ import VuePlugin from 'rollup-plugin-vue';
 import pkg from './package.json';
 
 // browser-friendly UMD build
-function getBrowserConfig(input, outputFile) {
+function getBrowserConfig(input, outputFile, name) {
   return {
     input,
     output: {
-      name: 'VueFormValidate',
+      name,
       file: outputFile,
       format: 'umd',
       exports: 'named'
@@ -47,8 +47,12 @@ function getEsConfig(input, outputFile) {
 }
 
 export default [
-  getBrowserConfig('src/index.js', pkg.browser),
-  getBrowserConfig('src/validators/index.js', 'dist/validators.umd.js'),
+  getBrowserConfig('src/index.js', pkg.browser, 'VueValidateForm'),
+  getBrowserConfig(
+    'src/validators/index.js',
+    'dist/validators.umd.js',
+    'VueValidateFormValidators'
+  ),
 
   getCommonJSConfig('src/index.js', pkg.main),
   getCommonJSConfig('src/validators/index.js', 'dist/validators.cjs.js'),
