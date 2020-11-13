@@ -2,14 +2,12 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var isEqual = require('lodash.isequal');
 var get = require('lodash.get');
 var set = require('lodash.set');
 var cloneDeep = require('lodash.clonedeep');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
-var isEqual__default = /*#__PURE__*/_interopDefaultLegacy(isEqual);
 var get__default = /*#__PURE__*/_interopDefaultLegacy(get);
 var set__default = /*#__PURE__*/_interopDefaultLegacy(set);
 var cloneDeep__default = /*#__PURE__*/_interopDefaultLegacy(cloneDeep);
@@ -28,6 +26,7 @@ var script = {
       updateField: this.updateField,
       removeField: this.removeField,
       setValue: this.setValue,
+      setFieldError: this.setError,
       getFieldDefaultValues: this.getFieldDefaultValues,
       getFieldValue: (name) => this.flatValues[name],
       getFieldErrors: this.getFieldErrors
@@ -59,6 +58,10 @@ var script = {
         return result;
       }, {});
     },
+    firstInvalidField() {
+      const name = Object.keys(this.fields).find((name) => this.errors[name].length);
+      return this.fields[name];
+    },
     existsErrors() {
       return Object.values(this.errors).some((errors) => errors.length);
     }
@@ -68,18 +71,30 @@ var script = {
   },
   methods: {
     onSubmit() {
-      if (!this.existsErrors) {
-        this.$emit('submit', this.values, { setErrors: this.setErrors, reset: this.reset });
+      Object.keys(this.fields).forEach((name) => {
+        this.validateField(name);
+      });
+      if (this.existsErrors) {
+        return this.focusInvalidField();
       }
+
+      this.$emit('submit', this.values, {
+        setError: this.setError,
+        reset: this.reset,
+        focusInvalidField: this.focusInvalidField
+      });
     },
-    addField({ name, rules, defaultValue }) {
-      this.$set(this.fields, name, rules);
+    focusInvalidField() {
+      return this.firstInvalidField.focus();
+    },
+    addField({ name, rules, defaultValue, focus }) {
+      this.$set(this.fields, name, { rules, focus });
       this.$set(this.defaultValuesByField, name, defaultValue);
       this.$set(this.errors, name, []);
       this.$delete(this.dirtyFields, name);
     },
-    updateField(oldName, { name, rules }) {
-      this.$set(this.fields, oldName, rules);
+    updateField(oldName, { name, rules, focus }) {
+      this.$set(this.fields, oldName, { rules, focus });
       this.replaceFieldName(oldName, name);
     },
     removeField(name) {
@@ -111,25 +126,23 @@ var script = {
         : this.$set(this.dirtyFields, name, true);
       this.validateField(name);
     },
-    setErrors(errors) {
-      Object.entries(errors).forEach(([name, error]) => {
-        this.setFieldError(name, error);
-      });
-    },
-    setFieldError(name, message) {
+    setError(name, message) {
+      if (this.errors[name] === undefined) {
+        throw new Error(`field '${name}' must be registered for set error`);
+      }
       this.errors[name].push(message);
     },
     validateField(name) {
       this.errors[name] = [];
-      const rules = this.fields[name];
+      const rules = this.fields[name].rules;
       const value = this.flatValues[name];
       Object.entries(rules).forEach(([ruleName, options]) => {
         const validator = validators[ruleName];
         if (!validator) {
           throw new Error(`validator '${ruleName}' must be registered`);
         }
-        if (!isEqual__default['default'](validator(value), options.value)) {
-          this.setFieldError(name, options.message);
+        if (!validator(value, options.params)) {
+          this.setError(name, options.message);
         }
       });
     },
@@ -140,7 +153,9 @@ var script = {
       return this.errors[name];
     },
     reset(values) {
-      this.innerDefaultValues = cloneDeep__default['default'](values);
+      if (values) {
+        this.innerDefaultValues = cloneDeep__default['default'](values);
+      }
       Object.entries(this.defaultValuesByField).forEach(([name, value]) => {
         const defaultValue = this.getFieldDefaultValues(name, value);
         this.defaultValuesByField[name] = defaultValue;
@@ -151,11 +166,12 @@ var script = {
   render() {
     return this.$scopedSlots.default({
       handleSubmit: this.onSubmit,
+      reset: this.reset,
+      setError: this.setError,
       values: this.values,
       isDirty: this.isDirty,
       errors: this.errors,
       defaultValues: this.defaultValuesByField,
-      fields: this.fields,
       dirtyFields: this.dirtyFields
     });
   }
@@ -277,6 +293,7 @@ var script$1 = {
     'removeField',
     'updateField',
     'setValue',
+    'setFieldError',
     'getFieldDefaultValues',
     'getFieldValue',
     'getFieldErrors'
@@ -321,10 +338,10 @@ var script$1 = {
   },
   watch: {
     rules(rules) {
-      this.updateField(this.name, { name: this.name, rules });
+      this.updateField(this.name, { name: this.name, rules, focus: this.onFocus });
     },
     name(name, oldName) {
-      this.updateField(oldName, { name, rules: this.rules });
+      this.updateField(oldName, { name, rules: this.rules, focus: this.onFocus });
     },
     modelValue(value) {
       this.setValue(this.name, value);
@@ -335,7 +352,7 @@ var script$1 = {
   },
   mounted() {
     const defaultValue = this.defaultValue;
-    this.addField({ name: this.name, rules: this.rules, defaultValue });
+    this.addField({ name: this.name, rules: this.rules, defaultValue, focus: this.onFocus });
     if (defaultValue !== this.modelValue) {
       this.onModelChange(defaultValue);
     }
@@ -350,12 +367,22 @@ var script$1 = {
         value = this.hasModelValue ? this.computedModelValue : value;
         this.setValue(this.name, value);
       });
+    },
+    setError(message) {
+      this.setFieldError(this.name, message);
+    },
+    onFocus() {
+      this.$emit('should-focus', {
+        name: this.name,
+        field: this
+      });
     }
   },
   render() {
     return this.$scopedSlots.default({
-      modelValue: this.computedModelValue,
       onChange: this.onModelChange,
+      setError: this.setError,
+      modelValue: this.computedModelValue,
       errors: this.errors
     });
   }

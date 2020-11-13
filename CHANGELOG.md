@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4-alpha.2](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.1...v0.0.4-alpha.2) (2020-11-13)
+
+
+### Features
+
+* add ability to set error in ValidateField ([07d0a85](https://github.com/leonied7/vue-validate-form/commit/07d0a85f373d00dee2a9f7868d27ba57ee5c0ff0))
+* emit event `should-focus` ([bcc943b](https://github.com/leonied7/vue-validate-form/commit/bcc943b03083a6c54927ae590a77e22e349a0548))
+* pass to slot setErrors, setFieldError ([4585057](https://github.com/leonied7/vue-validate-form/commit/4585057db4bc4c0f101ebcaa0919d73d26a0a39b))
+* reset without values reset to previous defaults ([0262c27](https://github.com/leonied7/vue-validate-form/commit/0262c27e00741ca2d9b474cd9110d7a1e3bc1c7c))
+
+
+### Bug Fixes
+
+* change focusFirstInvalidField => focusInvalidField ([51503da](https://github.com/leonied7/vue-validate-form/commit/51503da02f86a448d2073ae11ac0cbdb4af54e9c))
+* re-check validate on submit ([976efb3](https://github.com/leonied7/vue-validate-form/commit/976efb36f35cc6fe06edd9ba5f8ca4ac70f4db71))
+* remove depend isequal, value => params in rules ([2628304](https://github.com/leonied7/vue-validate-form/commit/26283047841d6750cb26755f5b3360057295d91f))
+* remove setErrors, rename setFieldError => setError ([dcc2d41](https://github.com/leonied7/vue-validate-form/commit/dcc2d41be802ec3c2fa779f3501b03348e033649))
+
 ### [0.0.4-alpha.1](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.0...v0.0.4-alpha.1) (2020-11-08)
 
 ### [0.0.4-alpha.0](https://github.com/leonied7/vue-validate-form/compare/v0.0.3...v0.0.4-alpha.0) (2020-11-08)
