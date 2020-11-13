@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4-alpha.4](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.3...v0.0.4-alpha.4) (2020-11-13)
+
+
+### Bug Fixes
+
+* add name for validators in browser config ([b39876c](https://github.com/leonied7/vue-validate-form/commit/b39876c0eb1fdfc43c25ac0745cdfb674a1b73de))
+
 ### [0.0.4-alpha.3](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.2...v0.0.4-alpha.3) (2020-11-13)
 
 
