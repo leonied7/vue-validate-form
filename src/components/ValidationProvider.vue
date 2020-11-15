@@ -71,7 +71,7 @@ export default {
       });
     },
     focusInvalidField() {
-      return this.firstInvalidField.focus();
+      return this.firstInvalidField && this.firstInvalidField.focus();
     },
     addField({ name, rules, defaultValue, focus }) {
       this.$set(this.fields, name, { rules, focus });
