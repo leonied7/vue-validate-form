@@ -42,6 +42,9 @@ export default {
     errors() {
       return this.getFieldErrors(this.name);
     },
+    firstError() {
+      return (this.errors && this.errors[0]) || '';
+    },
     hasModelValue() {
       return this.modelValue !== undefined;
     },
@@ -96,7 +99,8 @@ export default {
       onChange: this.onModelChange,
       setError: this.setError,
       modelValue: this.computedModelValue,
-      errors: this.errors
+      errors: this.errors,
+      firstError: this.firstError
     });
   }
 };
