@@ -4113,6 +4113,9 @@
       errors: function errors() {
         return this.getFieldErrors(this.name);
       },
+      firstError: function firstError() {
+        return this.errors && this.errors[0] || '';
+      },
       hasModelValue: function hasModelValue() {
         return this.modelValue !== undefined;
       },
@@ -4184,7 +4187,8 @@
         onChange: this.onModelChange,
         setError: this.setError,
         modelValue: this.computedModelValue,
-        errors: this.errors
+        errors: this.errors,
+        firstError: this.firstError
       });
     }
   };

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4-alpha.5](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.4...v0.0.4-alpha.5) (2020-11-15)
+
+
+### Features
+
+* add firstError in ValidationField slot ([ca94efc](https://github.com/leonied7/vue-validate-form/commit/ca94efc1baa2814072297e3753bee807cb34192d))
+
 ### [0.0.4-alpha.4](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.3...v0.0.4-alpha.4) (2020-11-13)
 
 
