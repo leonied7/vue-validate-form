@@ -1,4 +1,3 @@
-<script>
 export default {
   name: 'ValidationField',
   inject: [
@@ -104,4 +103,3 @@ export default {
     });
   }
 };
-</script>
