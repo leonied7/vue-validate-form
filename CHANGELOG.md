@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4-alpha.6](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.5...v0.0.4-alpha.6) (2020-11-21)
+
+
+### Bug Fixes
+
+* check firstInvalidField on exists ([57b2452](https://github.com/leonied7/vue-validate-form/commit/57b2452726b3c83caf376b4688c581a760de3514))
+* rename vue => js ([55afd01](https://github.com/leonied7/vue-validate-form/commit/55afd01f80710dd51b3ec4506bb1ed6114c57f8c))
+
 ### [0.0.4-alpha.5](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.4...v0.0.4-alpha.5) (2020-11-15)
 
 
