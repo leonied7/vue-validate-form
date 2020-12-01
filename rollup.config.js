@@ -48,15 +48,8 @@ function getEsConfig(input, outputFile) {
 
 export default [
   getBrowserConfig('src/index.js', pkg.browser, 'VueValidateForm'),
-  getBrowserConfig(
-    'src/validators/index.js',
-    'dist/validators.umd.js',
-    'VueValidateFormValidators'
-  ),
 
   getCommonJSConfig('src/index.js', pkg.main),
-  getCommonJSConfig('src/validators/index.js', 'dist/validators.cjs.js'),
 
-  getEsConfig('src/index.js', pkg.module),
-  getEsConfig('src/validators/index.js', 'dist/validators.esm.js')
+  getEsConfig('src/index.js', pkg.module)
 ];
