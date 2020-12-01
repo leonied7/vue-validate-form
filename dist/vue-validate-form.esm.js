@@ -26,6 +26,10 @@ var ValidationProvider = {
     defaultValues: {
       type: Object,
       default: () => ({})
+    },
+    resolver: {
+      type: Function,
+      default: null
     }
   },
   data() {
@@ -60,15 +64,23 @@ var ValidationProvider = {
     this.innerDefaultValues = cloneDeep(this.defaultValues);
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
+      let resultValues = this.values;
       Object.keys(this.fields).forEach((name) => {
         this.validateField(name);
       });
+      if (this.resolver) {
+        const { values, errors } = await this.resolver(this.values);
+        resultValues = values;
+        Object.entries(errors).forEach(([name, message]) => {
+          this.setError(name, message);
+        });
+      }
       if (this.existsErrors) {
         return this.focusInvalidField();
       }
 
-      this.$emit('submit', this.values, {
+      this.$emit('submit', resultValues, {
         setError: this.setError,
         reset: this.reset,
         focusInvalidField: this.focusInvalidField
@@ -110,7 +122,7 @@ var ValidationProvider = {
       this.$set(this.errors, to, this.errors[from]);
       this.$delete(this.errors, from);
     },
-    setValue(name, value) {
+    async setValue(name, value) {
       if (this.flatValues[name] === value) {
         return;
       }
@@ -118,7 +130,15 @@ var ValidationProvider = {
       value === this.defaultValuesByField[name]
         ? this.$delete(this.dirtyFields, name)
         : this.$set(this.dirtyFields, name, true);
+
       this.validateField(name);
+      if (!this.resolver) {
+        return;
+      }
+      const { errors } = await this.resolver(this.values);
+      if (errors[name]) {
+        this.setError(name, errors[name]);
+      }
     },
     setError(name, message) {
       if (this.errors[name] === undefined) {

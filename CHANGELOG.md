@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.6...v0.0.4) (2020-12-01)
+
+
+### Features
+
+* add resolver prop for validate by scheme ([38917bc](https://github.com/leonied7/vue-validate-form/commit/38917bcd62d1831aebd838b7cd146aaa6cd1c8b1))
+* move validators to external package ([1c6cf52](https://github.com/leonied7/vue-validate-form/commit/1c6cf52a87c5fa2a7feaaf492d3d1803749ae5be))
+
+
+### Bug Fixes
+
+* add transpile async/await ([d7dbdf5](https://github.com/leonied7/vue-validate-form/commit/d7dbdf5aade0b9f30fc1b5bbaa6dd542bebe8653))
+
 ### [0.0.4-alpha.6](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.5...v0.0.4-alpha.6) (2020-11-21)
 
 
