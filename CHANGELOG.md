@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/leonied7/vue-validate-form/compare/v0.0.4...v0.0.5) (2020-12-22)
+
+
+### Bug Fixes
+
+* add core-js for umd version ([2c5e278](https://github.com/leonied7/vue-validate-form/commit/2c5e2787c82f303e9a59216f95a1e37ef6b5e09f))
+
 ### [0.0.4](https://github.com/leonied7/vue-validate-form/compare/v0.0.4-alpha.6...v0.0.4) (2020-12-01)
 
 
