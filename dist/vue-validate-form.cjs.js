@@ -4,13 +4,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var get = require('lodash.get');
 var set = require('lodash.set');
-var cloneDeep = require('lodash.clonedeep');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 var get__default = /*#__PURE__*/_interopDefaultLegacy(get);
 var set__default = /*#__PURE__*/_interopDefaultLegacy(set);
-var cloneDeep__default = /*#__PURE__*/_interopDefaultLegacy(cloneDeep);
 
 const validators = {};
 
@@ -71,7 +69,7 @@ var ValidationProvider = {
     }
   },
   created() {
-    this.innerDefaultValues = cloneDeep__default['default'](this.defaultValues);
+    this.innerDefaultValues = this.defaultValues;
   },
   methods: {
     async onSubmit() {
@@ -178,7 +176,7 @@ var ValidationProvider = {
     },
     reset(values) {
       if (values) {
-        this.innerDefaultValues = cloneDeep__default['default'](values);
+        this.innerDefaultValues = values;
       }
       Object.entries(this.defaultValuesByField).forEach(([name, value]) => {
         const defaultValue = this.getFieldDefaultValues(name, value);
