@@ -5,7 +5,7 @@ import pkg from './package.json';
 function getCommonJSConfig(input, outputFile) {
   return {
     input,
-    external: ['lodash.get', 'lodash.set', 'lodash.clonedeep'],
+    external: ['lodash.get', 'lodash.set'],
     output: { file: outputFile, format: 'cjs', exports: 'named' },
     plugins: [VuePlugin()]
   };
@@ -15,7 +15,7 @@ function getCommonJSConfig(input, outputFile) {
 function getEsConfig(input, outputFile) {
   return {
     input,
-    external: ['lodash.get', 'lodash.set', 'lodash.clonedeep'],
+    external: ['lodash.get', 'lodash.set'],
     output: { file: outputFile, format: 'es', exports: 'named' },
     plugins: [VuePlugin()]
   };

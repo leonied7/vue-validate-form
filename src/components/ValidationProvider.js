@@ -1,6 +1,5 @@
 import get from 'lodash.get';
 import set from 'lodash.set';
-import cloneDeep from 'lodash.clonedeep';
 import { validators } from '../validators.js';
 
 export default {
@@ -56,7 +55,7 @@ export default {
     }
   },
   created() {
-    this.innerDefaultValues = cloneDeep(this.defaultValues);
+    this.innerDefaultValues = this.defaultValues;
   },
   methods: {
     async onSubmit() {
@@ -163,7 +162,7 @@ export default {
     },
     reset(values) {
       if (values) {
-        this.innerDefaultValues = cloneDeep(values);
+        this.innerDefaultValues = values;
       }
       Object.entries(this.defaultValuesByField).forEach(([name, value]) => {
         const defaultValue = this.getFieldDefaultValues(name, value);
