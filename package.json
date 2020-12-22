@@ -3,7 +3,6 @@
   "version": "0.0.5",
   "main": "dist/vue-validate-form.cjs.js",
   "module": "dist/vue-validate-form.esm.js",
-  "browser": "dist/vue-validate-form.umd.js",
   "repository": "https://github.com/leonied7/vue-validate-form.git",
   "author": {
     "name": "Denis",
@@ -15,7 +14,6 @@
   },
   "homepage": "https://github.com/leonied7/vue-validate-form#readme",
   "dependencies": {
-    "core-js": "3",
     "lodash.clonedeep": "^4.5.0",
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2"

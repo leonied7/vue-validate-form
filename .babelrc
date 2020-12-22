@@ -4,10 +4,8 @@
       "targets": {
         "browsers": ["last 2 versions"]
       },
-      "corejs": 3,
       "modules": false,
-      "loose": true,
-      "useBuiltIns": "usage"
+      "loose": true
     }]
   ]
 }
