@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/leonied7/vue-validate-form/compare/v0.0.5...v0.0.6) (2020-12-22)
+
+
+### Bug Fixes
+
+* remove umd in dist ([425dbce](https://github.com/leonied7/vue-validate-form/commit/425dbce78abb8e7091b09b2ea960f8d068f97fa8))
+* remove umd version ([f3eb000](https://github.com/leonied7/vue-validate-form/commit/f3eb000898d2348279507d1c510753a9fb2f93bd))
+
 ### [0.0.5](https://github.com/leonied7/vue-validate-form/compare/v0.0.4...v0.0.5) (2020-12-22)
 
 
