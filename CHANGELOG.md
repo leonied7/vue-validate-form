@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/leonied7/vue-validate-form/compare/v0.0.7...v0.0.8) (2021-02-18)
+
+
+### Features
+
+* pass name in slot ([5e26eec](https://github.com/leonied7/vue-validate-form/commit/5e26eec171786754a1152c5722ba20eadc111fa2))
+* remove validators ([0e1313d](https://github.com/leonied7/vue-validate-form/commit/0e1313d78a20e50d65e8a42aa65441ecfa5821f4))
+* return register validators ([8833a19](https://github.com/leonied7/vue-validate-form/commit/8833a194deba35cf872fd0f41afa7faf25923366))
+
 ### [0.0.7](https://github.com/leonied7/vue-validate-form/compare/v0.0.6...v0.0.7) (2020-12-22)
 
 
