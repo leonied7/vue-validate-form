@@ -13,7 +13,8 @@ export default {
       setFieldError: this.setError,
       getFieldDefaultValues: this.getFieldDefaultValues,
       getFieldValue: (name) => this.flatValues[name],
-      getFieldErrors: this.getFieldErrors
+      getFieldErrors: this.getFieldErrors,
+      getFieldDirty: this.getFieldDirty
     };
   },
   props: {
@@ -159,6 +160,9 @@ export default {
     },
     getFieldErrors(name) {
       return this.errors[name];
+    },
+    getFieldDirty(name) {
+      return this.dirtyFields[name];
     },
     reset(values) {
       if (values) {

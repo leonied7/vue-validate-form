@@ -8,7 +8,8 @@ export default {
     'setFieldError',
     'getFieldDefaultValues',
     'getFieldValue',
-    'getFieldErrors'
+    'getFieldErrors',
+    'getFieldDirty'
   ],
   model: {
     prop: 'modelValue',
@@ -37,6 +38,9 @@ export default {
     },
     defaultValue() {
       return this.providedDefaultValue !== undefined ? this.providedDefaultValue : this.modelValue;
+    },
+    dirty() {
+      return this.getFieldDirty(this.name);
     },
     errors() {
       return this.getFieldErrors(this.name);
@@ -100,7 +104,8 @@ export default {
       setError: this.setError,
       modelValue: this.computedModelValue,
       errors: this.errors,
-      firstError: this.firstError
+      firstError: this.firstError,
+      dirty: this.dirty
     });
   }
 };
