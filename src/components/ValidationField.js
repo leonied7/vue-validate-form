@@ -43,13 +43,13 @@ export default {
       return this.getFieldDirty(this.name);
     },
     errors() {
-      return this.getFieldErrors(this.name);
+      return this.getFieldErrors(this.name) || [];
     },
     firstError() {
-      return (this.errors && this.errors[0]) || '';
+      return this.errors[0] || '';
     },
     invalid() {
-      return this.dirty || !!this.errors;
+      return !!this.errors.length;
     },
     hasModelValue() {
       return this.modelValue !== undefined;
