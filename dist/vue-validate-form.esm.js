@@ -245,7 +245,7 @@ var ValidationField = {
       return (this.errors && this.errors[0]) || '';
     },
     invalid() {
-      return this.dirty || !!this.errors.length;
+      return this.dirty || !!this.errors;
     },
     hasModelValue() {
       return this.modelValue !== undefined;
