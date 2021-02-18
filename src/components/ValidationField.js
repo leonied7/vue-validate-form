@@ -49,7 +49,7 @@ export default {
       return (this.errors && this.errors[0]) || '';
     },
     invalid() {
-      return this.dirty && !!this.errors.length;
+      return this.dirty || !!this.errors.length;
     },
     hasModelValue() {
       return this.modelValue !== undefined;
