@@ -18,7 +18,8 @@ var ValidationProvider = {
       setFieldError: this.setError,
       getFieldDefaultValues: this.getFieldDefaultValues,
       getFieldValue: (name) => this.flatValues[name],
-      getFieldErrors: this.getFieldErrors
+      getFieldErrors: this.getFieldErrors,
+      getFieldDirty: this.getFieldDirty
     };
   },
   props: {
@@ -165,6 +166,9 @@ var ValidationProvider = {
     getFieldErrors(name) {
       return this.errors[name];
     },
+    getFieldDirty(name) {
+      return this.dirtyFields[name];
+    },
     reset(values) {
       if (values) {
         this.innerDefaultValues = values;
@@ -200,7 +204,8 @@ var ValidationField = {
     'setFieldError',
     'getFieldDefaultValues',
     'getFieldValue',
-    'getFieldErrors'
+    'getFieldErrors',
+    'getFieldDirty'
   ],
   model: {
     prop: 'modelValue',
@@ -229,6 +234,9 @@ var ValidationField = {
     },
     defaultValue() {
       return this.providedDefaultValue !== undefined ? this.providedDefaultValue : this.modelValue;
+    },
+    dirty() {
+      return this.getFieldDirty(this.name);
     },
     errors() {
       return this.getFieldErrors(this.name);
@@ -292,7 +300,8 @@ var ValidationField = {
       setError: this.setError,
       modelValue: this.computedModelValue,
       errors: this.errors,
-      firstError: this.firstError
+      firstError: this.firstError,
+      dirty: this.dirty
     });
   }
 };

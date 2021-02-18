@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/leonied7/vue-validate-form/compare/v0.0.8...v0.0.9) (2021-02-18)
+
+
+### Features
+
+* add dirty flag in ValidationField.js ([4040399](https://github.com/leonied7/vue-validate-form/commit/4040399aef16515bfcb4fc28d2d52bc4e088c7ee))
+
 ### [0.0.8](https://github.com/leonied7/vue-validate-form/compare/v0.0.7...v0.0.8) (2021-02-18)
 
 
