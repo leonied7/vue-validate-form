@@ -48,6 +48,9 @@ export default {
     firstError() {
       return (this.errors && this.errors[0]) || '';
     },
+    invalid() {
+      return this.dirty && !!this.errors.length;
+    },
     hasModelValue() {
       return this.modelValue !== undefined;
     },
@@ -105,7 +108,8 @@ export default {
       modelValue: this.computedModelValue,
       errors: this.errors,
       firstError: this.firstError,
-      dirty: this.dirty
+      dirty: this.dirty,
+      invalid: this.invalid
     });
   }
 };
