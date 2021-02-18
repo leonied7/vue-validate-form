@@ -253,6 +253,9 @@ var ValidationField = {
     firstError() {
       return (this.errors && this.errors[0]) || '';
     },
+    invalid() {
+      return this.dirty && !!this.errors.length;
+    },
     hasModelValue() {
       return this.modelValue !== undefined;
     },
@@ -310,7 +313,8 @@ var ValidationField = {
       modelValue: this.computedModelValue,
       errors: this.errors,
       firstError: this.firstError,
-      dirty: this.dirty
+      dirty: this.dirty,
+      invalid: this.invalid
     });
   }
 };
