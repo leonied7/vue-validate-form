@@ -95,6 +95,7 @@ export default {
   },
   render() {
     return this.$scopedSlots.default({
+      name: this.name,
       onChange: this.onModelChange,
       setError: this.setError,
       modelValue: this.computedModelValue,
