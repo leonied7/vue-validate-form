@@ -144,7 +144,7 @@ var ValidationProvider = {
     },
     setError(name, message) {
       if (this.errors[name] === undefined) {
-        this.errors[name] = [];
+        this.$set(this.errors, name, []);
       }
       this.errors[name].push(message);
     },

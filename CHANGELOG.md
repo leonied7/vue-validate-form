@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/leonied7/vue-validate-form/compare/v0.0.14...v0.0.15) (2021-06-03)
+
+
+### Bug Fixes
+
+* reactivity for custom error ([32cdc56](https://github.com/leonied7/vue-validate-form/commit/32cdc563199d6bc4714f87b45b9254db4d6e6353))
+
 ### [0.0.14](https://github.com/leonied7/vue-validate-form/compare/v0.0.13...v0.0.14) (2021-06-03)
 
 
