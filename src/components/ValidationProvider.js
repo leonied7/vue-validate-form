@@ -68,7 +68,8 @@ export default {
         const { values, errors } = await this.resolver(this.values);
         resultValues = values;
         Object.entries(errors).forEach(([name, message]) => {
-          this.setError(name, message);
+          // set correct error type
+          this.setError(name, 'resolver error', message);
         });
       }
       if (this.existsErrors) {
@@ -132,12 +133,13 @@ export default {
       }
       const { errors } = await this.resolver(this.values);
       if (errors[name]) {
-        this.setError(name, errors[name]);
+        // set correct error type
+        this.setError(name, 'resolver error', errors[name]);
       }
     },
     setError(name, message) {
       if (this.errors[name] === undefined) {
-        throw new Error(`field '${name}' must be registered for set error`);
+        this.errors[name] = [];
       }
       this.errors[name].push(message);
     },
@@ -151,7 +153,7 @@ export default {
           throw new Error(`validator '${ruleName}' must be registered`);
         }
         if (!validator(value, options.params)) {
-          this.setError(name, options.message);
+          this.setError(name, ruleName, options.message);
         }
       });
     },

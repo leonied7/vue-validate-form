@@ -90,8 +90,8 @@ export default {
         this.setValue(this.name, value);
       });
     },
-    setError(message) {
-      this.setFieldError(this.name, message);
+    setError(type, message) {
+      this.setFieldError(this.name, type, message);
     },
     onFocus() {
       this.$emit('should-focus', {
