@@ -75,6 +75,9 @@ var ValidationProvider = {
   methods: {
     async onSubmit() {
       let resultValues = this.values;
+      Object.keys(this.errors).forEach((name) => {
+        this.errors[name] = [];
+      });
       Object.keys(this.fields).forEach((name) => {
         this.validateField(name);
       });
