@@ -1,6 +1,6 @@
 {
   "name": "vue-validate-form",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "dist/vue-validate-form.cjs.js",
   "module": "dist/vue-validate-form.esm.js",
   "repository": "https://github.com/leonied7/vue-validate-form.git",
