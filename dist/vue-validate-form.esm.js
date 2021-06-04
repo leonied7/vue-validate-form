@@ -7,19 +7,29 @@ function register(name, validate) {
   validators[name] = validate;
 }
 
+const addField = Symbol('addField');
+const removeField = Symbol('removeField');
+const updateField = Symbol('updateField');
+const setValue = Symbol('setValue');
+const setFieldError = Symbol('setFieldError');
+const getFieldDefaultValues = Symbol('getFieldDefaultValues');
+const getFieldValue = Symbol('getFieldValue');
+const getFieldErrors = Symbol('getFieldErrors');
+const getFieldDirty = Symbol('getFieldDirty');
+
 var ValidationProvider = {
   name: 'ValidationProvider',
   provide() {
     return {
-      addField: this.addField,
-      updateField: this.updateField,
-      removeField: this.removeField,
-      setValue: this.setValue,
-      setFieldError: this.setError,
-      getFieldDefaultValues: this.getFieldDefaultValues,
-      getFieldValue: (name) => this.flatValues[name],
-      getFieldErrors: this.getFieldErrors,
-      getFieldDirty: this.getFieldDirty
+      [addField]: this.addField,
+      [updateField]: this.updateField,
+      [removeField]: this.removeField,
+      [setValue]: this.setValue,
+      [setFieldError]: this.setError,
+      [getFieldDefaultValues]: this.getFieldDefaultValues,
+      [getFieldValue]: (name) => this.flatValues[name],
+      [getFieldErrors]: this.getFieldErrors,
+      [getFieldDirty]: this.getFieldDirty
     };
   },
   props: {
@@ -75,9 +85,8 @@ var ValidationProvider = {
       if (this.resolver) {
         const { values, errors } = await this.resolver(this.values);
         resultValues = values;
-        Object.entries(errors).forEach(([name, message]) => {
-          // set correct error type
-          this.setError(name, 'resolver error', message);
+        Object.entries(errors).forEach(([name, { message, type }]) => {
+          this.setError(name, type, message);
         });
       }
       if (this.existsErrors) {
@@ -141,15 +150,17 @@ var ValidationProvider = {
       }
       const { errors } = await this.resolver(this.values);
       if (errors[name]) {
-        // set correct error type
-        this.setError(name, 'resolver error', errors[name]);
+        this.setError(name, errors[name].type, errors[name].message);
       }
     },
-    setError(name, message) {
+    setError(name, type, message) {
       if (this.errors[name] === undefined) {
         this.$set(this.errors, name, []);
       }
-      this.errors[name].push(message);
+      this.errors[name].push({
+        type,
+        message
+      });
     },
     validateField(name) {
       this.errors[name] = [];
@@ -192,6 +203,7 @@ var ValidationProvider = {
       setError: this.setError,
       values: this.values,
       isDirty: this.isDirty,
+      invalid: this.existsErrors,
       errors: this.errors,
       defaultValues: this.defaultValuesByField,
       dirtyFields: this.dirtyFields
@@ -201,17 +213,17 @@ var ValidationProvider = {
 
 var ValidationField = {
   name: 'ValidationField',
-  inject: [
-    'addField',
-    'removeField',
-    'updateField',
-    'setValue',
-    'setFieldError',
-    'getFieldDefaultValues',
-    'getFieldValue',
-    'getFieldErrors',
-    'getFieldDirty'
-  ],
+  inject: {
+    addField,
+    removeField,
+    updateField,
+    setValue,
+    setFieldError,
+    getFieldDefaultValues,
+    getFieldValue,
+    getFieldErrors,
+    getFieldDirty
+  },
   model: {
     prop: 'modelValue',
     event: 'update:modelValue'
