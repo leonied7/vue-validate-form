@@ -25,18 +25,25 @@
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-html": "^0.2.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
+    "@vue-validate-form/resolvers": "^0.0.3",
+    "@vue/test-utils": "^1.2.0",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^27.0.2",
     "del-cli": "^3.0.1",
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-vue": "^7.1.0",
+    "jest": "^27.0.4",
     "prettier": "2.1.2",
     "rollup": "^2.32.1",
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-vue": "^5.1.9",
     "standard-version": "^9.0.0",
     "vue": "^2.6.12",
-    "vue-template-compiler": "^2.6.12"
+    "vue-jest": "^3.0.7",
+    "vue-template-compiler": "^2.6.12",
+    "yup": "^0.32.9"
   },
   "peerDependencies": {
     "vue": "^2.6.12"
@@ -46,11 +53,12 @@
     "clean": "del dist\\**",
     "dev": "rollup -c dev-rollup.config.js -w",
     "lint": "eslint src/** *.js",
+    "test": "jest",
     "release": "standard-version -a"
   },
   "standard-version": {
     "scripts": {
-      "postchangelog": "yarn lint && yarn clean && yarn build && git add dist"
+      "postchangelog": "yarn lint && yarn test && yarn clean && yarn build && git add dist"
     }
   },
   "files": [
