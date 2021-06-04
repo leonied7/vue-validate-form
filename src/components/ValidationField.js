@@ -1,16 +1,28 @@
+import {
+  addField,
+  removeField,
+  updateField,
+  setValue,
+  setFieldError,
+  getFieldDefaultValues,
+  getFieldValue,
+  getFieldErrors,
+  getFieldDirty
+} from './symbols.js';
+
 export default {
   name: 'ValidationField',
-  inject: [
-    'addField',
-    'removeField',
-    'updateField',
-    'setValue',
-    'setFieldError',
-    'getFieldDefaultValues',
-    'getFieldValue',
-    'getFieldErrors',
-    'getFieldDirty'
-  ],
+  inject: {
+    addField,
+    removeField,
+    updateField,
+    setValue,
+    setFieldError,
+    getFieldDefaultValues,
+    getFieldValue,
+    getFieldErrors,
+    getFieldDirty
+  },
   model: {
     prop: 'modelValue',
     event: 'update:modelValue'

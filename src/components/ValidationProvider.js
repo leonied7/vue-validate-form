@@ -1,20 +1,31 @@
 import get from 'lodash.get';
 import set from 'lodash.set';
 import { validators } from '../validators.js';
+import {
+  addField,
+  removeField,
+  updateField,
+  setValue,
+  setFieldError,
+  getFieldDefaultValues,
+  getFieldValue,
+  getFieldErrors,
+  getFieldDirty
+} from './symbols.js';
 
 export default {
   name: 'ValidationProvider',
   provide() {
     return {
-      addField: this.addField,
-      updateField: this.updateField,
-      removeField: this.removeField,
-      setValue: this.setValue,
-      setFieldError: this.setError,
-      getFieldDefaultValues: this.getFieldDefaultValues,
-      getFieldValue: (name) => this.flatValues[name],
-      getFieldErrors: this.getFieldErrors,
-      getFieldDirty: this.getFieldDirty
+      [addField]: this.addField,
+      [updateField]: this.updateField,
+      [removeField]: this.removeField,
+      [setValue]: this.setValue,
+      [setFieldError]: this.setError,
+      [getFieldDefaultValues]: this.getFieldDefaultValues,
+      [getFieldValue]: (name) => this.flatValues[name],
+      [getFieldErrors]: this.getFieldErrors,
+      [getFieldDirty]: this.getFieldDirty
     };
   },
   props: {
@@ -70,9 +81,8 @@ export default {
       if (this.resolver) {
         const { values, errors } = await this.resolver(this.values);
         resultValues = values;
-        Object.entries(errors).forEach(([name, message]) => {
-          // set correct error type
-          this.setError(name, 'resolver error', message);
+        Object.entries(errors).forEach(([name, { message, type }]) => {
+          this.setError(name, type, message);
         });
       }
       if (this.existsErrors) {
@@ -136,15 +146,17 @@ export default {
       }
       const { errors } = await this.resolver(this.values);
       if (errors[name]) {
-        // set correct error type
-        this.setError(name, 'resolver error', errors[name]);
+        this.setError(name, errors[name].type, errors[name].message);
       }
     },
-    setError(name, message) {
+    setError(name, type, message) {
       if (this.errors[name] === undefined) {
         this.$set(this.errors, name, []);
       }
-      this.errors[name].push(message);
+      this.errors[name].push({
+        type,
+        message
+      });
     },
     validateField(name) {
       this.errors[name] = [];
@@ -187,6 +199,7 @@ export default {
       setError: this.setError,
       values: this.values,
       isDirty: this.isDirty,
+      invalid: this.existsErrors,
       errors: this.errors,
       defaultValues: this.defaultValuesByField,
       dirtyFields: this.dirtyFields
