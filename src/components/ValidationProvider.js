@@ -10,7 +10,8 @@ import {
   getFieldDefaultValues,
   getFieldValue,
   getFieldErrors,
-  getFieldDirty
+  getFieldDirty,
+  getFieldInvalid
 } from './symbols.js';
 
 export default {
@@ -25,7 +26,8 @@ export default {
       [getFieldDefaultValues]: this.getFieldDefaultValues,
       [getFieldValue]: (name) => this.flatValues[name],
       [getFieldErrors]: this.getFieldErrors,
-      [getFieldDirty]: this.getFieldDirty
+      [getFieldDirty]: this.getFieldDirty,
+      [getFieldInvalid]: this.getFieldInvalid
     };
   },
   props: {
@@ -40,6 +42,7 @@ export default {
   },
   data() {
     return {
+      submitted: false,
       fields: {},
       flatValues: {},
       errors: {},
@@ -71,6 +74,7 @@ export default {
   },
   methods: {
     async onSubmit() {
+      this.submitted = true;
       let resultValues = this.values;
       Object.keys(this.errors).forEach((name) => {
         this.errors[name] = [];
@@ -176,12 +180,16 @@ export default {
       return get(this.innerDefaultValues, name, defaultValue);
     },
     getFieldErrors(name) {
-      return this.errors[name];
+      return this.errors[name] || [];
     },
     getFieldDirty(name) {
       return this.dirtyFields[name];
     },
+    getFieldInvalid(name) {
+      return this.submitted && !!this.getFieldErrors(name).length;
+    },
     reset(values) {
+      this.submitted = false;
       if (values) {
         this.innerDefaultValues = values;
       }
@@ -199,7 +207,7 @@ export default {
       setError: this.setError,
       values: this.values,
       isDirty: this.isDirty,
-      invalid: this.existsErrors,
+      invalid: this.submitted && this.existsErrors,
       errors: this.errors,
       defaultValues: this.defaultValuesByField,
       dirtyFields: this.dirtyFields

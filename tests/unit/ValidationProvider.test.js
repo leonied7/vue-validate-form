@@ -149,4 +149,6 @@ describe('ValidationProvider', () => {
   it.todo('change ValidationField name');
   it.todo('check changing values');
   it.todo('check `reset` method');
+  it.todo('check invalid');
+  it.todo('check field invalid');
 });

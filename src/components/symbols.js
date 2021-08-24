@@ -7,3 +7,4 @@ export const getFieldDefaultValues = Symbol('getFieldDefaultValues');
 export const getFieldValue = Symbol('getFieldValue');
 export const getFieldErrors = Symbol('getFieldErrors');
 export const getFieldDirty = Symbol('getFieldDirty');
+export const getFieldInvalid = Symbol('getFieldInvalid');

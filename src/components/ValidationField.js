@@ -7,7 +7,8 @@ import {
   getFieldDefaultValues,
   getFieldValue,
   getFieldErrors,
-  getFieldDirty
+  getFieldDirty,
+  getFieldInvalid
 } from './symbols.js';
 
 export default {
@@ -21,7 +22,8 @@ export default {
     getFieldDefaultValues,
     getFieldValue,
     getFieldErrors,
-    getFieldDirty
+    getFieldDirty,
+    getFieldInvalid
   },
   model: {
     prop: 'modelValue',
@@ -55,13 +57,13 @@ export default {
       return this.getFieldDirty(this.name);
     },
     errors() {
-      return this.getFieldErrors(this.name) || [];
+      return this.getFieldErrors(this.name);
     },
     firstError() {
       return this.errors[0] || '';
     },
     invalid() {
-      return !!this.errors.length;
+      return this.getFieldInvalid(this.name);
     },
     hasModelValue() {
       return this.modelValue !== undefined;

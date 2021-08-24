@@ -9,7 +9,8 @@ import {
   getFieldDefaultValues,
   getFieldValue,
   getFieldErrors,
-  getFieldDirty
+  getFieldDirty,
+  getFieldInvalid
 } from '../../src/components/symbols.js';
 
 const mockAddField = jest.fn();
@@ -19,8 +20,9 @@ const mockSetValue = jest.fn();
 const mockSetFieldError = jest.fn();
 const mockGetFieldDefaultValues = jest.fn().mockImplementation();
 const mockGetFieldValue = jest.fn();
-const mockGetFieldErrors = jest.fn();
+const mockGetFieldErrors = jest.fn().mockImplementation(() => []);
 const mockGetFieldDirty = jest.fn();
+const mockGetFieldInvalid = jest.fn();
 
 describe('ValidationField', () => {
   let wrapper;
@@ -41,6 +43,7 @@ describe('ValidationField', () => {
         [getFieldValue]: mockGetFieldValue,
         [getFieldErrors]: mockGetFieldErrors,
         [getFieldDirty]: mockGetFieldDirty,
+        [getFieldInvalid]: mockGetFieldInvalid,
         ...provide
       }
     });
