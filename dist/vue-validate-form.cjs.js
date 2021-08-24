@@ -25,6 +25,7 @@ const getFieldDefaultValues = Symbol('getFieldDefaultValues');
 const getFieldValue = Symbol('getFieldValue');
 const getFieldErrors = Symbol('getFieldErrors');
 const getFieldDirty = Symbol('getFieldDirty');
+const getFieldInvalid = Symbol('getFieldInvalid');
 
 var ValidationProvider = {
   name: 'ValidationProvider',
@@ -38,7 +39,8 @@ var ValidationProvider = {
       [getFieldDefaultValues]: this.getFieldDefaultValues,
       [getFieldValue]: (name) => this.flatValues[name],
       [getFieldErrors]: this.getFieldErrors,
-      [getFieldDirty]: this.getFieldDirty
+      [getFieldDirty]: this.getFieldDirty,
+      [getFieldInvalid]: this.getFieldInvalid
     };
   },
   props: {
@@ -53,6 +55,7 @@ var ValidationProvider = {
   },
   data() {
     return {
+      submitted: false,
       fields: {},
       flatValues: {},
       errors: {},
@@ -84,6 +87,7 @@ var ValidationProvider = {
   },
   methods: {
     async onSubmit() {
+      this.submitted = true;
       let resultValues = this.values;
       Object.keys(this.errors).forEach((name) => {
         this.errors[name] = [];
@@ -189,12 +193,16 @@ var ValidationProvider = {
       return get__default['default'](this.innerDefaultValues, name, defaultValue);
     },
     getFieldErrors(name) {
-      return this.errors[name];
+      return this.errors[name] || [];
     },
     getFieldDirty(name) {
       return this.dirtyFields[name];
     },
+    getFieldInvalid(name) {
+      return this.submitted && !!this.getFieldErrors(name).length;
+    },
     reset(values) {
+      this.submitted = false;
       if (values) {
         this.innerDefaultValues = values;
       }
@@ -212,7 +220,7 @@ var ValidationProvider = {
       setError: this.setError,
       values: this.values,
       isDirty: this.isDirty,
-      invalid: this.existsErrors,
+      invalid: this.submitted && this.existsErrors,
       errors: this.errors,
       defaultValues: this.defaultValuesByField,
       dirtyFields: this.dirtyFields
@@ -231,7 +239,8 @@ var ValidationField = {
     getFieldDefaultValues,
     getFieldValue,
     getFieldErrors,
-    getFieldDirty
+    getFieldDirty,
+    getFieldInvalid
   },
   model: {
     prop: 'modelValue',
@@ -265,13 +274,13 @@ var ValidationField = {
       return this.getFieldDirty(this.name);
     },
     errors() {
-      return this.getFieldErrors(this.name) || [];
+      return this.getFieldErrors(this.name);
     },
     firstError() {
       return this.errors[0] || '';
     },
     invalid() {
-      return !!this.errors.length;
+      return this.getFieldInvalid(this.name);
     },
     hasModelValue() {
       return this.modelValue !== undefined;
