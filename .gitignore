@@ -1,5 +1,7 @@
 .DS_Store
 .idea
+.yarn/*
+coverage
 node_modules
 dev
 dev-rollup.config.js
