@@ -6,7 +6,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'vue'],
   transform: {
     '^.+\\.js$': 'babel-jest',
-    '.*\\.(vue)$': 'vue-jest'
+    '.*\\.(vue)$': '@vue/vue2-jest'
   },
   testEnvironment: 'jsdom',
   clearMocks: true,
