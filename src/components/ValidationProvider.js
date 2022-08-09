@@ -69,8 +69,13 @@ export default {
       return Object.values(this.errors).some((errors) => errors.length);
     }
   },
-  created() {
-    this.innerDefaultValues = this.defaultValues;
+  watch: {
+    defaultValues: {
+      immediate: true,
+      handler(values) {
+        this.innerDefaultValues = values;
+      }
+    }
   },
   methods: {
     async onSubmit() {
