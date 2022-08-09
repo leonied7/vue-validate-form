@@ -7,6 +7,7 @@ function register(name, validate) {
 const addField = Symbol("addField");
 const removeField = Symbol("removeField");
 const updateField = Symbol("updateField");
+const getFieldRegistered = Symbol("getFieldRegistered");
 const setValue = Symbol("setValue");
 const setFieldError = Symbol("setFieldError");
 const getFieldDefaultValues = Symbol("getFieldDefaultValues");
@@ -21,6 +22,7 @@ var ValidationProvider = {
       [addField]: this.addField,
       [updateField]: this.updateField,
       [removeField]: this.removeField,
+      [getFieldRegistered]: (name) => !!this.fields[name],
       [setValue]: this.setValue,
       [setFieldError]: this.setError,
       [getFieldDefaultValues]: this.getFieldDefaultValues,
@@ -221,6 +223,7 @@ var ValidationField = {
     addField,
     removeField,
     updateField,
+    getFieldRegistered,
     setValue,
     setFieldError,
     getFieldDefaultValues,
@@ -248,6 +251,9 @@ var ValidationField = {
     }
   },
   computed: {
+    isRegistered() {
+      return this.getFieldRegistered(this.name);
+    },
     providedDefaultValue() {
       return this.getFieldDefaultValues(this.name);
     },
@@ -319,6 +325,9 @@ var ValidationField = {
     }
   },
   render() {
+    if (!this.isRegistered) {
+      return;
+    }
     return this.$scopedSlots.default({
       name: this.name,
       onChange: this.onModelChange,

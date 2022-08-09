@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.22](https://github.com/leonied7/vue-validate-form/compare/v0.0.19...v0.0.22) (2022-08-09)
+
+
+### Features
+
+* render ValidationField content only after registered ([d70069d](https://github.com/leonied7/vue-validate-form/commit/d70069d58fbcdf6fb082b7546fc9276e36719611))
+
+
+### Bug Fixes
+
+* set defaultValues immediate ([58816b0](https://github.com/leonied7/vue-validate-form/commit/58816b062b4af5d6b7f1058b636abb86e026a2a9))
+
+### [0.0.21](https://github.com/leonied7/vue-validate-form/compare/v0.0.19...v0.0.21) (2022-08-09)
+
+
+### Features
+
+* render ValidationField content only after registered ([d70069d](https://github.com/leonied7/vue-validate-form/commit/d70069d58fbcdf6fb082b7546fc9276e36719611))
+
+
+### Bug Fixes
+
+* set defaultValues immediate ([58816b0](https://github.com/leonied7/vue-validate-form/commit/58816b062b4af5d6b7f1058b636abb86e026a2a9))
+
+### [0.0.20](https://github.com/leonied7/vue-validate-form/compare/v0.0.19...v0.0.20) (2022-08-09)
+
+
+### Features
+
+* render ValidationField content only after registered ([d70069d](https://github.com/leonied7/vue-validate-form/commit/d70069d58fbcdf6fb082b7546fc9276e36719611))
+
+
+### Bug Fixes
+
+* set defaultValues immediate ([58816b0](https://github.com/leonied7/vue-validate-form/commit/58816b062b4af5d6b7f1058b636abb86e026a2a9))
+
 ### [0.0.19](https://github.com/leonied7/vue-validate-form/compare/v0.0.18...v0.0.19) (2022-08-09)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "vue-validate-form",
-  "version": "0.0.19",
+  "version": "0.0.22",
   "main": "./dist/vue-validate-form.umd.js",
   "module": "./dist/vue-validate-form.es.js",
   "exports": {
