@@ -2,6 +2,7 @@ import {
   addField,
   removeField,
   updateField,
+  getFieldRegistered,
   setValue,
   setFieldError,
   getFieldDefaultValues,
@@ -17,6 +18,7 @@ export default {
     addField,
     removeField,
     updateField,
+    getFieldRegistered,
     setValue,
     setFieldError,
     getFieldDefaultValues,
@@ -44,6 +46,9 @@ export default {
     }
   },
   computed: {
+    isRegistered() {
+      return this.getFieldRegistered(this.name);
+    },
     providedDefaultValue() {
       return this.getFieldDefaultValues(this.name);
     },
@@ -115,6 +120,9 @@ export default {
     }
   },
   render() {
+    if (!this.isRegistered) {
+      return;
+    }
     return this.$scopedSlots.default({
       name: this.name,
       onChange: this.onModelChange,

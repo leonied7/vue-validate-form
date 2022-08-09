@@ -1,6 +1,7 @@
 export const addField = Symbol('addField');
 export const removeField = Symbol('removeField');
 export const updateField = Symbol('updateField');
+export const getFieldRegistered = Symbol('getFieldRegistered');
 export const setValue = Symbol('setValue');
 export const setFieldError = Symbol('setFieldError');
 export const getFieldDefaultValues = Symbol('getFieldDefaultValues');
