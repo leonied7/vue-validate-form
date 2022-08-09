@@ -137,6 +137,7 @@ describe('ValidationProvider', () => {
         }
       }
     });
+    await nextTick();
     expect(wrapper.find('input').attributes()['aria-invalid']).toBe(undefined);
 
     await wrapper.find('button[type="submit"]').trigger('click');

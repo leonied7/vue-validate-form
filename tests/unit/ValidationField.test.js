@@ -10,12 +10,14 @@ import {
   getFieldValue,
   getFieldErrors,
   getFieldDirty,
-  getFieldInvalid
+  getFieldInvalid,
+  getFieldRegistered
 } from '../../src/components/symbols.js';
 
 const mockAddField = jest.fn();
 const mockRemoveField = jest.fn();
 const mockUpdateField = jest.fn();
+const mockGetFieldRegistered = jest.fn().mockImplementation(() => true);
 const mockSetValue = jest.fn();
 const mockSetFieldError = jest.fn();
 const mockGetFieldDefaultValues = jest.fn().mockImplementation();
@@ -37,6 +39,7 @@ describe('ValidationField', () => {
         [addField]: mockAddField,
         [removeField]: mockRemoveField,
         [updateField]: mockUpdateField,
+        [getFieldRegistered]: mockGetFieldRegistered,
         [setValue]: mockSetValue,
         [setFieldError]: mockSetFieldError,
         [getFieldDefaultValues]: mockGetFieldDefaultValues,
