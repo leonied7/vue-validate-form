@@ -36,7 +36,7 @@ npm install @vue-validate-form/validators
 
 ### Базовые ресолверы
 
-Существует отдельный пакет с набором ресозверов `@vue-validate-form/resolvers` (пока поддерживается только [`yup`](https://github.com/jquense/yup))
+Существует отдельный пакет с набором ресолверов `@vue-validate-form/resolvers` (пока поддерживается только [`yup`](https://github.com/jquense/yup))
 
 ```bash
 npm install @vue-validate-form/resolvers yup
