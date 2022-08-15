@@ -23,6 +23,7 @@ export default defineConfig({
     resolve: {
       alias: {
         'vue-validate-form': resolve(__dirname, '../../src/index.js'),
+        '@vue-validate-form/validators': resolve(__dirname, './util/validators.js')
       }
     }
   }
