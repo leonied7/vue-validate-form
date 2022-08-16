@@ -14,7 +14,8 @@ export default defineConfig({
         '',
         'validation',
         'handling-form',
-        'focusing-fields'
+        'focusing-fields',
+        'best-practices'
       ]
     }
   },
