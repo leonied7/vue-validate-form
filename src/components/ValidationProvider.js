@@ -151,6 +151,10 @@ export default {
         ? this.$delete(this.dirtyFields, name)
         : this.$set(this.dirtyFields, name, true);
 
+      if (!this.submitted) {
+        return;
+      }
+
       this.validateField(name);
       if (!this.resolver) {
         return;
