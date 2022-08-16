@@ -12,7 +12,8 @@ export default defineConfig({
       '/guide/': [
         'installation',
         '',
-        'validation'
+        'validation',
+        'handling-form'
       ]
     }
   },
