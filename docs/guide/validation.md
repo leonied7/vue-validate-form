@@ -85,3 +85,45 @@ npm install @vue-validate-form/resolvers yup
   </template>
 </validation-provider>
 ```
+
+### Установка ошибок
+
+Установить ошибки можно с помощью метода `setError` в дефолтном слоте `ValidationProvider` или `ValidationField`
+
+::: tip
+Ошибки устанавливаемые через `setError` сбрасываются при изменении поля или при отправке формы
+:::
+
+Синтаксис `setError` для `ValidationProvider`
+
+```ts
+setError(fieldName:string, type:string, message:string)
+```
+
+Синтаксис `setError` для `ValidationField`
+
+```ts
+setError(type:string, message:string)
+```
+
+Там же в callback события `submit` приходит `setError`
+
+```vue{2,10,12}
+<template>
+  <validation-provider @submit="onSubmit">
+    //...
+  </validation-provider>
+</template>
+
+<script>
+export default {
+  methods: {
+    onSubmit(values, { setError }) {
+      formApi.send(values).catch((error) => {
+        setError('firstName', 'custom', error);
+      })
+    }
+  }
+}
+</script>
+```
