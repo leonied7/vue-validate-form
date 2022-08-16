@@ -1,5 +1,9 @@
 # Валидация
 
+::: tip
+`vue-validate-form` начинает валидировать только после первой попытки отправить форму
+:::
+
 vue-validate-form поддерживает несколько вариантов валидации
 
 - Правила валиации на уровне поля
@@ -45,3 +49,39 @@ npm install @vue-validate-form/resolvers yup
 Использование
 
 <<< @/docs/.vuepress/components/VResolverWithYup.vue{2,18,20,24-28}
+
+## Работа с ошибками валидации
+
+### Используя `ValidationField`
+
+В данных дефолтного слота присутствуют поля `errors`, `firstError`, `invalid` для отображения ошибок
+
+```vue{2,5-9}
+<validation-field name="firstName">
+  <template #default="{ modelValue, onChange, errors, invalid }">
+    <div>
+      <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
+      <template v-if="invalid">
+        <span v-for="(error, index) in errors" :key="index">
+          {{error.message}}
+        </span>
+      </template>
+    </div>
+  </template>
+</validation-field>
+```
+
+### Используя `ValidationProvider`
+
+В данных дефолтного слота присутствуют поля `errors`, `invalid` для отображения ошибок
+
+```vue{2,4,5}
+<validation-provider>
+  <template #default="{ errors, invalid }">
+    <div>
+      <div>{{invalid}}</div>
+      <div>{{errors}}</div>
+    </div>
+  </template>
+</validation-provider>
+```
