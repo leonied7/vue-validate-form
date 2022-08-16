@@ -13,7 +13,8 @@ export default defineConfig({
         'installation',
         '',
         'validation',
-        'handling-form'
+        'handling-form',
+        'focusing-fields'
       ]
     }
   },
