@@ -10,3 +10,7 @@
 :::
 
 <<< @/docs/.vuepress/components/VFieldFocusing.vue{5,10,15,38-40,43}
+
+::: tip
+[Вариант](/guide/best-practices.html#работа-с-фокусом) использования фокуса
+:::
