@@ -75,7 +75,7 @@ export default {
     defaultValues: {
       immediate: true,
       handler(values) {
-        this.innerDefaultValues = values;
+        this.reset(values);
       }
     }
   },
