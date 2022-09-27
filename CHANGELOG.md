@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.23](https://github.com/leonied7/vue-validate-form/compare/v0.0.22...v0.0.23) (2022-09-27)
+
+
+### Features
+
+* add dirty event ([99cdd20](https://github.com/leonied7/vue-validate-form/commit/99cdd2095903873ce1f79494e662b5fce2eab96b))
+
+
+### Bug Fixes
+
+* reset form on default values change ([12e2c10](https://github.com/leonied7/vue-validate-form/commit/12e2c102827cc7a17d468bf07388f91007e7b51d))
+* tests ([5f97098](https://github.com/leonied7/vue-validate-form/commit/5f97098742be529ae85c0b692b9ea70b95bd39d9))
+* validate fields only after first submitting ([e6bf8e0](https://github.com/leonied7/vue-validate-form/commit/e6bf8e0a070ec3546a83e3c724c88887ac0b9cd7))
+
 ### [0.0.22](https://github.com/leonied7/vue-validate-form/compare/v0.0.19...v0.0.22) (2022-08-09)
 
 

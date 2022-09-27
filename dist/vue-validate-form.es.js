@@ -75,7 +75,13 @@ var ValidationProvider = {
     defaultValues: {
       immediate: true,
       handler(values) {
-        this.innerDefaultValues = values;
+        this.reset(values);
+      }
+    },
+    isDirty: {
+      immediate: true,
+      handler(dirty) {
+        this.$emit("dirty", dirty);
       }
     }
   },
@@ -147,6 +153,9 @@ var ValidationProvider = {
       }
       this.flatValues[name] = value;
       value === this.defaultValuesByField[name] ? this.$delete(this.dirtyFields, name) : this.$set(this.dirtyFields, name, true);
+      if (!this.submitted) {
+        return;
+      }
       this.validateField(name);
       if (!this.resolver) {
         return;
