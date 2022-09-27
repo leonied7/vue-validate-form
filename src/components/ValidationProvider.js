@@ -77,6 +77,12 @@ export default {
       handler(values) {
         this.reset(values);
       }
+    },
+    isDirty: {
+      immediate: true,
+      handler(dirty) {
+        this.$emit('dirty', dirty);
+      }
     }
   },
   methods: {
