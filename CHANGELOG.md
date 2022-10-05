@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.24](https://github.com/leonied7/vue-validate-form/compare/v0.0.23...v0.0.24) (2022-10-05)
+
+
+### Features
+
+* add pass setValue method in slot ([30ddca7](https://github.com/leonied7/vue-validate-form/commit/30ddca7aee61b4abe508ee780a2fed4655197aaa))
+
 ### [0.0.23](https://github.com/leonied7/vue-validate-form/compare/v0.0.22...v0.0.23) (2022-09-27)
 
 

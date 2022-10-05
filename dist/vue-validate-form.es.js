@@ -217,6 +217,7 @@ var ValidationProvider = {
       handleSubmit: this.onSubmit,
       reset: this.reset,
       setError: this.setError,
+      setValue: this.setValue,
       values: this.values,
       isDirty: this.isDirty,
       invalid: this.submitted && this.existsErrors,
