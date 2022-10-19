@@ -15,6 +15,20 @@ const getFieldValue = Symbol("getFieldValue");
 const getFieldErrors = Symbol("getFieldErrors");
 const getFieldDirty = Symbol("getFieldDirty");
 const getFieldInvalid = Symbol("getFieldInvalid");
+var symbols = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  addField,
+  removeField,
+  updateField,
+  getFieldRegistered,
+  setValue,
+  setFieldError,
+  getFieldDefaultValues,
+  getFieldValue,
+  getFieldErrors,
+  getFieldDirty,
+  getFieldInvalid
+}, Symbol.toStringTag, { value: "Module" }));
 var ValidationProvider = {
   name: "ValidationProvider",
   provide() {
@@ -350,4 +364,4 @@ var ValidationField = {
     });
   }
 };
-export { ValidationField, ValidationProvider, register as registerValidator };
+export { ValidationField, ValidationProvider, register as registerValidator, symbols };
