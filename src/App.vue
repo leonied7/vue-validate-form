@@ -53,8 +53,8 @@
 
 <script>
 import {
-  ValidationFieldNew,
-  ValidationProviderNew,
+  ValidationField,
+  ValidationProvider,
   ValidationFieldArray,
   registerValidator
 } from './index';
@@ -64,8 +64,8 @@ registerValidator('required', (value) => !!value);
 export default {
   name: 'App',
   components: {
-    ValidationProvider: ValidationProviderNew,
-    ValidationField: ValidationFieldNew,
+    ValidationProvider,
+    ValidationField,
     ValidationFieldArray
   },
   data() {

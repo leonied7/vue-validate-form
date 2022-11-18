@@ -1,34 +1,36 @@
 import { validators } from '../validators.js';
 import {
-  addField,
-  removeField,
-  updateField,
-  getFieldRegistered,
-  setValue,
-  setFieldError,
   getFieldDefaultValue,
   getFieldValue,
-  getFieldErrors,
-  getFieldDirty,
-  getFieldInvalid
+  hasFieldValue,
+  getIsSubmitted,
+  register,
+  validate,
+  getFieldErrors
 } from './symbols.js';
-import { set, get } from './helpers';
+import { set, get, has, normalizeChildren } from './helpers';
 
 export default {
   name: 'ValidationProvider',
   provide() {
     return {
-      [addField]: this.addField,
-      [updateField]: this.updateField,
-      [removeField]: this.removeField,
-      [getFieldRegistered]: (name) => !!this.fields[name],
-      [setValue]: this.setValue,
-      [setFieldError]: this.setError,
+      [register]: this.register,
+      [validate]: async (name) => {
+        this.validateField(name);
+        if (!this.resolver) {
+          return;
+        }
+        const { errors } = await this.resolver(this.values);
+        if (errors[name]) {
+          const { setError } = this.callbackDataMap[name];
+          setError(errors[name].type, errors[name].message);
+        }
+      },
       [getFieldDefaultValue]: this.getFieldDefaultValue,
-      [getFieldValue]: (name) => this.flatValues[name],
+      [getFieldValue]: (name) => get(this.values, name),
       [getFieldErrors]: this.getFieldErrors,
-      [getFieldDirty]: this.getFieldDirty,
-      [getFieldInvalid]: this.getFieldInvalid
+      [hasFieldValue]: (name) => has(this.values, name),
+      [getIsSubmitted]: () => this.submitted
     };
   },
   props: {
@@ -39,35 +41,48 @@ export default {
     resolver: {
       type: Function,
       default: null
+    },
+    tag: {
+      type: String,
+      default: 'div'
     }
   },
   data() {
     return {
       submitted: false,
-      fields: {},
-      flatValues: {},
-      errors: {},
-      dirtyFields: {},
       innerDefaultValues: {},
-      defaultValuesByField: {}
+      callbacks: [],
+      additionalErrors: {}
     };
   },
   computed: {
-    isDirty() {
-      return !!Object.keys(this.dirtyFields).length;
+    callbackDataMap() {
+      return this.callbacks.reduce((result, callback) => {
+        const data = callback();
+        result[data.name] = data;
+        return result;
+      }, {});
     },
     values() {
-      return Object.entries(this.flatValues).reduce((result, [name, value]) => {
+      return Object.entries(this.callbackDataMap).reduce((result, [name, { value }]) => {
         set(result, name, value);
         return result;
       }, {});
     },
-    firstInvalidField() {
-      const name = Object.keys(this.fields).find((name) => this.errors[name].length);
-      return this.fields[name];
+    dirty() {
+      return Object.values(this.callbackDataMap).some(({ dirty }) => dirty);
+    },
+    errors() {
+      return Object.values(this.callbackDataMap).reduce((allErrors, { errors, name }) => {
+        allErrors[name] = errors;
+        return allErrors;
+      }, Object.assign({}, this.additionalErrors));
     },
     existsErrors() {
       return Object.values(this.errors).some((errors) => errors.length);
+    },
+    firstInvalidFieldData() {
+      return Object.values(this.callbackDataMap).find(({ name }) => this.errors[name].length);
     }
   },
   watch: {
@@ -77,7 +92,7 @@ export default {
         this.reset(values);
       }
     },
-    isDirty: {
+    dirty: {
       immediate: true,
       handler(dirty) {
         this.$emit('dirty', dirty);
@@ -85,13 +100,31 @@ export default {
     }
   },
   methods: {
+    getFieldDefaultValue(name, defaultValue) {
+      return get(this.innerDefaultValues, name, defaultValue);
+    },
+    getFieldErrors(name) {
+      return this.errors[name] || [];
+    },
+    validateField(name) {
+      const { rules, value, setError, resetErrors } = this.callbackDataMap[name];
+      resetErrors();
+      Object.entries(rules).forEach(([ruleName, options]) => {
+        const validator = validators[ruleName];
+        if (!validator) {
+          throw new Error(`validator '${ruleName}' must be registered`);
+        }
+        if (!validator(value, options.params)) {
+          setError(ruleName, options.message);
+        }
+      });
+    },
     async onSubmit() {
       this.submitted = true;
       let resultValues = this.values;
-      Object.keys(this.errors).forEach((name) => {
-        this.errors[name] = [];
-      });
-      Object.keys(this.fields).forEach((name) => {
+
+      this.additionalErrors = {};
+      Object.keys(this.callbackDataMap).forEach((name) => {
         this.validateField(name);
       });
       if (this.resolver) {
@@ -111,123 +144,55 @@ export default {
         focusInvalidField: this.focusInvalidField
       });
     },
-    focusInvalidField() {
-      return this.firstInvalidField && this.firstInvalidField.focus();
-    },
-    addField({ name, rules, defaultValue, focus }) {
-      this.$set(this.fields, name, { rules, focus });
-      this.$set(this.defaultValuesByField, name, defaultValue);
-      this.$set(this.flatValues, name, defaultValue);
-      this.$set(this.errors, name, []);
-      this.$delete(this.dirtyFields, name);
-    },
-    updateField(oldName, { name, rules, focus }) {
-      this.$set(this.fields, oldName, { rules, focus });
-      this.replaceFieldName(oldName, name);
-    },
-    removeField(name) {
-      this.$delete(this.fields, name);
-      this.$delete(this.defaultValuesByField, name);
-      this.$delete(this.flatValues, name);
-      this.$delete(this.errors, name);
-      this.$set(this.dirtyFields, name, true);
-    },
-    replaceFieldName(from, to) {
-      if (from === to) {
-        return;
-      }
-      this.$set(this.fields, to, this.fields[from]);
-      this.$delete(this.fields, from);
-      this.$set(this.dirtyFields, to, this.dirtyFields[from]);
-      this.$delete(this.dirtyFields, from);
-      this.$set(this.defaultValuesByField, to, this.defaultValuesByField[from]);
-      this.$delete(this.defaultValuesByField, from);
-      this.$set(this.flatValues, to, this.flatValues[from]);
-      this.$delete(this.flatValues, from);
-      this.$set(this.errors, to, this.errors[from]);
-      this.$delete(this.errors, from);
-    },
-    async setValue(name, value) {
-      if (this.flatValues[name] === value) {
-        return;
-      }
-      this.flatValues[name] = value;
-      value === this.defaultValuesByField[name]
-        ? this.$delete(this.dirtyFields, name)
-        : this.$set(this.dirtyFields, name, true);
-
-      if (!this.submitted) {
-        return;
-      }
-
-      this.validateField(name);
-      if (!this.resolver) {
-        return;
-      }
-      const { errors } = await this.resolver(this.values);
-      if (errors[name]) {
-        this.setError(name, errors[name].type, errors[name].message);
-      }
-    },
-    setError(name, type, message) {
-      if (this.errors[name] === undefined) {
-        this.$set(this.errors, name, []);
-      }
-      this.errors[name].push({
-        type,
-        message
-      });
-    },
-    validateField(name) {
-      this.errors[name] = [];
-      const rules = this.fields[name].rules;
-      const value = this.flatValues[name];
-      Object.entries(rules).forEach(([ruleName, options]) => {
-        const validator = validators[ruleName];
-        if (!validator) {
-          throw new Error(`validator '${ruleName}' must be registered`);
-        }
-        if (!validator(value, options.params)) {
-          this.setError(name, ruleName, options.message);
-        }
-      });
-    },
-    getFieldDefaultValue(name, defaultValue) {
-      return get(this.innerDefaultValues, name, defaultValue);
-    },
-    getFieldErrors(name) {
-      return this.errors[name] || [];
-    },
-    getFieldDirty(name) {
-      return this.dirtyFields[name];
-    },
-    getFieldInvalid(name) {
-      return this.submitted && !!this.getFieldErrors(name).length;
-    },
     reset(values) {
       this.submitted = false;
       if (values) {
         this.innerDefaultValues = values;
       }
-      Object.entries(this.defaultValuesByField).forEach(([name, value]) => {
-        const defaultValue = this.getFieldDefaultValue(name, value);
-        this.defaultValuesByField[name] = defaultValue;
-        this.setValue(name, defaultValue);
+      Object.values(this.callbackDataMap).forEach(({ reset }) => {
+        reset();
       });
+    },
+    setError(name, type, message) {
+      const fieldData = this.callbackDataMap[name];
+      if (fieldData) {
+        fieldData.setError(type, message);
+        return;
+      }
+      if (this.additionalErrors[name] === undefined) {
+        this.$set(this.additionalErrors, name, []);
+      }
+      this.additionalErrors[name].push({
+        type,
+        message
+      });
+    },
+    focusInvalidField() {
+      return this.firstInvalidFieldData && this.firstInvalidFieldData.focus();
+    },
+    register(callback) {
+      const { name, setError } = callback();
+      (this.additionalErrors[name] || []).forEach((error) => {
+        setError(error);
+      });
+      this.$delete(this.additionalErrors, name);
+      this.callbacks.push(callback);
+      return () => this.unregister(callback);
+    },
+    unregister(callback) {
+      this.callbacks = this.callbacks.filter((field) => field !== callback);
     }
   },
-  render() {
-    return this.$scopedSlots.default({
+  render(h) {
+    const children = normalizeChildren(this, {
       handleSubmit: this.onSubmit,
       reset: this.reset,
-      setError: this.setError,
-      setValue: this.setValue,
       values: this.values,
-      isDirty: this.isDirty,
+      dirty: this.dirty,
       invalid: this.submitted && this.existsErrors,
-      errors: this.errors,
-      defaultValues: this.defaultValuesByField,
-      dirtyFields: this.dirtyFields
+      errors: this.errors
     });
+
+    return children.length <= 1 ? children[0] : h(this.tag, children);
   }
 };

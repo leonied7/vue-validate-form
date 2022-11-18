@@ -95,8 +95,8 @@
 
 <script>
 import {
-  ValidationProviderNew,
-  ValidationFieldNew,
+  ValidationProvider,
+  ValidationField,
   ValidationFieldArray,
   ValidationErrors,
   registerValidator
@@ -112,8 +112,8 @@ export default {
   components: {
     BaseErrors,
     FormInfo,
-    ValidationProvider: ValidationProviderNew,
-    ValidationField: ValidationFieldNew,
+    ValidationProvider,
+    ValidationField,
     ValidationFieldArray,
     ValidationErrors,
 

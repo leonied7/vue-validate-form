@@ -1,137 +1,127 @@
 import {
-  addField,
-  removeField,
-  updateField,
-  getFieldRegistered,
-  setValue,
-  setFieldError,
   getFieldDefaultValue,
   getFieldValue,
-  getFieldErrors,
-  getFieldDirty,
-  getFieldInvalid
-} from './symbols.js';
+  hasFieldValue,
+  getIsSubmitted,
+  register,
+  validate
+} from './symbols';
+import { normalizeChildren } from './helpers';
 
 export default {
   name: 'ValidationField',
   inject: {
-    addField,
-    removeField,
-    updateField,
-    getFieldRegistered,
-    setValue,
-    setFieldError,
+    hasFieldValue,
     getFieldDefaultValue,
     getFieldValue,
-    getFieldErrors,
-    getFieldDirty,
-    getFieldInvalid
+    getIsSubmitted,
+    register,
+    validate
   },
-  model: {
-    prop: 'modelValue',
-    event: 'update:modelValue'
+  data() {
+    return {
+      value: undefined,
+      errors: []
+    };
   },
   props: {
     name: {
       type: String,
       required: true
     },
-    modelValue: {
-      type: null,
-      default: undefined
-    },
     rules: {
       type: Object,
       default: () => ({})
+    },
+    tag: {
+      type: String,
+      default: 'div'
     }
   },
   computed: {
-    isRegistered() {
-      return this.getFieldRegistered(this.name);
-    },
-    providedDefaultValue() {
+    defaultValue() {
       return this.getFieldDefaultValue(this.name);
+    },
+    hasProvidedValue() {
+      return this.hasFieldValue(this.name);
     },
     providedValue() {
       return this.getFieldValue(this.name);
     },
-    defaultValue() {
-      return this.providedDefaultValue !== undefined ? this.providedDefaultValue : this.modelValue;
+    submitted() {
+      return this.getIsSubmitted();
     },
     dirty() {
-      return this.getFieldDirty(this.name);
-    },
-    errors() {
-      return this.getFieldErrors(this.name);
+      return this.value !== this.defaultValue;
     },
     firstError() {
-      return this.errors[0] || '';
+      return this.errors[0];
     },
     invalid() {
-      return this.getFieldInvalid(this.name);
-    },
-    hasModelValue() {
-      return this.modelValue !== undefined;
-    },
-    computedModelValue() {
-      return this.hasModelValue ? this.modelValue : this.providedValue;
-    }
-  },
-  watch: {
-    rules(rules) {
-      this.updateField(this.name, { name: this.name, rules, focus: this.onFocus });
-    },
-    name(name, oldName) {
-      this.updateField(oldName, { name, rules: this.rules, focus: this.onFocus });
-    },
-    modelValue(value) {
-      this.setValue(this.name, value);
-    },
-    providedValue(value) {
-      this.onModelChange(value);
+      return this.submitted && !!this.errors.length;
     }
   },
   mounted() {
-    const defaultValue = this.defaultValue;
-    this.addField({ name: this.name, rules: this.rules, defaultValue, focus: this.onFocus });
-    if (defaultValue !== this.modelValue) {
-      this.onModelChange(defaultValue);
-    }
+    this.value = this.hasProvidedValue ? this.providedValue : this.defaultValue;
+    this.unregister = this.register(this.fieldData);
   },
   beforeDestroy() {
-    this.removeField(this.name);
+    this.unregister();
   },
   methods: {
-    onModelChange(value) {
-      this.$emit('update:modelValue', value);
-      this.$nextTick(() => {
-        value = this.hasModelValue ? this.computedModelValue : value;
-        this.setValue(this.name, value);
-      });
-    },
-    setError(type, message) {
-      this.setFieldError(this.name, type, message);
+    fieldData() {
+      return {
+        name: this.name,
+        value: this.value,
+        dirty: this.dirty,
+        errors: this.errors,
+        rules: this.rules,
+        focus: this.onFocus,
+        reset: this.reset,
+        setError: this.setError,
+        resetErrors: this.resetErrors
+      };
     },
     onFocus() {
       this.$emit('should-focus', {
-        name: this.name,
-        field: this
+        name: this.name
       });
+    },
+    reset() {
+      this.resetErrors();
+      this.value = this.defaultValue;
+    },
+    onChange(value) {
+      this.value = value;
+
+      if (!this.submitted) {
+        return;
+      }
+
+      this.validate(this.name);
+    },
+    setError(type, message) {
+      this.errors.push({
+        type,
+        message
+      });
+    },
+    resetErrors() {
+      this.errors = [];
     }
   },
-  render() {
-    if (!this.isRegistered) {
-      return;
-    }
-    return this.$scopedSlots.default({
+  render(h) {
+    const children = normalizeChildren(this, {
       name: this.name,
-      onChange: this.onModelChange,
+      onChange: this.onChange,
       setError: this.setError,
-      modelValue: this.computedModelValue,
+      modelValue: this.value,
       errors: this.errors,
       firstError: this.firstError,
       dirty: this.dirty,
       invalid: this.invalid
     });
+
+    return children.length <= 1 ? children[0] : h(this.tag, children);
   }
 };

@@ -7,7 +7,7 @@ import ValidationForm from './ValidationForm';
 import FormInfo from './FormInfo';
 import BaseInput from './BaseInput';
 
-describe('ValidationProviderNew', () => {
+describe('ValidationProvider', () => {
   let wrapper;
 
   const createComponent = ({ props } = {}) => {
