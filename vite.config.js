@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const { defineConfig } = require('vite');
 const { createVuePlugin } = require('vite-plugin-vue2');
 import { visualizer } from 'rollup-plugin-visualizer';
@@ -17,7 +17,7 @@ module.exports = defineConfig({
       fileName: (format) => `vue-validate-form.${format}.js`
     },
     rollupOptions: {
-      external: ['vue', 'lodash.get', 'lodash.set'],
+      external: ['vue', 'nanoid'],
       plugins: [
         visualizer({
           open: true

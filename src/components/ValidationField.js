@@ -5,7 +5,7 @@ import {
   getFieldRegistered,
   setValue,
   setFieldError,
-  getFieldDefaultValues,
+  getFieldDefaultValue,
   getFieldValue,
   getFieldErrors,
   getFieldDirty,
@@ -21,7 +21,7 @@ export default {
     getFieldRegistered,
     setValue,
     setFieldError,
-    getFieldDefaultValues,
+    getFieldDefaultValue,
     getFieldValue,
     getFieldErrors,
     getFieldDirty,
@@ -50,7 +50,7 @@ export default {
       return this.getFieldRegistered(this.name);
     },
     providedDefaultValue() {
-      return this.getFieldDefaultValues(this.name);
+      return this.getFieldDefaultValue(this.name);
     },
     providedValue() {
       return this.getFieldValue(this.name);

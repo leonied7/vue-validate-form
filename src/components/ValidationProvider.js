@@ -1,5 +1,3 @@
-import get from 'lodash.get';
-import set from 'lodash.set';
 import { validators } from '../validators.js';
 import {
   addField,
@@ -8,12 +6,13 @@ import {
   getFieldRegistered,
   setValue,
   setFieldError,
-  getFieldDefaultValues,
+  getFieldDefaultValue,
   getFieldValue,
   getFieldErrors,
   getFieldDirty,
   getFieldInvalid
 } from './symbols.js';
+import { set, get } from './helpers';
 
 export default {
   name: 'ValidationProvider',
@@ -25,7 +24,7 @@ export default {
       [getFieldRegistered]: (name) => !!this.fields[name],
       [setValue]: this.setValue,
       [setFieldError]: this.setError,
-      [getFieldDefaultValues]: this.getFieldDefaultValues,
+      [getFieldDefaultValue]: this.getFieldDefaultValue,
       [getFieldValue]: (name) => this.flatValues[name],
       [getFieldErrors]: this.getFieldErrors,
       [getFieldDirty]: this.getFieldDirty,
@@ -193,7 +192,7 @@ export default {
         }
       });
     },
-    getFieldDefaultValues(name, defaultValue) {
+    getFieldDefaultValue(name, defaultValue) {
       return get(this.innerDefaultValues, name, defaultValue);
     },
     getFieldErrors(name) {
@@ -211,7 +210,7 @@ export default {
         this.innerDefaultValues = values;
       }
       Object.entries(this.defaultValuesByField).forEach(([name, value]) => {
-        const defaultValue = this.getFieldDefaultValues(name, value);
+        const defaultValue = this.getFieldDefaultValue(name, value);
         this.defaultValuesByField[name] = defaultValue;
         this.setValue(name, defaultValue);
       });
