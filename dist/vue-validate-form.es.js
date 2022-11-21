@@ -223,7 +223,7 @@ var ValidationProvider = {
     reset(values) {
       this.submitted = false;
       if (values) {
-        this.innerDefaultValues = values;
+        this.innerDefaultValues = JSON.parse(JSON.stringify(values));
       }
       Object.values(this.callbackDataMap).forEach(({ reset }) => {
         reset();
@@ -433,10 +433,16 @@ var ValidationFieldArray = {
   computed: {
     defaultValue() {
       return this.getFieldDefaultValue(this.name) || [];
+    },
+    actualValue() {
+      const keyName = this.keyName;
+      return this.fields.map((field) => ({
+        [keyName]: field[keyName]
+      }));
     }
   },
   mounted() {
-    this.fields = this.defaultValue;
+    this.fields = [...this.defaultValue];
     this.unregister = this.register(this.fieldData);
   },
   beforeDestroy() {
@@ -446,7 +452,7 @@ var ValidationFieldArray = {
     fieldData() {
       return {
         name: this.name,
-        value: JSON.parse(JSON.stringify(this.fields)),
+        value: JSON.parse(JSON.stringify(this.actualValue)),
         dirty: false,
         errors: [],
         rules: {},
@@ -459,7 +465,7 @@ var ValidationFieldArray = {
     noop() {
     },
     reset() {
-      this.fields = this.defaultValue;
+      this.fields = [...this.defaultValue];
     },
     append(value, shouldFocus = false) {
       var _a;
@@ -494,9 +500,7 @@ var ValidationFieldArray = {
   render(h) {
     const children = normalizeChildren(this, {
       name: this.name,
-      fields: this.fields.map((field) => ({
-        [this.keyName]: field[this.keyName]
-      })),
+      fields: this.actualValue,
       append: this.append,
       prepend: this.prepend,
       insert: this.insert,
