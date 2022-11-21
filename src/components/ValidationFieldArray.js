@@ -50,10 +50,16 @@ export default {
   computed: {
     defaultValue() {
       return this.getFieldDefaultValue(this.name) || [];
+    },
+    actualValue() {
+      const keyName = this.keyName;
+      return this.fields.map((field) => ({
+        [keyName]: field[keyName]
+      }));
     }
   },
   mounted() {
-    this.fields = this.defaultValue;
+    this.fields = [...this.defaultValue];
     this.unregister = this.register(this.fieldData);
   },
   beforeDestroy() {
@@ -63,7 +69,7 @@ export default {
     fieldData() {
       return {
         name: this.name,
-        value: JSON.parse(JSON.stringify(this.fields)),
+        value: JSON.parse(JSON.stringify(this.actualValue)),
         dirty: false,
         errors: [],
         rules: {},
@@ -75,7 +81,7 @@ export default {
     },
     noop() {},
     reset() {
-      this.fields = this.defaultValue;
+      this.fields = [...this.defaultValue];
     },
     append(value, shouldFocus = false) {
       value[this.keyName] = value[this.keyName] ?? nanoid();
@@ -107,9 +113,7 @@ export default {
   render(h) {
     const children = normalizeChildren(this, {
       name: this.name,
-      fields: this.fields.map((field) => ({
-        [this.keyName]: field[this.keyName]
-      })),
+      fields: this.actualValue,
       append: this.append,
       prepend: this.prepend,
       insert: this.insert,

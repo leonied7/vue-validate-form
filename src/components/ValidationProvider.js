@@ -147,7 +147,7 @@ export default {
     reset(values) {
       this.submitted = false;
       if (values) {
-        this.innerDefaultValues = values;
+        this.innerDefaultValues = JSON.parse(JSON.stringify(values));
       }
       Object.values(this.callbackDataMap).forEach(({ reset }) => {
         reset();

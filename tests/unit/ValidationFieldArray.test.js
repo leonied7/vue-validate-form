@@ -70,6 +70,7 @@ describe('ValidationFieldArrayNew', () => {
         resolver
       }
     });
+    await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
     // wait async yup validate
     await nextTick();
@@ -135,6 +136,7 @@ describe('ValidationFieldArrayNew', () => {
         resolver
       }
     });
+    await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
     // wait async yup validate
     await nextTick();
@@ -192,6 +194,7 @@ describe('ValidationFieldArrayNew', () => {
         resolver
       }
     });
+    await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
     // wait async yup validate
     await nextTick();
@@ -238,6 +241,7 @@ describe('ValidationFieldArrayNew', () => {
         resolver
       }
     });
+    await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
     // wait async yup validate
     await nextTick();
@@ -288,6 +292,7 @@ describe('ValidationFieldArrayNew', () => {
         resolver
       }
     });
+    await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
     // wait async yup validate
     await nextTick();
@@ -394,6 +399,7 @@ describe('ValidationFieldArrayNew', () => {
         resolver
       }
     });
+    await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
     // wait async yup validate
     await nextTick();
