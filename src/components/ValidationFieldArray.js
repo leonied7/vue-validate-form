@@ -18,7 +18,6 @@ export default {
         return get(this.fields, name.replace(new RegExp(`^${this.name}.`), ''));
       },
       [register]: (callback) => {
-        // debugger;
         if (this.shouldFocus) {
           const { focus } = callback();
           focus();

@@ -23,7 +23,7 @@ export default {
         const { errors } = await this.resolver(this.values);
         if (errors[name]) {
           const { setError } = this.callbackDataMap[name];
-          setError(errors[name].type, errors[name].message);
+          setError(errors[name].message, errors[name].type);
         }
       },
       [getFieldDefaultValue]: this.getFieldDefaultValue,
@@ -115,7 +115,7 @@ export default {
           throw new Error(`validator '${ruleName}' must be registered`);
         }
         if (!validator(value, options.params)) {
-          setError(ruleName, options.message);
+          setError(options.message, ruleName);
         }
       });
     },
@@ -131,7 +131,7 @@ export default {
         const { values, errors } = await this.resolver(this.values);
         resultValues = values;
         Object.entries(errors).forEach(([name, { message, type }]) => {
-          this.setError(name, type, message);
+          this.setError(name, message, type);
         });
       }
       if (this.existsErrors) {
@@ -153,10 +153,10 @@ export default {
         reset();
       });
     },
-    setError(name, type, message) {
+    setError(name, message, type = null) {
       const fieldData = this.callbackDataMap[name];
       if (fieldData) {
-        fieldData.setError(type, message);
+        fieldData.setError(message, type);
         return;
       }
       if (this.additionalErrors[name] === undefined) {

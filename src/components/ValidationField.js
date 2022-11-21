@@ -100,7 +100,7 @@ export default {
 
       this.validate(this.name);
     },
-    setError(type, message) {
+    setError(message, type = null) {
       this.errors.push({
         type,
         message

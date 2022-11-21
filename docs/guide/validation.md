@@ -97,13 +97,13 @@ npm install @vue-validate-form/resolvers yup
 Синтаксис `setError` для `ValidationProvider`
 
 ```ts
-setError(fieldName:string, type:string, message:string)
+setError(fieldName:string, message:string, type?:string)
 ```
 
 Синтаксис `setError` для `ValidationField`
 
 ```ts
-setError(type:string, message:string)
+setError(message:string, type?:string)
 ```
 
 Там же в callback события `submit` приходит `setError`
@@ -120,7 +120,7 @@ export default {
   methods: {
     onSubmit(values, { setError }) {
       formApi.send(values).catch((error) => {
-        setError('firstName', 'custom', error);
+        setError('firstName', error, 'custom');
       })
     }
   }

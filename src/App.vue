@@ -98,8 +98,8 @@ export default {
   methods: {
     onSubmit(values, { setError }) {
       setTimeout(() => {
-        setError('my-input', 'custom', 'invalid field');
-        setError('common', 'custom', 'invalid common field');
+        setError('my-input', 'invalid field', 'custom');
+        setError('common', 'invalid common field', 'custom');
       }, 250);
 
       console.log(values);
