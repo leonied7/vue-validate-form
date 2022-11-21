@@ -9,6 +9,7 @@ module.exports = {
     '.*\\.(vue)$': '@vue/vue2-jest'
   },
   testEnvironment: 'jsdom',
+  timers: 'modern',
   clearMocks: true,
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/src/**/*.js']

@@ -39,7 +39,7 @@ export default {
       alert(`Фокус поля: ${name}`)
     },
     onSubmit(values, { setError, focusInvalidField }) {
-      setError('lastName', 'serverError', 'invalid');
+      setError('lastName', 'invalid', 'serverError');
       focusInvalidField();
     }
   }
