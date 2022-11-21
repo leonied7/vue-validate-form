@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/leonied7/vue-validate-form/compare/v0.0.25...v1.0.0) (2022-11-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* swap message and type in setError method
+* full refactor, old implementation is a dead end
+
+### Features
+
+* add ValidationFieldArray ([9efeed5](https://github.com/leonied7/vue-validate-form/commit/9efeed53e200aa5f3e001aee8655439f7c8c8935))
+
+
+* full refactor, old implementation is a dead end ([3a3454b](https://github.com/leonied7/vue-validate-form/commit/3a3454bfec96f8830a1bb3718ab2fc345c08a9f2))
+* swap message and type in setError method ([b9cb25b](https://github.com/leonied7/vue-validate-form/commit/b9cb25b89e85995d666a89531d78e64326c15c87))
+
 ### [0.0.25](https://github.com/leonied7/vue-validate-form/compare/v0.0.24...v0.0.25) (2022-10-19)
 
 

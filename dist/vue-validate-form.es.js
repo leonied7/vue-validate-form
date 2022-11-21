@@ -1,8 +1,7 @@
-import get from "lodash.get";
-import set from "lodash.set";
+import { nanoid } from "nanoid";
 const validators = {};
-function register(name, validate) {
-  validators[name] = validate;
+function register$1(name, validate2) {
+  validators[name] = validate2;
 }
 const addField = Symbol("addField");
 const removeField = Symbol("removeField");
@@ -10,11 +9,15 @@ const updateField = Symbol("updateField");
 const getFieldRegistered = Symbol("getFieldRegistered");
 const setValue = Symbol("setValue");
 const setFieldError = Symbol("setFieldError");
-const getFieldDefaultValues = Symbol("getFieldDefaultValues");
-const getFieldValue = Symbol("getFieldValue");
 const getFieldErrors = Symbol("getFieldErrors");
 const getFieldDirty = Symbol("getFieldDirty");
 const getFieldInvalid = Symbol("getFieldInvalid");
+const hasFieldValue = Symbol("hasFieldValue");
+const getFieldValue = Symbol("getFieldValue");
+const getFieldDefaultValue = Symbol("getFieldDefaultValue");
+const register = Symbol("register");
+const validate = Symbol("validate");
+const getIsSubmitted = Symbol("getIsSubmitted");
 var symbols = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   addField,
@@ -23,27 +26,89 @@ var symbols = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePropert
   getFieldRegistered,
   setValue,
   setFieldError,
-  getFieldDefaultValues,
-  getFieldValue,
   getFieldErrors,
   getFieldDirty,
-  getFieldInvalid
+  getFieldInvalid,
+  hasFieldValue,
+  getFieldValue,
+  getFieldDefaultValue,
+  register,
+  validate,
+  getIsSubmitted
 }, Symbol.toStringTag, { value: "Module" }));
+function normalizeChildren(context, slotProps = null) {
+  if (context.$scopedSlots.default) {
+    return context.$scopedSlots.default(slotProps) || [];
+  }
+  return context.$slots.default || [];
+}
+function has(object, path) {
+  if (!isObject(object)) {
+    return false;
+  }
+  let pathParts = path.split(".");
+  while (pathParts.length) {
+    const key = pathParts.shift();
+    if (!Object.hasOwn(object, key)) {
+      return false;
+    }
+    object = object[key];
+  }
+  return true;
+}
+function get(object, path, defaultValue) {
+  if (!isObject(object)) {
+    return defaultValue;
+  }
+  let pathParts = path.split(".");
+  while (pathParts.length && object) {
+    const key = pathParts.shift();
+    object = object[key];
+  }
+  return !pathParts.length ? object : defaultValue;
+}
+function set(object, path, value) {
+  if (!isObject(object)) {
+    return;
+  }
+  let pathParts = path.split(".");
+  while (pathParts.length > 1) {
+    const key = pathParts.shift();
+    if (!isObject(object[key])) {
+      object[key] = isIndex(pathParts[0]) ? [] : {};
+    }
+    object = object[key];
+  }
+  object[pathParts[0]] = value;
+}
+function isIndex(value) {
+  const int = Number(value);
+  return !Number.isNaN(int);
+}
+function isObject(value) {
+  return !!value && typeof value == "object";
+}
 var ValidationProvider = {
   name: "ValidationProvider",
   provide() {
     return {
-      [addField]: this.addField,
-      [updateField]: this.updateField,
-      [removeField]: this.removeField,
-      [getFieldRegistered]: (name) => !!this.fields[name],
-      [setValue]: this.setValue,
-      [setFieldError]: this.setError,
-      [getFieldDefaultValues]: this.getFieldDefaultValues,
-      [getFieldValue]: (name) => this.flatValues[name],
+      [register]: this.register,
+      [validate]: async (name) => {
+        this.validateField(name);
+        if (!this.resolver) {
+          return;
+        }
+        const { errors } = await this.resolver(this.values);
+        if (errors[name]) {
+          const { setError } = this.callbackDataMap[name];
+          setError(errors[name].message, errors[name].type);
+        }
+      },
+      [getFieldDefaultValue]: this.getFieldDefaultValue,
+      [getFieldValue]: (name) => get(this.values, name),
       [getFieldErrors]: this.getFieldErrors,
-      [getFieldDirty]: this.getFieldDirty,
-      [getFieldInvalid]: this.getFieldInvalid
+      [hasFieldValue]: (name) => has(this.values, name),
+      [getIsSubmitted]: () => this.submitted
     };
   },
   props: {
@@ -54,35 +119,48 @@ var ValidationProvider = {
     resolver: {
       type: Function,
       default: null
+    },
+    tag: {
+      type: String,
+      default: "div"
     }
   },
   data() {
     return {
       submitted: false,
-      fields: {},
-      flatValues: {},
-      errors: {},
-      dirtyFields: {},
       innerDefaultValues: {},
-      defaultValuesByField: {}
+      callbacks: [],
+      additionalErrors: {}
     };
   },
   computed: {
-    isDirty() {
-      return !!Object.keys(this.dirtyFields).length;
+    callbackDataMap() {
+      return this.callbacks.reduce((result, callback) => {
+        const data = callback();
+        result[data.name] = data;
+        return result;
+      }, {});
     },
     values() {
-      return Object.entries(this.flatValues).reduce((result, [name, value]) => {
+      return Object.entries(this.callbackDataMap).reduce((result, [name, { value }]) => {
         set(result, name, value);
         return result;
       }, {});
     },
-    firstInvalidField() {
-      const name = Object.keys(this.fields).find((name2) => this.errors[name2].length);
-      return this.fields[name];
+    dirty() {
+      return Object.values(this.callbackDataMap).some(({ dirty }) => dirty);
+    },
+    errors() {
+      return Object.values(this.callbackDataMap).reduce((allErrors, { errors, name }) => {
+        allErrors[name] = errors;
+        return allErrors;
+      }, Object.assign({}, this.additionalErrors));
     },
     existsErrors() {
       return Object.values(this.errors).some((errors) => errors.length);
+    },
+    firstInvalidFieldData() {
+      return Object.values(this.callbackDataMap).find(({ name }) => this.errors[name].length);
     }
   },
   watch: {
@@ -92,7 +170,7 @@ var ValidationProvider = {
         this.reset(values);
       }
     },
-    isDirty: {
+    dirty: {
       immediate: true,
       handler(dirty) {
         this.$emit("dirty", dirty);
@@ -100,20 +178,37 @@ var ValidationProvider = {
     }
   },
   methods: {
+    getFieldDefaultValue(name, defaultValue) {
+      return get(this.innerDefaultValues, name, defaultValue);
+    },
+    getFieldErrors(name) {
+      return this.errors[name] || [];
+    },
+    validateField(name) {
+      const { rules, value, setError, resetErrors } = this.callbackDataMap[name];
+      resetErrors();
+      Object.entries(rules).forEach(([ruleName, options]) => {
+        const validator = validators[ruleName];
+        if (!validator) {
+          throw new Error(`validator '${ruleName}' must be registered`);
+        }
+        if (!validator(value, options.params)) {
+          setError(options.message, ruleName);
+        }
+      });
+    },
     async onSubmit() {
       this.submitted = true;
       let resultValues = this.values;
-      Object.keys(this.errors).forEach((name) => {
-        this.errors[name] = [];
-      });
-      Object.keys(this.fields).forEach((name) => {
+      this.additionalErrors = {};
+      Object.keys(this.callbackDataMap).forEach((name) => {
         this.validateField(name);
       });
       if (this.resolver) {
         const { values, errors } = await this.resolver(this.values);
         resultValues = values;
         Object.entries(errors).forEach(([name, { message, type }]) => {
-          this.setError(name, type, message);
+          this.setError(name, message, type);
         });
       }
       if (this.existsErrors) {
@@ -125,243 +220,328 @@ var ValidationProvider = {
         focusInvalidField: this.focusInvalidField
       });
     },
-    focusInvalidField() {
-      return this.firstInvalidField && this.firstInvalidField.focus();
-    },
-    addField({ name, rules, defaultValue, focus }) {
-      this.$set(this.fields, name, { rules, focus });
-      this.$set(this.defaultValuesByField, name, defaultValue);
-      this.$set(this.flatValues, name, defaultValue);
-      this.$set(this.errors, name, []);
-      this.$delete(this.dirtyFields, name);
-    },
-    updateField(oldName, { name, rules, focus }) {
-      this.$set(this.fields, oldName, { rules, focus });
-      this.replaceFieldName(oldName, name);
-    },
-    removeField(name) {
-      this.$delete(this.fields, name);
-      this.$delete(this.defaultValuesByField, name);
-      this.$delete(this.flatValues, name);
-      this.$delete(this.errors, name);
-      this.$set(this.dirtyFields, name, true);
-    },
-    replaceFieldName(from, to) {
-      if (from === to) {
-        return;
-      }
-      this.$set(this.fields, to, this.fields[from]);
-      this.$delete(this.fields, from);
-      this.$set(this.dirtyFields, to, this.dirtyFields[from]);
-      this.$delete(this.dirtyFields, from);
-      this.$set(this.defaultValuesByField, to, this.defaultValuesByField[from]);
-      this.$delete(this.defaultValuesByField, from);
-      this.$set(this.flatValues, to, this.flatValues[from]);
-      this.$delete(this.flatValues, from);
-      this.$set(this.errors, to, this.errors[from]);
-      this.$delete(this.errors, from);
-    },
-    async setValue(name, value) {
-      if (this.flatValues[name] === value) {
-        return;
-      }
-      this.flatValues[name] = value;
-      value === this.defaultValuesByField[name] ? this.$delete(this.dirtyFields, name) : this.$set(this.dirtyFields, name, true);
-      if (!this.submitted) {
-        return;
-      }
-      this.validateField(name);
-      if (!this.resolver) {
-        return;
-      }
-      const { errors } = await this.resolver(this.values);
-      if (errors[name]) {
-        this.setError(name, errors[name].type, errors[name].message);
-      }
-    },
-    setError(name, type, message) {
-      if (this.errors[name] === void 0) {
-        this.$set(this.errors, name, []);
-      }
-      this.errors[name].push({
-        type,
-        message
-      });
-    },
-    validateField(name) {
-      this.errors[name] = [];
-      const rules = this.fields[name].rules;
-      const value = this.flatValues[name];
-      Object.entries(rules).forEach(([ruleName, options]) => {
-        const validator = validators[ruleName];
-        if (!validator) {
-          throw new Error(`validator '${ruleName}' must be registered`);
-        }
-        if (!validator(value, options.params)) {
-          this.setError(name, ruleName, options.message);
-        }
-      });
-    },
-    getFieldDefaultValues(name, defaultValue) {
-      return get(this.innerDefaultValues, name, defaultValue);
-    },
-    getFieldErrors(name) {
-      return this.errors[name] || [];
-    },
-    getFieldDirty(name) {
-      return this.dirtyFields[name];
-    },
-    getFieldInvalid(name) {
-      return this.submitted && !!this.getFieldErrors(name).length;
-    },
     reset(values) {
       this.submitted = false;
       if (values) {
         this.innerDefaultValues = values;
       }
-      Object.entries(this.defaultValuesByField).forEach(([name, value]) => {
-        const defaultValue = this.getFieldDefaultValues(name, value);
-        this.defaultValuesByField[name] = defaultValue;
-        this.setValue(name, defaultValue);
+      Object.values(this.callbackDataMap).forEach(({ reset }) => {
+        reset();
       });
+    },
+    setError(name, message, type = null) {
+      const fieldData = this.callbackDataMap[name];
+      if (fieldData) {
+        fieldData.setError(message, type);
+        return;
+      }
+      if (this.additionalErrors[name] === void 0) {
+        this.$set(this.additionalErrors, name, []);
+      }
+      this.additionalErrors[name].push({
+        type,
+        message
+      });
+    },
+    focusInvalidField() {
+      return this.firstInvalidFieldData && this.firstInvalidFieldData.focus();
+    },
+    register(callback) {
+      const { name, setError } = callback();
+      (this.additionalErrors[name] || []).forEach((error) => {
+        setError(error);
+      });
+      this.$delete(this.additionalErrors, name);
+      this.callbacks.push(callback);
+      return () => this.unregister(callback);
+    },
+    unregister(callback) {
+      this.callbacks = this.callbacks.filter((field) => field !== callback);
     }
   },
-  render() {
-    return this.$scopedSlots.default({
+  render(h) {
+    const children = normalizeChildren(this, {
       handleSubmit: this.onSubmit,
       reset: this.reset,
-      setError: this.setError,
-      setValue: this.setValue,
       values: this.values,
-      isDirty: this.isDirty,
+      dirty: this.dirty,
       invalid: this.submitted && this.existsErrors,
-      errors: this.errors,
-      defaultValues: this.defaultValuesByField,
-      dirtyFields: this.dirtyFields
+      errors: this.errors
     });
+    return children.length <= 1 ? children[0] : h(this.tag, children);
   }
 };
 var ValidationField = {
   name: "ValidationField",
   inject: {
-    addField,
-    removeField,
-    updateField,
-    getFieldRegistered,
-    setValue,
-    setFieldError,
-    getFieldDefaultValues,
+    hasFieldValue,
+    getFieldDefaultValue,
     getFieldValue,
-    getFieldErrors,
-    getFieldDirty,
-    getFieldInvalid
+    getIsSubmitted,
+    register,
+    validate
   },
-  model: {
-    prop: "modelValue",
-    event: "update:modelValue"
+  data() {
+    return {
+      value: void 0,
+      errors: []
+    };
   },
   props: {
     name: {
       type: String,
       required: true
     },
-    modelValue: {
-      type: null,
-      default: void 0
-    },
     rules: {
       type: Object,
       default: () => ({})
+    },
+    tag: {
+      type: String,
+      default: "div"
     }
   },
   computed: {
-    isRegistered() {
-      return this.getFieldRegistered(this.name);
+    defaultValue() {
+      return this.getFieldDefaultValue(this.name);
     },
-    providedDefaultValue() {
-      return this.getFieldDefaultValues(this.name);
+    hasProvidedValue() {
+      return this.hasFieldValue(this.name);
     },
     providedValue() {
       return this.getFieldValue(this.name);
     },
-    defaultValue() {
-      return this.providedDefaultValue !== void 0 ? this.providedDefaultValue : this.modelValue;
+    submitted() {
+      return this.getIsSubmitted();
     },
     dirty() {
-      return this.getFieldDirty(this.name);
-    },
-    errors() {
-      return this.getFieldErrors(this.name);
+      return this.value !== this.defaultValue;
     },
     firstError() {
-      return this.errors[0] || "";
+      return this.errors[0];
     },
     invalid() {
-      return this.getFieldInvalid(this.name);
-    },
-    hasModelValue() {
-      return this.modelValue !== void 0;
-    },
-    computedModelValue() {
-      return this.hasModelValue ? this.modelValue : this.providedValue;
-    }
-  },
-  watch: {
-    rules(rules) {
-      this.updateField(this.name, { name: this.name, rules, focus: this.onFocus });
-    },
-    name(name, oldName) {
-      this.updateField(oldName, { name, rules: this.rules, focus: this.onFocus });
-    },
-    modelValue(value) {
-      this.setValue(this.name, value);
-    },
-    providedValue(value) {
-      this.onModelChange(value);
+      return this.submitted && !!this.errors.length;
     }
   },
   mounted() {
-    const defaultValue = this.defaultValue;
-    this.addField({ name: this.name, rules: this.rules, defaultValue, focus: this.onFocus });
-    if (defaultValue !== this.modelValue) {
-      this.onModelChange(defaultValue);
-    }
+    this.value = this.hasProvidedValue ? this.providedValue : this.defaultValue;
+    this.unregister = this.register(this.fieldData);
   },
   beforeDestroy() {
-    this.removeField(this.name);
+    this.unregister();
   },
   methods: {
-    onModelChange(value) {
-      this.$emit("update:modelValue", value);
-      this.$nextTick(() => {
-        value = this.hasModelValue ? this.computedModelValue : value;
-        this.setValue(this.name, value);
-      });
-    },
-    setError(type, message) {
-      this.setFieldError(this.name, type, message);
+    fieldData() {
+      return {
+        name: this.name,
+        value: this.value,
+        dirty: this.dirty,
+        errors: this.errors,
+        rules: this.rules,
+        focus: this.onFocus,
+        reset: this.reset,
+        setError: this.setError,
+        resetErrors: this.resetErrors
+      };
     },
     onFocus() {
       this.$emit("should-focus", {
-        name: this.name,
-        field: this
+        name: this.name
       });
+    },
+    reset() {
+      this.resetErrors();
+      this.value = this.defaultValue;
+    },
+    onChange(value) {
+      this.value = value;
+      if (!this.submitted) {
+        return;
+      }
+      this.validate(this.name);
+    },
+    setError(message, type = null) {
+      this.errors.push({
+        type,
+        message
+      });
+    },
+    resetErrors() {
+      this.errors = [];
     }
   },
-  render() {
-    if (!this.isRegistered) {
-      return;
-    }
-    return this.$scopedSlots.default({
+  render(h) {
+    const children = normalizeChildren(this, {
       name: this.name,
-      onChange: this.onModelChange,
+      onChange: this.onChange,
       setError: this.setError,
-      modelValue: this.computedModelValue,
+      modelValue: this.value,
       errors: this.errors,
       firstError: this.firstError,
       dirty: this.dirty,
       invalid: this.invalid
     });
+    return children.length <= 1 ? children[0] : h(this.tag, children);
   }
 };
-export { ValidationField, ValidationProvider, register as registerValidator, symbols };
+var ValidationFieldArray = {
+  name: "ValidationFieldArray",
+  inject: {
+    register,
+    getFieldDefaultValue,
+    getFieldValue
+  },
+  provide() {
+    return {
+      [hasFieldValue]: (name) => {
+        return has(this.fields, name.replace(new RegExp(`^${this.name}.`), ""));
+      },
+      [getFieldValue]: (name) => {
+        return get(this.fields, name.replace(new RegExp(`^${this.name}.`), ""));
+      },
+      [register]: (callback) => {
+        if (this.shouldFocus) {
+          const { focus } = callback();
+          focus();
+          this.shouldFocus = false;
+        }
+        return this.register(callback);
+      }
+    };
+  },
+  data() {
+    return {
+      fields: [],
+      shouldFocus: false
+    };
+  },
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    keyName: {
+      type: String,
+      default: "id"
+    },
+    tag: {
+      type: String,
+      default: "div"
+    }
+  },
+  computed: {
+    defaultValue() {
+      return this.getFieldDefaultValue(this.name) || [];
+    }
+  },
+  mounted() {
+    this.fields = this.defaultValue;
+    this.unregister = this.register(this.fieldData);
+  },
+  beforeDestroy() {
+    this.unregister();
+  },
+  methods: {
+    fieldData() {
+      return {
+        name: this.name,
+        value: JSON.parse(JSON.stringify(this.fields)),
+        dirty: false,
+        errors: [],
+        rules: {},
+        focus: this.noop,
+        reset: this.reset,
+        setError: this.noop,
+        resetErrors: this.noop
+      };
+    },
+    noop() {
+    },
+    reset() {
+      this.fields = this.defaultValue;
+    },
+    append(value, shouldFocus = false) {
+      var _a;
+      value[this.keyName] = (_a = value[this.keyName]) != null ? _a : nanoid();
+      this.shouldFocus = shouldFocus;
+      this.fields.push(value);
+    },
+    prepend(value, shouldFocus = false) {
+      var _a;
+      value[this.keyName] = (_a = value[this.keyName]) != null ? _a : nanoid();
+      this.shouldFocus = shouldFocus;
+      this.fields.unshift(value);
+    },
+    insert(index, value, shouldFocus = false) {
+      var _a;
+      value[this.keyName] = (_a = value[this.keyName]) != null ? _a : nanoid();
+      this.shouldFocus = shouldFocus;
+      this.fields.splice(index, 0, value);
+    },
+    swap(from, to) {
+      const temp = this.fields[from];
+      this.$set(this.fields, from, this.fields[to]);
+      this.$set(this.fields, to, temp);
+    },
+    move(from, to) {
+      this.fields.splice(to, 0, this.fields.splice(from, 1)[0]);
+    },
+    remove(index) {
+      this.fields = this.fields.filter((field, i) => index !== i);
+    }
+  },
+  render(h) {
+    const children = normalizeChildren(this, {
+      name: this.name,
+      fields: this.fields.map((field) => ({
+        [this.keyName]: field[this.keyName]
+      })),
+      append: this.append,
+      prepend: this.prepend,
+      insert: this.insert,
+      swap: this.swap,
+      move: this.move,
+      remove: this.remove
+    });
+    return children.length <= 1 ? children[0] : h(this.tag, children);
+  }
+};
+var ValidationErrors = {
+  name: "ValidationErrors",
+  inject: {
+    getFieldErrors,
+    getIsSubmitted
+  },
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    tag: {
+      type: String,
+      default: "div"
+    }
+  },
+  computed: {
+    submitted() {
+      return this.getIsSubmitted();
+    },
+    errors() {
+      return this.getFieldErrors(this.name);
+    },
+    invalid() {
+      return this.submitted && !!this.errors.length;
+    }
+  },
+  render(h) {
+    if (!this.invalid) {
+      return;
+    }
+    const children = normalizeChildren(this, {
+      errors: this.errors
+    });
+    return children.length <= 1 ? children[0] : h(this.tag, children);
+  }
+};
+export { ValidationErrors, ValidationField, ValidationFieldArray, ValidationProvider, register$1 as registerValidator, symbols };
