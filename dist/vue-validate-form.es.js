@@ -436,7 +436,9 @@ var ValidationFieldArray = {
     },
     actualValue() {
       const keyName = this.keyName;
-      return this.fields.map((field) => ({
+      const providedValues = this.getFieldValue(this.name) || [];
+      return this.fields.map((field, index) => ({
+        ...providedValues[index],
         [keyName]: field[keyName]
       }));
     }
@@ -452,7 +454,7 @@ var ValidationFieldArray = {
     fieldData() {
       return {
         name: this.name,
-        value: JSON.parse(JSON.stringify(this.actualValue)),
+        value: [],
         dirty: false,
         errors: [],
         rules: {},
