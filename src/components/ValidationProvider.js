@@ -6,7 +6,7 @@ import {
   getIsSubmitted,
   register,
   validate,
-  getFieldErrors
+  getErrors
 } from './symbols.js';
 import { set, get, has, normalizeChildren } from './helpers';
 
@@ -28,7 +28,7 @@ export default {
       },
       [getFieldDefaultValue]: this.getFieldDefaultValue,
       [getFieldValue]: (name) => get(this.values, name),
-      [getFieldErrors]: this.getFieldErrors,
+      [getErrors]: this.getErrors,
       [hasFieldValue]: (name) => has(this.values, name),
       [getIsSubmitted]: () => this.submitted
     };
@@ -103,8 +103,8 @@ export default {
     getFieldDefaultValue(name, defaultValue) {
       return get(this.innerDefaultValues, name, defaultValue);
     },
-    getFieldErrors(name) {
-      return this.errors[name] || [];
+    getErrors(name) {
+      return name ? this.errors[name] || [] : this.errors;
     },
     validateField(name) {
       const { rules, value, setError, resetErrors } = this.callbackDataMap[name];

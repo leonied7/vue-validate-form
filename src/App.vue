@@ -26,7 +26,7 @@
               <div>
                 <div v-for="(field, index) in fields" :key="field.id">
                   <ValidationField :name="`${name}.${index}.id`" />
-                  <ValidationField :name="`${name}.${index}.firstName`">
+                  <ValidationField :name="`${name}.${index}.firstName`" :rules="rules">
                     <template #default="{ modelValue, onChange }">
                       <input
                         :value="modelValue"
@@ -47,6 +47,9 @@
               </div>
             </template>
           </ValidationFieldArray>
+
+          <ValidationErrors />
+          <ValidationErrors name="my-input" />
           <button type="submit">Send</button>
         </form>
       </template>
@@ -59,6 +62,7 @@ import {
   ValidationField,
   ValidationProvider,
   ValidationFieldArray,
+  ValidationErrors,
   registerValidator
 } from './index';
 
@@ -69,7 +73,8 @@ export default {
   components: {
     ValidationProvider,
     ValidationField,
-    ValidationFieldArray
+    ValidationFieldArray,
+    ValidationErrors
   },
   data() {
     return {

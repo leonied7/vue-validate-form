@@ -1,16 +1,16 @@
-import { getFieldErrors, getIsSubmitted } from './symbols';
+import { getErrors, getIsSubmitted } from './symbols';
 import { normalizeChildren } from './helpers';
 
 export default {
   name: 'ValidationErrors',
   inject: {
-    getFieldErrors,
+    getErrors,
     getIsSubmitted
   },
   props: {
     name: {
       type: String,
-      required: true
+      default: undefined
     },
     tag: {
       type: String,
@@ -22,7 +22,8 @@ export default {
       return this.getIsSubmitted();
     },
     errors() {
-      return this.getFieldErrors(this.name);
+      const errors = this.getErrors(this.name);
+      return Array.isArray(errors) ? errors : [].concat(...Object.values(errors));
     },
     invalid() {
       return this.submitted && !!this.errors.length;
