@@ -24,15 +24,18 @@
           <ValidationFieldArray name="arrayField">
             <template #default="{ name, fields, append, prepend, insert, swap, move, remove }">
               <div>
-                <ValidationField
-                  v-for="(field, index) in fields"
-                  :key="field.id"
-                  :name="`${name}.${index}.firstName`"
-                >
-                  <template #default="{ modelValue, onChange }">
-                    <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
-                  </template>
-                </ValidationField>
+                <div v-for="(field, index) in fields" :key="field.id">
+                  <ValidationField :name="`${name}.${index}.id`" />
+                  <ValidationField :name="`${name}.${index}.firstName`">
+                    <template #default="{ modelValue, onChange }">
+                      <input
+                        :value="modelValue"
+                        type="text"
+                        @input="onChange($event.target.value)"
+                      />
+                    </template>
+                  </ValidationField>
+                </div>
                 <button type="button" @click="prepend({ firstName: 'prepend' }, true)">
                   Prepend
                 </button>

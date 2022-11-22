@@ -50,25 +50,24 @@
           <template
             #default="{ name: arrayName, fields, append, prepend, insert, swap, move, remove }"
           >
-            <ValidationField
-              v-for="(field, index) in fields"
-              :key="field.id"
-              :name="`${arrayName}.${index}.firstName`"
-            >
-              <template
-                #default="{ modelValue, name, firstError, errors, dirty, invalid, onChange }"
-              >
-                <base-input
-                  :name="name"
-                  :first-error="firstError"
-                  :errors="errors"
-                  :model-value="modelValue"
-                  :dirty="dirty"
-                  :invalid="invalid"
-                  @update:modelValue="onChange"
-                />
-              </template>
-            </ValidationField>
+            <div v-for="(field, index) in fields" :key="field.id">
+              <ValidationField :name="`${arrayName}.${index}.id`" />
+              <ValidationField :name="`${arrayName}.${index}.firstName`">
+                <template
+                  #default="{ modelValue, name, firstError, errors, dirty, invalid, onChange }"
+                >
+                  <base-input
+                    :name="name"
+                    :first-error="firstError"
+                    :errors="errors"
+                    :model-value="modelValue"
+                    :dirty="dirty"
+                    :invalid="invalid"
+                    @update:modelValue="onChange"
+                  />
+                </template>
+              </ValidationField>
+            </div>
             <button id="append" type="button" @click="append">Append</button>
             <button id="prepend" type="button" @click="prepend">Prepend</button>
             <button id="insert" type="button" @click="insert(1, { firstName: 'insert' })">

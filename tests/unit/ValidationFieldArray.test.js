@@ -83,7 +83,9 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [{ type: 'required', message: 'invalid' }],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': []
     });
     expect(formInfoProps.dirty).toBe(false);
@@ -148,8 +150,11 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [],
+      'arrayField.2.id': [],
       'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
     });
 
@@ -159,7 +164,9 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [{ type: 'required', message: 'invalid' }]
     });
     expect(wrapper.findComponent(FormInfo).props().values).toEqual({
@@ -206,7 +213,9 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [{ type: 'required', message: 'invalid' }]
     });
 
@@ -216,8 +225,11 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [],
+      'arrayField.2.id': [],
       'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
     });
     expect(wrapper.findAllComponents(BaseInput).at(2).props().modelValue).toBe('new name');
@@ -253,7 +265,9 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [{ type: 'required', message: 'invalid' }]
     });
 
@@ -263,8 +277,11 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [],
+      'arrayField.2.id': [],
       'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
     });
     expect(wrapper.findAllComponents(BaseInput).at(3).props().modelValue).toBe('insert');
@@ -304,8 +321,11 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [],
+      'arrayField.2.id': [],
       'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
     });
     const formInfoWrapper = wrapper.findComponent(FormInfo);
@@ -316,8 +336,11 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [{ type: 'required', message: 'invalid' }],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [],
+      'arrayField.2.id': [],
       'arrayField.2.firstName': []
     });
     expect(formInfoWrapper.props().values).toEqual({
@@ -349,8 +372,11 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [],
+      'arrayField.2.id': [],
       'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
     });
     expect(formInfoWrapper.props().values).toEqual({
@@ -411,8 +437,11 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [],
+      'arrayField.2.id': [],
       'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
     });
     const formInfoWrapper = wrapper.findComponent(FormInfo);
@@ -423,8 +452,11 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [{ type: 'required', message: 'invalid' }],
+      'arrayField.2.id': [],
       'arrayField.2.firstName': []
     });
     expect(formInfoWrapper.props().values).toEqual({
@@ -456,8 +488,11 @@ describe('ValidationFieldArrayNew', () => {
       'my.nested.value': [],
       'my-input': [],
       arrayField: [],
+      'arrayField.0.id': [],
       'arrayField.0.firstName': [{ type: 'required', message: 'invalid' }],
+      'arrayField.1.id': [],
       'arrayField.1.firstName': [],
+      'arrayField.2.id': [],
       'arrayField.2.firstName': []
     });
     expect(formInfoWrapper.props().values).toEqual({
