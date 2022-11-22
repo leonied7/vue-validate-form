@@ -3,35 +3,19 @@ const validators = {};
 function register$1(name, validate2) {
   validators[name] = validate2;
 }
-const addField = Symbol("addField");
-const removeField = Symbol("removeField");
-const updateField = Symbol("updateField");
-const getFieldRegistered = Symbol("getFieldRegistered");
-const setValue = Symbol("setValue");
-const setFieldError = Symbol("setFieldError");
-const getFieldErrors = Symbol("getFieldErrors");
-const getFieldDirty = Symbol("getFieldDirty");
-const getFieldInvalid = Symbol("getFieldInvalid");
 const hasFieldValue = Symbol("hasFieldValue");
 const getFieldValue = Symbol("getFieldValue");
 const getFieldDefaultValue = Symbol("getFieldDefaultValue");
+const getErrors = Symbol("getErrors");
 const register = Symbol("register");
 const validate = Symbol("validate");
 const getIsSubmitted = Symbol("getIsSubmitted");
 var symbols = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  addField,
-  removeField,
-  updateField,
-  getFieldRegistered,
-  setValue,
-  setFieldError,
-  getFieldErrors,
-  getFieldDirty,
-  getFieldInvalid,
   hasFieldValue,
   getFieldValue,
   getFieldDefaultValue,
+  getErrors,
   register,
   validate,
   getIsSubmitted
@@ -106,7 +90,7 @@ var ValidationProvider = {
       },
       [getFieldDefaultValue]: this.getFieldDefaultValue,
       [getFieldValue]: (name) => get(this.values, name),
-      [getFieldErrors]: this.getFieldErrors,
+      [getErrors]: this.getErrors,
       [hasFieldValue]: (name) => has(this.values, name),
       [getIsSubmitted]: () => this.submitted
     };
@@ -181,8 +165,8 @@ var ValidationProvider = {
     getFieldDefaultValue(name, defaultValue) {
       return get(this.innerDefaultValues, name, defaultValue);
     },
-    getFieldErrors(name) {
-      return this.errors[name] || [];
+    getErrors(name) {
+      return name ? this.errors[name] || [] : this.errors;
     },
     validateField(name) {
       const { rules, value, setError, resetErrors } = this.callbackDataMap[name];
@@ -516,13 +500,13 @@ var ValidationFieldArray = {
 var ValidationErrors = {
   name: "ValidationErrors",
   inject: {
-    getFieldErrors,
+    getErrors,
     getIsSubmitted
   },
   props: {
     name: {
       type: String,
-      required: true
+      default: void 0
     },
     tag: {
       type: String,
@@ -534,7 +518,8 @@ var ValidationErrors = {
       return this.getIsSubmitted();
     },
     errors() {
-      return this.getFieldErrors(this.name);
+      const errors = this.getErrors(this.name);
+      return Array.isArray(errors) ? errors : [].concat(...Object.values(errors));
     },
     invalid() {
       return this.submitted && !!this.errors.length;

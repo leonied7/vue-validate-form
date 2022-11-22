@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/leonied7/vue-validate-form/compare/v1.0.2...v1.1.0) (2022-11-22)
+
+
+### Features
+
+* available pass empty name in ValidationErrors and get all errors ([5d9e8ff](https://github.com/leonied7/vue-validate-form/commit/5d9e8ffd87437be774b32d93131b64c496c699fd))
+
 ### [1.0.2](https://github.com/leonied7/vue-validate-form/compare/v1.0.1...v1.0.2) (2022-11-22)
 
 
