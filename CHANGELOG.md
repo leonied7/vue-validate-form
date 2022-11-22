@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/leonied7/vue-validate-form/compare/v1.1.0...v1.1.1) (2022-11-22)
+
+
+### Bug Fixes
+
+* change focusOptions format for append/prepend/insert ([2fc65a8](https://github.com/leonied7/vue-validate-form/commit/2fc65a8d686b11fcfd4467f15453afaca5aef7a2))
+
 ## [1.1.0](https://github.com/leonied7/vue-validate-form/compare/v1.0.2...v1.1.0) (2022-11-22)
 
 
