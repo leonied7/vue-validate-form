@@ -18,10 +18,13 @@ export default {
         return get(this.fields, name.replace(new RegExp(`^${this.name}.`), ''));
       },
       [register]: (callback) => {
-        if (this.shouldFocus) {
-          const { focus } = callback();
-          focus();
-          this.shouldFocus = false;
+        if (this.focusOptions) {
+          const { focusName } = this.focusOptions;
+          const { focus, name } = callback();
+          if (name === focusName) {
+            focus();
+            this.focusOptions = null;
+          }
         }
         return this.register(callback);
       }
@@ -30,7 +33,7 @@ export default {
   data() {
     return {
       fields: [],
-      shouldFocus: false
+      focusOptions: null
     };
   },
   props: {
@@ -85,19 +88,19 @@ export default {
     reset() {
       this.fields = [...this.defaultValue];
     },
-    append(value, shouldFocus = false) {
+    append(value, focusOptions = null) {
       value[this.keyName] = value[this.keyName] ?? nanoid();
-      this.shouldFocus = shouldFocus;
+      this.focusOptions = focusOptions;
       this.fields.push(value);
     },
-    prepend(value, shouldFocus = false) {
+    prepend(value, focusOptions = null) {
       value[this.keyName] = value[this.keyName] ?? nanoid();
-      this.shouldFocus = shouldFocus;
+      this.focusOptions = focusOptions;
       this.fields.unshift(value);
     },
-    insert(index, value, shouldFocus = false) {
+    insert(index, value, focusOptions = null) {
       value[this.keyName] = value[this.keyName] ?? nanoid();
-      this.shouldFocus = shouldFocus;
+      this.focusOptions = focusOptions;
       this.fields.splice(index, 0, value);
     },
     swap(from, to) {

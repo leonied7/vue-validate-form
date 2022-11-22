@@ -36,7 +36,12 @@
                     </template>
                   </ValidationField>
                 </div>
-                <button type="button" @click="prepend({ firstName: 'prepend' }, true)">
+                <button
+                  type="button"
+                  @click="
+                    prepend({ firstName: 'prepend' }, { focusName: 'arrayField.0.firstName' })
+                  "
+                >
                   Prepend
                 </button>
                 <button type="button" @click="append({ firstName: 'append' })">Append</button>
