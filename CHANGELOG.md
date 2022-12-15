@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.3](https://github.com/leonied7/vue-validate-form/compare/v1.1.2...v1.1.3) (2022-12-15)
+
+
+### Bug Fixes
+
+* add safari 14 support ([0ce82a4](https://github.com/leonied7/vue-validate-form/commit/0ce82a4001dfd76102ac21e5983382a4ee17f605))
+
 ### [1.1.2](https://github.com/leonied7/vue-validate-form/compare/v1.1.1...v1.1.2) (2022-12-15)
 
 
