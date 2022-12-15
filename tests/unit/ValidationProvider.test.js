@@ -229,12 +229,14 @@ describe('ValidationProvider', () => {
       expect(formInfo.props().dirty).toBe(true);
 
       await wrapper.find('button[type=reset]').trigger('click', {
-        'my-input': 'qwe',
-        my: {
-          nested: {
-            value: 42
-          },
-          unused: 'test'
+        payload: {
+          'my-input': 'qwe',
+          my: {
+            nested: {
+              value: 42
+            },
+            unused: 'test'
+          }
         }
       });
 
@@ -247,6 +249,38 @@ describe('ValidationProvider', () => {
         },
         arrayField: []
       });
+      expect(formInfo.props().dirty).toBe(false);
+    });
+
+    it('correctly reset after remove', async () => {
+      createComponent({
+        props: {
+          defaultValues: {
+            arrayField: [
+              {
+                id: 1,
+                firstName: 'name 1'
+              },
+              {
+                id: 2,
+                firstName: 'name 2'
+              },
+              {
+                id: 3,
+                firstName: 'name 2'
+              }
+            ]
+          }
+        }
+      });
+      await nextTick();
+
+      await wrapper.find('#remove').trigger('click');
+      const formInfo = wrapper.findComponent(FormInfo);
+      expect(formInfo.props().dirty).toBe(true);
+
+      await wrapper.find('button[type=reset]').trigger('click');
+
       expect(formInfo.props().dirty).toBe(false);
     });
   });

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <ValidationProvider :default-values="defaultValues" @submit="onSubmit">
-      <template #default="{ handleSubmit, values, dirty, errors }">
+      <template #default="{ handleSubmit, values, dirty, errors, reset }">
         <form @submit.prevent="handleSubmit">
           <label>Values</label>
           <pre>{{ values }}</pre>
@@ -25,7 +25,24 @@
             <template #default="{ name, fields, append, prepend, insert, swap, move, remove }">
               <div>
                 <div v-for="(field, index) in fields" :key="field.id">
-                  <ValidationField :name="`${name}.${index}.id`" />
+                  <ValidationField :name="`${name}.${index}.id`">
+                    <template #default="{ modelValue, onChange }">
+                      <input
+                        :value="modelValue"
+                        type="text"
+                        @input="onChange($event.target.value)"
+                      />
+                    </template>
+                  </ValidationField>
+                  <ValidationField :name="`${name}.${index}.type`">
+                    <template #default="{ modelValue, onChange }">
+                      <input
+                        :value="modelValue"
+                        type="text"
+                        @input="onChange($event.target.value)"
+                      />
+                    </template>
+                  </ValidationField>
                   <ValidationField :name="`${name}.${index}.firstName`" :rules="rules">
                     <template #default="{ modelValue, onChange }">
                       <input
@@ -49,6 +66,7 @@
                 <button type="button" @click="swap(0, 2)">Swap</button>
                 <button type="button" @click="move(0, 2)">Move</button>
                 <button type="button" @click="remove(0)">Remove</button>
+                <button type="button" @click="reset()">Reset</button>
               </div>
             </template>
           </ValidationFieldArray>
@@ -97,12 +115,19 @@ export default {
         },
         arrayField: [
           {
-            id: 'qwe123',
-            firstName: '111'
+            id: '1',
+            firstName: '111',
+            type: 'user'
           },
           {
-            id: 'qwe1231',
-            firstName: '222'
+            id: '2',
+            firstName: '222',
+            type: 'user'
+          },
+          {
+            id: '3',
+            firstName: '333',
+            type: null
           }
         ]
       }

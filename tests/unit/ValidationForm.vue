@@ -86,7 +86,7 @@
         </ValidationErrors>
 
         <button type="submit">Submit</button>
-        <button type="reset" @click="reset">Reset</button>
+        <button type="reset" @click="reset($event.payload)">Reset</button>
       </form>
     </template>
   </validation-provider>
