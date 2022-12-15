@@ -14,7 +14,7 @@ export function has(object, path) {
 
   while (pathParts.length) {
     const key = pathParts.shift();
-    if (!Object.hasOwn(object, key)) {
+    if (!(key in object)) {
       return false;
     }
     object = object[key];
