@@ -336,7 +336,9 @@ var ValidationField = {
     },
     reset() {
       this.resetErrors();
-      this.value = this.defaultValue;
+      this.$nextTick(() => {
+        this.value = this.defaultValue;
+      });
     },
     onChange(value) {
       this.value = value;

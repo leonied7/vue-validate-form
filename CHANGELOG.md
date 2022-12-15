@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/leonied7/vue-validate-form/compare/v1.1.1...v1.1.2) (2022-12-15)
+
+
+### Bug Fixes
+
+* rename file ([ce3ef7b](https://github.com/leonied7/vue-validate-form/commit/ce3ef7b373c1bc6f69aa64c86040534bca00594b))
+* reset method should work correctly with ValidationFieldArray ([23f54ea](https://github.com/leonied7/vue-validate-form/commit/23f54ea6544f85e59078bec2e9c99890144d868d))
+
 ### [1.1.1](https://github.com/leonied7/vue-validate-form/compare/v1.1.0...v1.1.1) (2022-11-22)
 
 
