@@ -21,10 +21,9 @@ export default {
           return;
         }
         const { errors } = await this.resolver(this.values);
-        if (errors[name]) {
-          const { setError } = this.callbackDataMap[name];
-          setError(errors[name].message, errors[name].type);
-        }
+        Object.entries(errors).forEach(([name, { message, type }]) => {
+          this.setError(name, message, type);
+        });
       },
       [getFieldDefaultValue]: this.getFieldDefaultValue,
       [getFieldValue]: (name) => get(this.values, name),
