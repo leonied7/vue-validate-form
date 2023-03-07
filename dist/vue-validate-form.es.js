@@ -83,10 +83,9 @@ var ValidationProvider = {
           return;
         }
         const { errors } = await this.resolver(this.values);
-        if (errors[name]) {
-          const { setError } = this.callbackDataMap[name];
-          setError(errors[name].message, errors[name].type);
-        }
+        Object.entries(errors).forEach(([name2, { message, type }]) => {
+          this.setError(name2, message, type);
+        });
       },
       [getFieldDefaultValue]: this.getFieldDefaultValue,
       [getFieldValue]: (name) => get(this.values, name),
