@@ -72,6 +72,8 @@ function isIndex(value) {
 function isObject(value) {
   return !!value && typeof value == "object";
 }
+const ON_FIELD_CHANGE = "onFieldChange";
+const ON_FORM_CHANGE = "onFormChange";
 var ValidationProvider = {
   name: "ValidationProvider",
   provide() {
@@ -82,9 +84,18 @@ var ValidationProvider = {
         if (!this.resolver) {
           return;
         }
-        const { errors } = await this.resolver(this.values);
-        Object.entries(errors).forEach(([name2, { message, type }]) => {
-          this.setError(name2, message, type);
+        const { errors: resolverErrors } = await this.resolver(this.values);
+        Object.values(this.callbackDataMap).forEach(({ resetErrors, errors, name: name2 }) => {
+          const actualErrors = errors.filter(
+            ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
+          );
+          resolverErrors[name2] = actualErrors.push(...resolverErrors[name2]);
+          resetErrors();
+        });
+        Object.entries(resolverErrors).forEach(([name2, errors]) => {
+          errors.forEach(({ message, type, resetBehaviour = ON_FORM_CHANGE }) => {
+            this.setError(name2, { message, type, resetBehaviour });
+          });
         });
       },
       [getFieldDefaultValue]: this.getFieldDefaultValue,
@@ -176,7 +187,7 @@ var ValidationProvider = {
           throw new Error(`validator '${ruleName}' must be registered`);
         }
         if (!validator(value, options.params)) {
-          setError(options.message, ruleName);
+          setError({ message: options.message, type: ruleName });
         }
       });
     },
@@ -188,17 +199,19 @@ var ValidationProvider = {
         this.validateField(name);
       });
       if (this.resolver) {
-        const { values, errors } = await this.resolver(this.values);
+        const { values, errors: resolverErrors } = await this.resolver(this.values);
         resultValues = values;
-        Object.entries(errors).forEach(([name, { message, type }]) => {
-          this.setError(name, message, type);
+        Object.entries(resolverErrors).forEach(([name, errors]) => {
+          errors.forEach(({ message, type, resetBehaviour = ON_FORM_CHANGE }) => {
+            this.setError(name, { message, type, resetBehaviour });
+          });
         });
       }
       if (this.existsErrors) {
         return this.focusInvalidField();
       }
       this.$emit("submit", resultValues, {
-        setError: this.setError,
+        setError: (name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) => this.setError(name, { message, type, resetBehaviour }),
         reset: this.reset,
         focusInvalidField: this.focusInvalidField
       });
@@ -212,10 +225,10 @@ var ValidationProvider = {
         reset();
       });
     },
-    setError(name, message, type = null) {
+    setError(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       const fieldData = this.callbackDataMap[name];
       if (fieldData) {
-        fieldData.setError(message, type);
+        fieldData.setError({ message, type, resetBehaviour });
         return;
       }
       if (this.additionalErrors[name] === void 0) {
@@ -223,7 +236,8 @@ var ValidationProvider = {
       }
       this.additionalErrors[name].push({
         type,
-        message
+        message,
+        resetBehaviour
       });
     },
     focusInvalidField() {
@@ -346,10 +360,11 @@ var ValidationField = {
       }
       this.validate(this.name);
     },
-    setError(message, type = null) {
+    setError({ message, type = null, resetBehaviour = "onFieldChange" }) {
       this.errors.push({
         type,
-        message
+        message,
+        resetBehaviour
       });
     },
     resetErrors() {
@@ -360,7 +375,9 @@ var ValidationField = {
     const children = normalizeChildren(this, {
       name: this.name,
       onChange: this.onChange,
-      setError: this.setError,
+      setError: (message, type = null, resetBehaviour = "onFieldChange") => {
+        this.setError({ message, type, resetBehaviour });
+      },
       modelValue: this.value,
       errors: this.errors,
       firstError: this.firstError,
