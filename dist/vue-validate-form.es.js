@@ -89,7 +89,7 @@ var ValidationProvider = {
           const actualErrors = errors.filter(
             ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
           );
-          resolverErrors[name2] = actualErrors.push(...resolverErrors[name2]);
+          resolverErrors[name2] = actualErrors.push(...resolverErrors[name2] || []);
           resetErrors();
         });
         Object.entries(resolverErrors).forEach(([name2, errors]) => {
