@@ -102,10 +102,11 @@ export default {
 
       this.validate(this.name);
     },
-    setError(message, type = null) {
+    setError({ message, type = null, resetBehaviour = 'onFieldChange' }) {
       this.errors.push({
         type,
-        message
+        message,
+        resetBehaviour
       });
     },
     resetErrors() {
@@ -116,7 +117,9 @@ export default {
     const children = normalizeChildren(this, {
       name: this.name,
       onChange: this.onChange,
-      setError: this.setError,
+      setError: (message, type = null, resetBehaviour = 'onFieldChange') => {
+        this.setError({ message, type, resetBehaviour });
+      },
       modelValue: this.value,
       errors: this.errors,
       firstError: this.firstError,

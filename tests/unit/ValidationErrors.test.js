@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils';
 
 import ValidationForm from './ValidationForm';
 import BaseErrors from './BaseErrors';
+import { ON_FIELD_CHANGE } from '../../src/components/constants';
 
 describe('ValidationErrors', () => {
   let wrapper;
@@ -30,7 +31,8 @@ describe('ValidationErrors', () => {
     expect(wrapper.findComponent(BaseErrors).props().errors).toEqual([
       {
         type: 'custom',
-        message: 'invalid'
+        message: 'invalid',
+        resetBehaviour: ON_FIELD_CHANGE
       }
     ]);
   });

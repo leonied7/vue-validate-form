@@ -9,6 +9,7 @@ import {
   getErrors
 } from './symbols.js';
 import { set, get, has, normalizeChildren } from './helpers';
+import { ON_FIELD_CHANGE, ON_FORM_CHANGE } from './constants';
 
 export default {
   name: 'ValidationProvider',
@@ -20,9 +21,18 @@ export default {
         if (!this.resolver) {
           return;
         }
-        const { errors } = await this.resolver(this.values);
-        Object.entries(errors).forEach(([name, { message, type }]) => {
-          this.setError(name, message, type);
+        const { errors: resolverErrors } = await this.resolver(this.values);
+        Object.values(this.callbackDataMap).forEach(({ resetErrors, errors, name }) => {
+          const actualErrors = errors.filter(
+            ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
+          );
+          resolverErrors[name] = actualErrors.push(...resolverErrors[name]);
+          resetErrors();
+        });
+        Object.entries(resolverErrors).forEach(([name, errors]) => {
+          errors.forEach(({ message, type, resetBehaviour = ON_FORM_CHANGE }) => {
+            this.setError(name, { message, type, resetBehaviour });
+          });
         });
       },
       [getFieldDefaultValue]: this.getFieldDefaultValue,
@@ -114,7 +124,7 @@ export default {
           throw new Error(`validator '${ruleName}' must be registered`);
         }
         if (!validator(value, options.params)) {
-          setError(options.message, ruleName);
+          setError({ message: options.message, type: ruleName });
         }
       });
     },
@@ -127,10 +137,12 @@ export default {
         this.validateField(name);
       });
       if (this.resolver) {
-        const { values, errors } = await this.resolver(this.values);
+        const { values, errors: resolverErrors } = await this.resolver(this.values);
         resultValues = values;
-        Object.entries(errors).forEach(([name, { message, type }]) => {
-          this.setError(name, message, type);
+        Object.entries(resolverErrors).forEach(([name, errors]) => {
+          errors.forEach(({ message, type, resetBehaviour = ON_FORM_CHANGE }) => {
+            this.setError(name, { message, type, resetBehaviour });
+          });
         });
       }
       if (this.existsErrors) {
@@ -138,7 +150,8 @@ export default {
       }
 
       this.$emit('submit', resultValues, {
-        setError: this.setError,
+        setError: (name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) =>
+          this.setError(name, { message, type, resetBehaviour }),
         reset: this.reset,
         focusInvalidField: this.focusInvalidField
       });
@@ -152,10 +165,10 @@ export default {
         reset();
       });
     },
-    setError(name, message, type = null) {
+    setError(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       const fieldData = this.callbackDataMap[name];
       if (fieldData) {
-        fieldData.setError(message, type);
+        fieldData.setError({ message, type, resetBehaviour });
         return;
       }
       if (this.additionalErrors[name] === undefined) {
@@ -163,7 +176,8 @@ export default {
       }
       this.additionalErrors[name].push({
         type,
-        message
+        message,
+        resetBehaviour
       });
     },
     focusInvalidField() {

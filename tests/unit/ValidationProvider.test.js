@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import ValidationForm from './ValidationForm';
 import FormInfo from './FormInfo';
 import BaseInput from './BaseInput';
+import { ON_FORM_CHANGE } from '../../src/components/constants';
 
 describe('ValidationProvider', () => {
   let wrapper;
@@ -127,8 +128,8 @@ describe('ValidationProvider', () => {
 
       expect(formInfoProps.errors).toEqual({
         'my.nested.value': [],
-        'my-input': [{ type: 'required', message: MESSAGE }],
-        unused: [{ type: 'required', message: UNUSED_MESSAGE }],
+        'my-input': [{ type: 'required', message: MESSAGE, resetBehaviour: ON_FORM_CHANGE }],
+        unused: [{ type: 'required', message: UNUSED_MESSAGE, resetBehaviour: ON_FORM_CHANGE }],
         arrayField: []
       });
       expect(formInfoProps.dirty).toBe(false);

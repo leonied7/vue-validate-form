@@ -6,6 +6,7 @@ import { array, object, string } from 'yup';
 import ValidationForm from './ValidationForm';
 import FormInfo from './FormInfo';
 import BaseInput from './BaseInput';
+import { ON_FORM_CHANGE } from '../../src/components/constants';
 
 const resolver = yupResolver(
   object().shape({
@@ -84,7 +85,9 @@ describe('ValidationFieldArrayNew', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
-      'arrayField.0.firstName': [{ type: 'required', message: 'invalid' }],
+      'arrayField.0.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ],
       'arrayField.1.id': [],
       'arrayField.1.firstName': []
     });
@@ -155,7 +158,9 @@ describe('ValidationFieldArrayNew', () => {
       'arrayField.1.id': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
-      'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
+      'arrayField.2.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ]
     });
 
     await wrapper.find('#remove').trigger('click');
@@ -167,7 +172,9 @@ describe('ValidationFieldArrayNew', () => {
       'arrayField.0.id': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
-      'arrayField.1.firstName': [{ type: 'required', message: 'invalid' }]
+      'arrayField.1.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ]
     });
     expect(wrapper.findComponent(FormInfo).props().values).toEqual({
       my: {
@@ -216,7 +223,9 @@ describe('ValidationFieldArrayNew', () => {
       'arrayField.0.id': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
-      'arrayField.1.firstName': [{ type: 'required', message: 'invalid' }]
+      'arrayField.1.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ]
     });
 
     await wrapper.find('#prepend').trigger('click', { firstName: 'new name' });
@@ -230,7 +239,9 @@ describe('ValidationFieldArrayNew', () => {
       'arrayField.1.id': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
-      'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
+      'arrayField.2.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ]
     });
     expect(wrapper.findAllComponents(BaseInput).at(2).props().modelValue).toBe('new name');
   });
@@ -268,7 +279,9 @@ describe('ValidationFieldArrayNew', () => {
       'arrayField.0.id': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
-      'arrayField.1.firstName': [{ type: 'required', message: 'invalid' }]
+      'arrayField.1.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ]
     });
 
     await wrapper.find('#insert').trigger('click');
@@ -282,7 +295,9 @@ describe('ValidationFieldArrayNew', () => {
       'arrayField.1.id': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
-      'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
+      'arrayField.2.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ]
     });
     expect(wrapper.findAllComponents(BaseInput).at(3).props().modelValue).toBe('insert');
   });
@@ -326,7 +341,9 @@ describe('ValidationFieldArrayNew', () => {
       'arrayField.1.id': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
-      'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
+      'arrayField.2.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ]
     });
     const formInfoWrapper = wrapper.findComponent(FormInfo);
 
@@ -337,7 +354,9 @@ describe('ValidationFieldArrayNew', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
-      'arrayField.0.firstName': [{ type: 'required', message: 'invalid' }],
+      'arrayField.0.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ],
       'arrayField.1.id': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
@@ -377,7 +396,9 @@ describe('ValidationFieldArrayNew', () => {
       'arrayField.1.id': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
-      'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
+      'arrayField.2.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ]
     });
     expect(formInfoWrapper.props().values).toEqual({
       my: {
@@ -442,7 +463,9 @@ describe('ValidationFieldArrayNew', () => {
       'arrayField.1.id': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
-      'arrayField.2.firstName': [{ type: 'required', message: 'invalid' }]
+      'arrayField.2.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ]
     });
     const formInfoWrapper = wrapper.findComponent(FormInfo);
 
@@ -455,7 +478,9 @@ describe('ValidationFieldArrayNew', () => {
       'arrayField.0.id': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
-      'arrayField.1.firstName': [{ type: 'required', message: 'invalid' }],
+      'arrayField.1.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ],
       'arrayField.2.id': [],
       'arrayField.2.firstName': []
     });
@@ -489,7 +514,9 @@ describe('ValidationFieldArrayNew', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
-      'arrayField.0.firstName': [{ type: 'required', message: 'invalid' }],
+      'arrayField.0.firstName': [
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+      ],
       'arrayField.1.id': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
