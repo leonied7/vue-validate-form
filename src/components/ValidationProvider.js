@@ -26,7 +26,7 @@ export default {
           const actualErrors = errors.filter(
             ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
           );
-          resolverErrors[name] = actualErrors.push(...(resolverErrors[name] || []));
+          resolverErrors[name] = actualErrors.concat(resolverErrors[name] || []);
           resetErrors();
         });
         Object.entries(resolverErrors).forEach(([name, errors]) => {
