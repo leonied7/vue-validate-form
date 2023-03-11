@@ -92,11 +92,17 @@ export default {
     reset() {
       this.resetErrors();
       this.$nextTick(() => {
-        this.value = this.defaultValue;
+        this.onChange(this.defaultValue);
       });
     },
     onChange(value) {
+      const isChanged = this.value !== value;
+      if (!isChanged) {
+        return;
+      }
+
       this.value = value;
+      this.$emit('change', value);
 
       if (!this.submitted) {
         return;

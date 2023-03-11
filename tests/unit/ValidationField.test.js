@@ -1,5 +1,6 @@
 import { nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
+import { ValidationField } from '../../src/index';
 import ValidationForm from './ValidationForm';
 import BaseInput from './BaseInput';
 
@@ -34,6 +35,7 @@ describe('ValidationField', () => {
     expect(myInputWrapper.props().invalid).toBe(false);
 
     myInputWrapper.vm.$emit('update:modelValue', '');
+
     expect(myInputWrapper.props().invalid).toBe(false);
 
     await wrapper.find('button[type=submit]').trigger('click');
@@ -79,5 +81,39 @@ describe('ValidationField', () => {
     await nextTick();
     expect(myInputWrapper.props().invalid).toBe(false);
     expect(myInputWrapper.props().errors).toEqual([]);
+  });
+
+  it('shouldn`t emit event on equal change', async () => {
+    createComponent({
+      props: {
+        defaultValues: {
+          'my-input': 42
+        }
+      }
+    });
+
+    const fieldWrapper = wrapper.findComponent(ValidationField);
+    const inputWrapper = wrapper.findComponent(BaseInput);
+
+    expect(fieldWrapper.emitted().change).toBeUndefined();
+    inputWrapper.vm.$emit('update:modelValue', 42);
+    expect(fieldWrapper.emitted().change).toBeUndefined();
+  });
+
+  it('should emit event on change', async () => {
+    createComponent({
+      props: {
+        defaultValues: {
+          'my-input': 42
+        }
+      }
+    });
+
+    const fieldWrapper = wrapper.findComponent(ValidationField);
+    const inputWrapper = wrapper.findComponent(BaseInput);
+
+    expect(fieldWrapper.emitted().change).toBeUndefined();
+    inputWrapper.vm.$emit('update:modelValue', '');
+    expect(fieldWrapper.emitted().change).toEqual([['']]);
   });
 });
