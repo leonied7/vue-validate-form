@@ -287,4 +287,21 @@ describe('ValidationProvider', () => {
       expect(formInfo.props().dirty).toBe(false);
     });
   });
+
+  it('set field value by provider', async () => {
+    createComponent();
+
+    wrapper.findComponent(FormInfo).vm.$emit('set-field-value', 'my.nested.value', 'new value');
+    await nextTick();
+
+    expect(wrapper.findComponent(FormInfo).props().values).toEqual({
+      'my-input': undefined,
+      my: {
+        nested: {
+          value: 'new value'
+        }
+      },
+      arrayField: []
+    });
+  });
 });

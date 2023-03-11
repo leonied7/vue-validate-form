@@ -81,6 +81,9 @@ export default {
         errors: [],
         rules: {},
         focus: this.noop,
+        set: (value) => {
+          this.fields = [...value];
+        },
         reset: this.reset,
         setError: this.noop,
         resetErrors: this.noop

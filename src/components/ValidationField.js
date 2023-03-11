@@ -78,6 +78,7 @@ export default {
         errors: this.errors,
         rules: this.rules,
         focus: this.onFocus,
+        set: this.onChange,
         reset: this.reset,
         setError: this.setError,
         resetErrors: this.resetErrors

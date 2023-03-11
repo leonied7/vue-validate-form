@@ -151,6 +151,9 @@ export default {
         return errorsList;
       }, initialErrors);
     },
+    onFieldChange(name, value) {
+      this.callbackDataMap[name].set(value);
+    },
     reset(values) {
       this.submitted = false;
       if (values) {
@@ -201,6 +204,7 @@ export default {
   render(h) {
     const children = normalizeChildren(this, {
       handleSubmit: this.onSubmit,
+      onFieldChange: this.onFieldChange,
       reset: this.reset,
       values: this.values,
       dirty: this.dirty,

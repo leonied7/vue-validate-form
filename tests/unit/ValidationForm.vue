@@ -9,6 +9,7 @@
       #default="{
         handleSubmit,
         reset,
+        onFieldChange,
         values,
         dirty: formDirty,
         invalid: formInvalid,
@@ -43,8 +44,6 @@
             />
           </template>
         </ValidationField>
-
-        <FormInfo :values="values" :dirty="formDirty" :invalid="formInvalid" :errors="formErrors" />
 
         <ValidationFieldArray name="arrayField">
           <template
@@ -84,6 +83,14 @@
             <BaseErrors :errors="errors" />
           </template>
         </ValidationErrors>
+
+        <FormInfo
+          :values="values"
+          :dirty="formDirty"
+          :invalid="formInvalid"
+          :errors="formErrors"
+          @set-field-value="onFieldChange"
+        />
 
         <button type="submit">Submit</button>
         <button type="reset" @click="reset($event.payload)">Reset</button>

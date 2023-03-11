@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <ValidationProvider :default-values="defaultValues" @submit="onSubmit">
-      <template #default="{ handleSubmit, values, dirty, errors, reset }">
+      <template #default="{ handleSubmit, values, dirty, errors, reset, onFieldChange }">
         <form @submit.prevent="handleSubmit">
           <label>Values</label>
           <pre>{{ values }}</pre>
@@ -73,6 +73,9 @@
 
           <ValidationErrors />
           <ValidationErrors name="my-input" />
+          <button type="button" @click="onFieldChange('my-input', 123)">
+            Set 'my-input' field
+          </button>
           <button type="submit">Send</button>
         </form>
       </template>
