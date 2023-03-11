@@ -35,6 +35,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    isEqual: {
+      type: Function,
+      default: (a, b) => a === b
+    },
     tag: {
       type: String,
       default: 'div'
@@ -54,7 +58,7 @@ export default {
       return this.getIsSubmitted();
     },
     dirty() {
-      return this.value !== this.defaultValue;
+      return !this.isEqual(this.value, this.defaultValue);
     },
     firstError() {
       return this.errors[0];
@@ -99,8 +103,7 @@ export default {
       });
     },
     onChange(value) {
-      const isChanged = this.value !== value;
-      if (!isChanged) {
+      if (this.isEqual(this.value, value)) {
         return;
       }
 
