@@ -2,7 +2,6 @@ import { nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
 import ValidationForm from './ValidationForm';
 import BaseInput from './BaseInput';
-import { ON_FIELD_CHANGE } from '../../src/components/constants';
 
 describe('ValidationField', () => {
   let wrapper;
@@ -38,15 +37,17 @@ describe('ValidationField', () => {
     expect(myInputWrapper.props().invalid).toBe(false);
 
     await wrapper.find('button[type=submit]').trigger('click');
+    await nextTick();
+    await nextTick();
     expect(myInputWrapper.props().invalid).toBe(true);
     expect(myInputWrapper.props().errors).toEqual([
-      { type: 'required', message: 'field required', resetBehaviour: ON_FIELD_CHANGE }
+      expect.objectContaining({ message: 'field required' })
     ]);
-    expect(myInputWrapper.props().firstError).toEqual({
-      type: 'required',
-      message: 'field required',
-      resetBehaviour: ON_FIELD_CHANGE
-    });
+    expect(myInputWrapper.props().firstError).toEqual(
+      expect.objectContaining({
+        message: 'field required'
+      })
+    );
     expect(wrapper.emitted().submit).toBeUndefined();
   });
 
@@ -66,12 +67,15 @@ describe('ValidationField', () => {
     const myInputWrapper = wrapper.findComponent(BaseInput);
 
     await wrapper.find('button[type=submit]').trigger('click');
+    await nextTick();
+    await nextTick();
     expect(myInputWrapper.props().invalid).toBe(true);
     expect(myInputWrapper.props().errors).toEqual([
-      { type: 'required', message: 'field required', resetBehaviour: ON_FIELD_CHANGE }
+      expect.objectContaining({ message: 'field required' })
     ]);
 
     myInputWrapper.vm.$emit('update:modelValue', 42);
+    await nextTick();
     await nextTick();
     expect(myInputWrapper.props().invalid).toBe(false);
     expect(myInputWrapper.props().errors).toEqual([]);

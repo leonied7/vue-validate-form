@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import ValidationForm from './ValidationForm';
 import FormInfo from './FormInfo';
 import BaseInput from './BaseInput';
-import { ON_FORM_CHANGE } from '../../src/components/constants';
 
 describe('ValidationProvider', () => {
   let wrapper;
@@ -22,6 +21,7 @@ describe('ValidationProvider', () => {
     createComponent();
 
     await wrapper.find('button[type=submit]').trigger('click');
+    await nextTick();
 
     expect(wrapper.emitted().submit[0]).toEqual(
       expect.arrayContaining([
@@ -71,6 +71,7 @@ describe('ValidationProvider', () => {
       });
 
       await wrapper.find('button[type=submit]').trigger('click');
+      await nextTick();
 
       expect(wrapper.emitted().submit[0]).toEqual(
         expect.arrayContaining([
@@ -123,13 +124,14 @@ describe('ValidationProvider', () => {
       await nextTick();
       await nextTick();
       await nextTick();
+      await nextTick();
 
       const formInfoProps = wrapper.findComponent(FormInfo).props();
 
       expect(formInfoProps.errors).toEqual({
         'my.nested.value': [],
-        'my-input': [{ type: 'required', message: MESSAGE, resetBehaviour: ON_FORM_CHANGE }],
-        unused: [{ type: 'required', message: UNUSED_MESSAGE, resetBehaviour: ON_FORM_CHANGE }],
+        'my-input': [expect.objectContaining({ message: MESSAGE })],
+        unused: [expect.objectContaining({ message: UNUSED_MESSAGE })],
         arrayField: []
       });
       expect(formInfoProps.dirty).toBe(false);

@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { nextTick } from 'vue';
 
 import ValidationForm from './ValidationForm';
 import BaseErrors from './BaseErrors';
@@ -27,6 +28,8 @@ describe('ValidationErrors', () => {
     expect(wrapper.findComponent(BaseErrors).exists()).toBe(false);
 
     await wrapper.find('button[type=submit]').trigger('click');
+    await nextTick();
+    await nextTick();
 
     expect(wrapper.findComponent(BaseErrors).props().errors).toEqual([
       {

@@ -7,6 +7,7 @@ import {
   validate
 } from './symbols';
 import { normalizeChildren } from './helpers';
+import { ON_FIELD_CHANGE } from './constants';
 
 export default {
   name: 'ValidationField',
@@ -102,7 +103,7 @@ export default {
 
       this.validate(this.name);
     },
-    setError({ message, type = null, resetBehaviour = 'onFieldChange' }) {
+    setError({ message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       this.errors.push({
         type,
         message,
@@ -117,7 +118,7 @@ export default {
     const children = normalizeChildren(this, {
       name: this.name,
       onChange: this.onChange,
-      setError: (message, type = null, resetBehaviour = 'onFieldChange') => {
+      setError: (message, type = null, resetBehaviour = ON_FIELD_CHANGE) => {
         this.setError({ message, type, resetBehaviour });
       },
       modelValue: this.value,

@@ -78,6 +78,7 @@ describe('ValidationFieldArrayNew', () => {
     await nextTick();
     await nextTick();
     await nextTick();
+    await nextTick();
     const formInfoProps = wrapper.findComponent(FormInfo).props();
 
     expect(formInfoProps.errors).toEqual({

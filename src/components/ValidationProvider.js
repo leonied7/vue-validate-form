@@ -17,23 +17,8 @@ export default {
     return {
       [register]: this.register,
       [validate]: async (name) => {
-        this.validateField(name);
-        if (!this.resolver) {
-          return;
-        }
-        const { errors: resolverErrors } = await this.resolver(this.values);
-        Object.values(this.callbackDataMap).forEach(({ resetErrors, errors, name }) => {
-          const actualErrors = errors.filter(
-            ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
-          );
-          resolverErrors[name] = actualErrors.concat(resolverErrors[name] || []);
-          resetErrors();
-        });
-        Object.entries(resolverErrors).forEach(([name, errors]) => {
-          errors.forEach(({ message, type, resetBehaviour = ON_FORM_CHANGE }) => {
-            this.setError(name, { message, type, resetBehaviour });
-          });
-        });
+        const { errors } = await this.validate(name);
+        this.setErrorsList(errors);
       },
       [getFieldDefaultValue]: this.getFieldDefaultValue,
       [getFieldValue]: (name) => get(this.values, name),
@@ -115,46 +100,56 @@ export default {
     getErrors(name) {
       return name ? this.errors[name] || [] : this.errors;
     },
-    validateField(name) {
-      const { rules, value, setError, resetErrors } = this.callbackDataMap[name];
-      resetErrors();
-      Object.entries(rules).forEach(([ruleName, options]) => {
-        const validator = validators[ruleName];
-        if (!validator) {
-          throw new Error(`validator '${ruleName}' must be registered`);
-        }
-        if (!validator(value, options.params)) {
-          setError({ message: options.message, type: ruleName });
-        }
-      });
-    },
     async onSubmit() {
       this.submitted = true;
-      let resultValues = this.values;
-
       this.additionalErrors = {};
-      Object.keys(this.callbackDataMap).forEach((name) => {
-        this.validateField(name);
-      });
-      if (this.resolver) {
-        const { values, errors: resolverErrors } = await this.resolver(this.values);
-        resultValues = values;
-        Object.entries(resolverErrors).forEach(([name, errors]) => {
-          errors.forEach(({ message, type, resetBehaviour = ON_FORM_CHANGE }) => {
-            this.setError(name, { message, type, resetBehaviour });
-          });
-        });
-      }
+
+      const { values, errors } = await this.validate();
+      this.setErrorsList(errors);
       if (this.existsErrors) {
         return this.focusInvalidField();
       }
 
-      this.$emit('submit', resultValues, {
+      this.$emit('submit', values, {
         setError: (name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) =>
           this.setError(name, { message, type, resetBehaviour }),
         reset: this.reset,
         focusInvalidField: this.focusInvalidField
       });
+    },
+    async validate(triggerFieldName = null) {
+      const { values, errors } = await this.resolveSchema();
+      const errorsList = this.getLegacyValidateErrors(errors);
+
+      Object.values(this.callbackDataMap).forEach(({ resetErrors, errors, name }) => {
+        if (triggerFieldName !== name) {
+          const actualErrors = errors.filter(
+            ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
+          );
+          errorsList[name] = actualErrors.concat(errorsList[name] || []);
+        }
+        resetErrors();
+      });
+      return { values, errors: errorsList };
+    },
+    resolveSchema() {
+      const values = this.values;
+      return this.resolver ? this.resolver(values) : { values, errors: {} };
+    },
+    getLegacyValidateErrors(initialErrors = {}) {
+      return Object.values(this.callbackDataMap).reduce((errorsList, { name, rules, value }) => {
+        errorsList[name] = Object.entries(rules).reduce((errors, [ruleName, options]) => {
+          const validator = validators[ruleName];
+          if (!validator) {
+            throw new Error(`validator '${ruleName}' must be registered`);
+          }
+          if (!validator(value, options.params)) {
+            errors.push({ message: options.message, type: ruleName });
+          }
+          return errors;
+        }, errorsList[name] || []);
+        return errorsList;
+      }, initialErrors);
     },
     reset(values) {
       this.submitted = false;
@@ -163,6 +158,13 @@ export default {
       }
       Object.values(this.callbackDataMap).forEach(({ reset }) => {
         reset();
+      });
+    },
+    setErrorsList(errorsList) {
+      Object.entries(errorsList).forEach(([name, errors]) => {
+        errors.forEach(({ message, type, resetBehaviour = ON_FORM_CHANGE }) => {
+          this.setError(name, { message, type, resetBehaviour });
+        });
       });
     },
     setError(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
@@ -184,12 +186,12 @@ export default {
       return this.firstInvalidFieldData && this.firstInvalidFieldData.focus();
     },
     register(callback) {
-      const { name, setError } = callback();
+      const { name } = callback();
+      this.callbacks.push(callback);
       (this.additionalErrors[name] || []).forEach((error) => {
-        setError(error);
+        this.setError(name, error);
       });
       this.$delete(this.additionalErrors, name);
-      this.callbacks.push(callback);
       return () => this.unregister(callback);
     },
     unregister(callback) {
