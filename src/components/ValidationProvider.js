@@ -114,6 +114,7 @@ export default {
         setError: (name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) =>
           this.setError(name, { message, type, resetBehaviour }),
         reset: this.reset,
+        onFieldChange: this.onFieldChange,
         focusInvalidField: this.focusInvalidField
       });
     },
