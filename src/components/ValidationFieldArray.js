@@ -12,10 +12,12 @@ export default {
   provide() {
     return {
       [hasFieldValue]: (name) => {
-        return has(this.fields, name.replace(new RegExp(`^${this.name}.`), ''));
+        const normalizedName = name.replace(new RegExp(`^${this.name}.`), '');
+        return has(this.actualValue, normalizedName) || has(this.fields, normalizedName);
       },
       [getFieldValue]: (name) => {
-        return get(this.fields, name.replace(new RegExp(`^${this.name}.`), ''));
+        const normalizedName = name.replace(new RegExp(`^${this.name}.`), '');
+        return get(this.actualValue, normalizedName) || get(this.fields, normalizedName);
       },
       [register]: (callback) => {
         if (this.focusOptions) {
