@@ -304,4 +304,32 @@ describe('ValidationProvider', () => {
       arrayField: []
     });
   });
+
+  it('check pristine behaviour', async () => {
+    createComponent();
+
+    createComponent({
+      props: {
+        defaultValues: {
+          'my-input': 42
+        }
+      }
+    });
+
+    const inputWrapper = wrapper.findComponent(BaseInput);
+    const formInfoWrapper = wrapper.findComponent(FormInfo);
+
+    expect(formInfoWrapper.props().pristine).toBe(true);
+    inputWrapper.vm.$emit('update:modelValue', 42);
+    await nextTick();
+    expect(formInfoWrapper.props().pristine).toBe(true);
+    inputWrapper.vm.$emit('update:modelValue', '42');
+    await nextTick();
+    expect(formInfoWrapper.props().pristine).toBe(false);
+    inputWrapper.vm.$emit('update:modelValue', 42);
+    await nextTick();
+    expect(formInfoWrapper.props().pristine).toBe(false);
+    await wrapper.find('button[type=reset]').trigger('click');
+    expect(formInfoWrapper.props().pristine).toBe(true);
+  });
 });

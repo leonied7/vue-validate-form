@@ -12,19 +12,23 @@
         onFieldChange,
         values,
         dirty: formDirty,
+        pristine: formPristine,
         invalid: formInvalid,
         errors: formErrors
       }"
     >
       <form @submit.prevent="handleSubmit">
         <ValidationField name="my-input" :rules="rulesByField['my-input']">
-          <template #default="{ modelValue, name, firstError, errors, dirty, invalid, onChange }">
+          <template
+            #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
+          >
             <base-input
               :name="name"
               :first-error="firstError"
               :errors="errors"
               :model-value="modelValue"
               :dirty="dirty"
+              :pristine="pristine"
               :invalid="invalid"
               @update:modelValue="onChange"
             />
@@ -32,13 +36,16 @@
         </ValidationField>
 
         <ValidationField name="my.nested.value" :rules="rulesByField['my.nested.value']">
-          <template #default="{ modelValue, name, firstError, errors, dirty, invalid, onChange }">
+          <template
+            #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
+          >
             <base-input
               :name="name"
               :first-error="firstError"
               :errors="errors"
               :model-value="modelValue"
               :dirty="dirty"
+              :pristine="pristine"
               :invalid="invalid"
               @update:modelValue="onChange"
             />
@@ -53,7 +60,16 @@
               <ValidationField :name="`${arrayName}.${index}.id`" />
               <ValidationField :name="`${arrayName}.${index}.firstName`">
                 <template
-                  #default="{ modelValue, name, firstError, errors, dirty, invalid, onChange }"
+                  #default="{
+                    modelValue,
+                    name,
+                    firstError,
+                    errors,
+                    dirty,
+                    pristine,
+                    invalid,
+                    onChange
+                  }"
                 >
                   <base-input
                     :name="name"
@@ -61,6 +77,7 @@
                     :errors="errors"
                     :model-value="modelValue"
                     :dirty="dirty"
+                    :pristine="pristine"
                     :invalid="invalid"
                     @update:modelValue="onChange"
                   />
@@ -87,6 +104,7 @@
         <FormInfo
           :values="values"
           :dirty="formDirty"
+          :pristine="formPristine"
           :invalid="formInvalid"
           :errors="formErrors"
           @set-field-value="onFieldChange"

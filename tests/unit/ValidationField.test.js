@@ -116,4 +116,27 @@ describe('ValidationField', () => {
     inputWrapper.vm.$emit('update:modelValue', '');
     expect(fieldWrapper.emitted().change).toEqual([['']]);
   });
+
+  it('check pristine behaviour', async () => {
+    createComponent({
+      props: {
+        defaultValues: {
+          'my-input': 42
+        }
+      }
+    });
+
+    const inputWrapper = wrapper.findComponent(BaseInput);
+
+    expect(inputWrapper.props().pristine).toBe(true);
+    inputWrapper.vm.$emit('update:modelValue', 42);
+    await nextTick();
+    expect(inputWrapper.props().pristine).toBe(true);
+    inputWrapper.vm.$emit('update:modelValue', '42');
+    await nextTick();
+    expect(inputWrapper.props().pristine).toBe(false);
+    inputWrapper.vm.$emit('update:modelValue', 42);
+    await nextTick();
+    expect(inputWrapper.props().pristine).toBe(false);
+  });
 });

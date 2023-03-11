@@ -15,6 +15,7 @@ export default {
       required: true
     },
     dirty: Boolean,
+    pristine: Boolean,
     invalid: Boolean
   }
 };

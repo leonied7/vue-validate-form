@@ -78,6 +78,7 @@ export default {
         name: this.name,
         value: [],
         dirty: false,
+        pristine: true,
         errors: [],
         rules: {},
         focus: this.noop,

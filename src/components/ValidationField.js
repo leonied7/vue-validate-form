@@ -22,6 +22,7 @@ export default {
   data() {
     return {
       value: undefined,
+      pristine: true,
       errors: []
     };
   },
@@ -75,6 +76,7 @@ export default {
         name: this.name,
         value: this.value,
         dirty: this.dirty,
+        pristine: this.pristine,
         errors: this.errors,
         rules: this.rules,
         focus: this.onFocus,
@@ -93,6 +95,7 @@ export default {
       this.resetErrors();
       this.$nextTick(() => {
         this.onChange(this.defaultValue);
+        this.pristine = true;
       });
     },
     onChange(value) {
@@ -102,6 +105,7 @@ export default {
       }
 
       this.value = value;
+      this.pristine = false;
       this.$emit('change', value);
 
       if (!this.submitted) {
@@ -132,7 +136,8 @@ export default {
       errors: this.errors,
       firstError: this.firstError,
       dirty: this.dirty,
-      invalid: this.invalid
+      invalid: this.invalid,
+      pristine: this.pristine
     });
 
     return children.length <= 1 ? children[0] : h(this.tag, children);

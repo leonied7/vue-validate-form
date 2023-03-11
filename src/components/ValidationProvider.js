@@ -66,6 +66,9 @@ export default {
     dirty() {
       return Object.values(this.callbackDataMap).some(({ dirty }) => dirty);
     },
+    pristine() {
+      return !Object.values(this.callbackDataMap).some(({ pristine }) => !pristine);
+    },
     errors() {
       return Object.values(this.callbackDataMap).reduce((allErrors, { errors, name }) => {
         allErrors[name] = errors;
@@ -209,6 +212,7 @@ export default {
       reset: this.reset,
       values: this.values,
       dirty: this.dirty,
+      pristine: this.pristine,
       invalid: this.submitted && this.existsErrors,
       errors: this.errors
     });
