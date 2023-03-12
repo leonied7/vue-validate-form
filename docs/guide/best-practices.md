@@ -17,7 +17,7 @@
 import { ValidationField } from 'vue-validate-form';
 
 export default {
-  name: 'ValidationField',
+  name: 'BaseValidationField',
   components: { ValidationField },
   props: {
     name: ValidationField.props.name,

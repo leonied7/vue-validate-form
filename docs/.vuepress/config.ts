@@ -7,6 +7,7 @@ export default defineConfig({
     repo: 'leonied7/vue-validate-form',
     nav: [
       { text: 'Руководство', link: '/guide/' },
+      { text: 'Справочник API', link: '/api/' },
     ],
     sidebar: {
       '/guide/': [
@@ -16,6 +17,11 @@ export default defineConfig({
         'handling-form',
         'focusing-fields',
         'best-practices'
+      ],
+      '/api/': [
+        'validation-provider',
+        'validation-field',
+        'types'
       ]
     }
   },

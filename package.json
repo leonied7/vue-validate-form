@@ -58,8 +58,8 @@
     "test": "jest",
     "release": "standard-version -a",
     "prepare": "install-peers",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:dev": "env NODE_OPTIONS=--openssl-legacy-provider vuepress dev docs",
+    "docs:build": "env NODE_OPTIONS=--openssl-legacy-provider vuepress build docs"
   },
   "standard-version": {
     "scripts": {

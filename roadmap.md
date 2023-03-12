@@ -7,7 +7,8 @@
 - [x] Добавить событие при изменении полей
 - [x] Добавить метод onFieldChange у формы
 - [x] Сверять старые и новые значения полей структурно (массивы и объекты не равны друг другу). Добавлен isEqual метод у ValidationField
-- [ ] Оптимизировать количество пересчётов вычисляемых полей в ValidationProvider
+- [x] Оптимизировать количество пересчётов вычисляемых полей в ValidationProvider
+- [ ] Описать в документации об ValidationFieldArray/ValidationErrors
 
 # Для v2
 - [ ] Выпилить rules, интегрировать vue-validate-form-validators через vue-validate-form-resolvers
