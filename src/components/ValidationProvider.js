@@ -45,32 +45,31 @@ export default {
     return {
       submitted: false,
       innerDefaultValues: {},
-      callbacks: [],
+      fieldComponents: [],
       additionalErrors: {}
     };
   },
   computed: {
-    callbackDataMap() {
-      return this.callbacks.reduce((result, callback) => {
-        const data = callback();
-        result[data.name] = data;
-        return result;
+    fieldComponentMap() {
+      return this.fieldComponents.reduce((map, fieldComponent) => {
+        map[fieldComponent.name] = fieldComponent;
+        return map;
       }, {});
     },
     values() {
-      return Object.entries(this.callbackDataMap).reduce((result, [name, { value }]) => {
-        set(result, name, value);
+      return this.fieldComponents.reduce((result, { name, getValue }) => {
+        set(result, name, getValue());
         return result;
       }, {});
     },
     dirty() {
-      return Object.values(this.callbackDataMap).some(({ dirty }) => dirty);
+      return this.fieldComponents.some(({ dirty }) => dirty);
     },
     pristine() {
-      return !Object.values(this.callbackDataMap).some(({ pristine }) => !pristine);
+      return !this.fieldComponents.some(({ pristine }) => !pristine);
     },
     errors() {
-      return Object.values(this.callbackDataMap).reduce((allErrors, { errors, name }) => {
+      return this.fieldComponents.reduce((allErrors, { name, errors }) => {
         allErrors[name] = errors;
         return allErrors;
       }, Object.assign({}, this.additionalErrors));
@@ -78,8 +77,8 @@ export default {
     existsErrors() {
       return Object.values(this.errors).some((errors) => errors.length);
     },
-    firstInvalidFieldData() {
-      return Object.values(this.callbackDataMap).find(({ name }) => this.errors[name].length);
+    firstInvalidFieldComponent() {
+      return this.fieldComponents.find(({ name }) => this.errors[name].length);
     }
   },
   watch: {
@@ -125,7 +124,7 @@ export default {
       const { values, errors } = await this.resolveSchema();
       const errorsList = this.getLegacyValidateErrors(errors);
 
-      Object.values(this.callbackDataMap).forEach(({ resetErrors, errors, name }) => {
+      this.fieldComponents.forEach(({ resetErrors, errors, name }) => {
         if (triggerFieldName !== name) {
           const actualErrors = errors.filter(
             ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
@@ -141,13 +140,13 @@ export default {
       return this.resolver ? this.resolver(values) : { values, errors: {} };
     },
     getLegacyValidateErrors(initialErrors = {}) {
-      return Object.values(this.callbackDataMap).reduce((errorsList, { name, rules, value }) => {
+      return this.fieldComponents.reduce((errorsList, { name, rules, getValue }) => {
         errorsList[name] = Object.entries(rules).reduce((errors, [ruleName, options]) => {
           const validator = validators[ruleName];
           if (!validator) {
             throw new Error(`validator '${ruleName}' must be registered`);
           }
-          if (!validator(value, options.params)) {
+          if (!validator(getValue(), options.params)) {
             errors.push({ message: options.message, type: ruleName });
           }
           return errors;
@@ -156,14 +155,14 @@ export default {
       }, initialErrors);
     },
     onFieldChange(name, value) {
-      this.callbackDataMap[name].set(value);
+      this.fieldComponentMap[name].onChange(value);
     },
     reset(values) {
       this.submitted = false;
       if (values) {
         this.innerDefaultValues = JSON.parse(JSON.stringify(values));
       }
-      Object.values(this.callbackDataMap).forEach(({ reset }) => {
+      this.fieldComponents.forEach(({ reset }) => {
         reset();
       });
     },
@@ -175,9 +174,9 @@ export default {
       });
     },
     setError(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
-      const fieldData = this.callbackDataMap[name];
-      if (fieldData) {
-        fieldData.setError({ message, type, resetBehaviour });
+      const fieldComponent = this.fieldComponentMap[name];
+      if (fieldComponent) {
+        fieldComponent.setError({ message, type, resetBehaviour });
         return;
       }
       if (this.additionalErrors[name] === undefined) {
@@ -190,19 +189,19 @@ export default {
       });
     },
     focusInvalidField() {
-      return this.firstInvalidFieldData && this.firstInvalidFieldData.focus();
+      return this.firstInvalidFieldComponent && this.firstInvalidFieldComponent.onFocus();
     },
-    register(callback) {
-      const { name } = callback();
-      this.callbacks.push(callback);
+    register(fieldComponent) {
+      const name = fieldComponent.name;
+      this.fieldComponents.push(fieldComponent);
       (this.additionalErrors[name] || []).forEach((error) => {
         this.setError(name, error);
       });
       this.$delete(this.additionalErrors, name);
-      return () => this.unregister(callback);
+      return () => this.unregister(fieldComponent);
     },
-    unregister(callback) {
-      this.callbacks = this.callbacks.filter((field) => field !== callback);
+    unregister(fieldComponent) {
+      this.fieldComponents = this.fieldComponents.filter((field) => field !== fieldComponent);
     }
   },
   render(h) {

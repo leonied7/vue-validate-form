@@ -18,7 +18,7 @@ const resolver = yupResolver(
   })
 );
 
-describe('ValidationFieldArrayNew', () => {
+describe('ValidationFieldArray', () => {
   let wrapper;
 
   const createComponent = ({ props } = {}) => {

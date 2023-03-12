@@ -69,26 +69,14 @@ export default {
   },
   mounted() {
     this.value = this.hasProvidedValue ? this.providedValue : this.defaultValue;
-    this.unregister = this.register(this.fieldData);
+    this.unregister = this.register(this);
   },
   beforeDestroy() {
     this.unregister();
   },
   methods: {
-    fieldData() {
-      return {
-        name: this.name,
-        value: this.value,
-        dirty: this.dirty,
-        pristine: this.pristine,
-        errors: this.errors,
-        rules: this.rules,
-        focus: this.onFocus,
-        set: this.onChange,
-        reset: this.reset,
-        setError: this.setError,
-        resetErrors: this.resetErrors
-      };
+    getValue() {
+      return this.value;
     },
     onFocus() {
       this.$emit('should-focus', {
@@ -125,7 +113,9 @@ export default {
       });
     },
     resetErrors() {
-      this.errors = [];
+      if (this.errors.length) {
+        this.errors = [];
+      }
     }
   },
   render(h) {

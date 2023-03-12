@@ -19,23 +19,28 @@ export default {
         const normalizedName = name.replace(new RegExp(`^${this.name}.`), '');
         return get(this.actualValue, normalizedName) || get(this.fields, normalizedName);
       },
-      [register]: (callback) => {
+      [register]: (fieldComponent) => {
         if (this.focusOptions) {
           const { focusName } = this.focusOptions;
-          const { focus, name } = callback();
+          const { onFocus, name } = fieldComponent;
           if (name === focusName) {
-            focus();
+            onFocus();
             this.focusOptions = null;
           }
         }
-        return this.register(callback);
+        return this.register(fieldComponent);
       }
     };
   },
   data() {
     return {
       fields: [],
-      focusOptions: null
+      focusOptions: null,
+      // common fields with ValidationField
+      errors: [],
+      rules: [],
+      dirty: false,
+      pristine: true
     };
   },
   props: {
@@ -67,30 +72,20 @@ export default {
   },
   mounted() {
     this.fields = [...this.defaultValue];
-    this.unregister = this.register(this.fieldData);
+    this.unregister = this.register(this);
   },
   beforeDestroy() {
     this.unregister();
   },
   methods: {
-    fieldData() {
-      return {
-        name: this.name,
-        value: [],
-        dirty: false,
-        pristine: true,
-        errors: [],
-        rules: {},
-        focus: this.noop,
-        set: (value) => {
-          this.fields = [...value];
-        },
-        reset: this.reset,
-        setError: this.noop,
-        resetErrors: this.noop
-      };
+    onChange(value) {
+      this.fields = [...value];
     },
-    noop() {},
+    getValue() {
+      return [];
+    },
+    setError() {},
+    resetErrors() {},
     reset() {
       this.fields = [...this.defaultValue];
     },
