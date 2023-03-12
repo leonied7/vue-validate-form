@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/leonied7/vue-validate-form/compare/v1.2.2...v1.3.0) (2023-03-12)
+
+
+### Features
+
+* add change event for ValidationField ([39e75fc](https://github.com/leonied7/vue-validate-form/commit/39e75fc054c2c8df0bb80ca78ff516978bc0597e))
+* add isEqual prop function for ValidationField ([2da95b4](https://github.com/leonied7/vue-validate-form/commit/2da95b425d0d9f8fd9dcd9de34c3caf0c7d61cfe))
+* add onFieldChange in submit event ([fe7efda](https://github.com/leonied7/vue-validate-form/commit/fe7efdaaef0ac14e653368bb5614cd2d083cb0b5))
+* add onFieldChange method from ValidationProvider ([7a03f74](https://github.com/leonied7/vue-validate-form/commit/7a03f74633fa30010dc3b0b81a0c1d037f8e7308))
+* add pristine flag for provider/field ([602d6cc](https://github.com/leonied7/vue-validate-form/commit/602d6ccb256fb081a053459d73dd1993a48397e7))
+
+
+### Bug Fixes
+
+* provide actualValues from ValidationFieldArray by default ([23c71e9](https://github.com/leonied7/vue-validate-form/commit/23c71e995b192e0c3eeb4fdefa43f10a1595b3cc))
+
 ### [1.2.2](https://github.com/leonied7/vue-validate-form/compare/v1.2.1...v1.2.2) (2023-03-07)
 
 
