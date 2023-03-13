@@ -105,6 +105,114 @@ describe('ValidationProvider', () => {
     });
   });
 
+  describe('defaultErrors', () => {
+    it('set default errors', async () => {
+      createComponent({
+        props: {
+          defaultErrors: {
+            'my-input': [
+              {
+                message: 'outer error'
+              }
+            ]
+          }
+        }
+      });
+      await nextTick();
+
+      const formInfoWrapper = wrapper.findComponent(FormInfo);
+
+      expect(formInfoWrapper.props().errors).toEqual({
+        'my-input': [
+          expect.objectContaining({
+            message: 'outer error'
+          })
+        ],
+        arrayField: [],
+        'my.nested.value': []
+      });
+    });
+
+    it('should work with defaultValues', async () => {
+      createComponent({
+        props: {
+          defaultValues: {
+            my: {
+              nested: {
+                value: 'wqe'
+              }
+            }
+          },
+          defaultErrors: {
+            'my-input': [
+              {
+                message: 'outer error'
+              }
+            ]
+          }
+        }
+      });
+      await nextTick();
+      await nextTick();
+
+      const formInfoWrapper = wrapper.findComponent(FormInfo);
+
+      expect(formInfoWrapper.props().errors).toEqual({
+        'my-input': [
+          expect.objectContaining({
+            message: 'outer error'
+          })
+        ],
+        arrayField: [],
+        'my.nested.value': []
+      });
+    });
+
+    it('should keep defaultErrors on change another fields', async () => {
+      createComponent({
+        props: {
+          defaultValues: {
+            'my-input': 'test',
+            my: {
+              nested: {
+                value: 'wqe'
+              }
+            }
+          },
+          defaultErrors: {
+            'my-input': [
+              {
+                message: 'outer error'
+              }
+            ],
+            'my.nested.value': [
+              {
+                message: 'nested'
+              }
+            ]
+          }
+        }
+      });
+      await nextTick();
+
+      const inputWrapper = wrapper.findAllComponents(BaseInput).at(1);
+      const formInfoWrapper = wrapper.findComponent(FormInfo);
+      inputWrapper.vm.$emit('update:modelValue', 42);
+      await nextTick();
+      await nextTick();
+
+      expect(formInfoWrapper.props().errors).toEqual({
+        'my-input': [
+          expect.objectContaining({
+            message: 'outer error'
+          })
+        ],
+        arrayField: [],
+        'my.nested.value': []
+      });
+    });
+  });
+
   describe('resolver', () => {
     it('should validate', async () => {
       const MESSAGE = 'required field';
@@ -306,8 +414,6 @@ describe('ValidationProvider', () => {
   });
 
   it('check pristine behaviour', async () => {
-    createComponent();
-
     createComponent({
       props: {
         defaultValues: {

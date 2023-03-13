@@ -1,6 +1,13 @@
 <template>
   <div id="app">
-    <ValidationProvider :default-values="defaultValues" @submit="onSubmit">
+    <ValidationProvider
+      :default-values="defaultValues"
+      :default-errors="{
+        'my-input': [{ message: 'outer error' }],
+        'my.nested.value': [{ message: 'qwe' }]
+      }"
+      @submit="onSubmit"
+    >
       <template #default="{ handleSubmit, values, dirty, errors, reset, onFieldChange }">
         <form @submit.prevent="handleSubmit">
           <label>Values</label>

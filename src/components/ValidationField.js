@@ -86,7 +86,7 @@ export default {
     reset() {
       this.resetErrors();
       this.$nextTick(() => {
-        this.onChange(this.defaultValue);
+        this.value = this.defaultValue;
         this.pristine = true;
       });
     },
@@ -105,7 +105,10 @@ export default {
 
       this.validate(this.name);
     },
-    setError({ message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
+    setError(message, type = null, resetBehaviour = ON_FIELD_CHANGE) {
+      this.setErrorActual({ message, type, resetBehaviour });
+    },
+    setErrorActual({ message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       this.errors.push({
         type,
         message,
@@ -122,9 +125,7 @@ export default {
     const children = normalizeChildren(this, {
       name: this.name,
       onChange: this.onChange,
-      setError: (message, type = null, resetBehaviour = ON_FIELD_CHANGE) => {
-        this.setError({ message, type, resetBehaviour });
-      },
+      setError: this.setError,
       modelValue: this.value,
       errors: this.errors,
       firstError: this.firstError,

@@ -84,7 +84,7 @@ export default {
     getValue() {
       return [];
     },
-    setError() {},
+    setErrorActual() {},
     resetErrors() {},
     reset() {
       this.fields = [...this.defaultValue];

@@ -1,6 +1,7 @@
 <template>
   <validation-provider
     :default-values="defaultValues"
+    :default-errors="defaultErrors"
     :resolver="resolver"
     @submit="onSubmit"
     @dirty="$emit('dirty', $event)"
@@ -145,6 +146,10 @@ export default {
   },
   props: {
     defaultValues: {
+      type: Object,
+      default: () => ({})
+    },
+    defaultErrors: {
       type: Object,
       default: () => ({})
     },

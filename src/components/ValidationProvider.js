@@ -32,6 +32,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    defaultErrors: {
+      type: Object,
+      default: () => ({})
+    },
     resolver: {
       type: Function,
       default: null
@@ -84,10 +88,9 @@ export default {
   watch: {
     defaultValues: {
       immediate: true,
-      handler(values) {
-        this.reset(values);
-      }
+      handler: 'setDefaultData'
     },
+    defaultErrors: 'setDefaultData',
     dirty: {
       immediate: true,
       handler(dirty) {
@@ -96,6 +99,16 @@ export default {
     }
   },
   methods: {
+    async setDefaultData() {
+      this.reset(this.defaultValues);
+      if (!Object.values(this.defaultErrors).some((errors) => errors.length)) {
+        return;
+      }
+      this.submitted = true;
+      this.setErrorsList(this.defaultErrors, ON_FIELD_CHANGE);
+      const { errors } = await this.validate();
+      this.setErrorsList(errors);
+    },
     getFieldDefaultValue(name, defaultValue) {
       return get(this.innerDefaultValues, name, defaultValue);
     },
@@ -113,8 +126,7 @@ export default {
       }
 
       this.$emit('submit', values, {
-        setError: (name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) =>
-          this.setError(name, { message, type, resetBehaviour }),
+        setError: this.setError,
         reset: this.reset,
         onFieldChange: this.onFieldChange,
         focusInvalidField: this.focusInvalidField
@@ -166,17 +178,20 @@ export default {
         reset();
       });
     },
-    setErrorsList(errorsList) {
+    setErrorsList(errorsList, defaultResetBehaviour = ON_FORM_CHANGE) {
       Object.entries(errorsList).forEach(([name, errors]) => {
-        errors.forEach(({ message, type, resetBehaviour = ON_FORM_CHANGE }) => {
-          this.setError(name, { message, type, resetBehaviour });
+        errors.forEach(({ message, type, resetBehaviour = defaultResetBehaviour }) => {
+          this.setErrorActual(name, { message, type, resetBehaviour });
         });
       });
     },
-    setError(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
+    setError(name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) {
+      this.setErrorActual(name, { message, type, resetBehaviour });
+    },
+    setErrorActual(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       const fieldComponent = this.fieldComponentMap[name];
       if (fieldComponent) {
-        fieldComponent.setError({ message, type, resetBehaviour });
+        fieldComponent.setErrorActual({ message, type, resetBehaviour });
         return;
       }
       if (this.additionalErrors[name] === undefined) {
@@ -195,7 +210,7 @@ export default {
       const name = fieldComponent.name;
       this.fieldComponents.push(fieldComponent);
       (this.additionalErrors[name] || []).forEach((error) => {
-        this.setError(name, error);
+        this.setErrorActual(name, error);
       });
       this.$delete(this.additionalErrors, name);
       return () => this.unregister(fieldComponent);
@@ -209,6 +224,8 @@ export default {
       handleSubmit: this.onSubmit,
       onFieldChange: this.onFieldChange,
       reset: this.reset,
+      setError: this.setError,
+      focusInvalidField: this.focusInvalidField,
       values: this.values,
       dirty: this.dirty,
       pristine: this.pristine,
