@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/leonied7/vue-validate-form/compare/v1.3.0...v1.4.0) (2023-03-13)
+
+
+### Features
+
+* add setError/focusInvalidField in slot, add defaultErrors prop ([f5c56dd](https://github.com/leonied7/vue-validate-form/commit/f5c56ddbaa2a5aef743e56783bc05d0ac61ac4d3))
+
 ## [1.3.0](https://github.com/leonied7/vue-validate-form/compare/v1.2.2...v1.3.0) (2023-03-12)
 
 

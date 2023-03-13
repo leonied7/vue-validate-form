@@ -95,6 +95,10 @@ var ValidationProvider = {
       type: Object,
       default: () => ({})
     },
+    defaultErrors: {
+      type: Object,
+      default: () => ({})
+    },
     resolver: {
       type: Function,
       default: null
@@ -147,10 +151,9 @@ var ValidationProvider = {
   watch: {
     defaultValues: {
       immediate: true,
-      handler(values) {
-        this.reset(values);
-      }
+      handler: "setDefaultData"
     },
+    defaultErrors: "setDefaultData",
     dirty: {
       immediate: true,
       handler(dirty) {
@@ -159,6 +162,16 @@ var ValidationProvider = {
     }
   },
   methods: {
+    async setDefaultData() {
+      this.reset(this.defaultValues);
+      if (!Object.values(this.defaultErrors).some((errors2) => errors2.length)) {
+        return;
+      }
+      this.submitted = true;
+      this.setErrorsList(this.defaultErrors, ON_FIELD_CHANGE);
+      const { errors } = await this.validate();
+      this.setErrorsList(errors);
+    },
     getFieldDefaultValue(name, defaultValue) {
       return get(this.innerDefaultValues, name, defaultValue);
     },
@@ -174,7 +187,7 @@ var ValidationProvider = {
         return this.focusInvalidField();
       }
       this.$emit("submit", values, {
-        setError: (name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) => this.setError(name, { message, type, resetBehaviour }),
+        setError: this.setError,
         reset: this.reset,
         onFieldChange: this.onFieldChange,
         focusInvalidField: this.focusInvalidField
@@ -225,17 +238,20 @@ var ValidationProvider = {
         reset();
       });
     },
-    setErrorsList(errorsList) {
+    setErrorsList(errorsList, defaultResetBehaviour = ON_FORM_CHANGE) {
       Object.entries(errorsList).forEach(([name, errors]) => {
-        errors.forEach(({ message, type, resetBehaviour = ON_FORM_CHANGE }) => {
-          this.setError(name, { message, type, resetBehaviour });
+        errors.forEach(({ message, type, resetBehaviour = defaultResetBehaviour }) => {
+          this.setErrorActual(name, { message, type, resetBehaviour });
         });
       });
     },
-    setError(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
+    setError(name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) {
+      this.setErrorActual(name, { message, type, resetBehaviour });
+    },
+    setErrorActual(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       const fieldComponent = this.fieldComponentMap[name];
       if (fieldComponent) {
-        fieldComponent.setError({ message, type, resetBehaviour });
+        fieldComponent.setErrorActual({ message, type, resetBehaviour });
         return;
       }
       if (this.additionalErrors[name] === void 0) {
@@ -254,7 +270,7 @@ var ValidationProvider = {
       const name = fieldComponent.name;
       this.fieldComponents.push(fieldComponent);
       (this.additionalErrors[name] || []).forEach((error) => {
-        this.setError(name, error);
+        this.setErrorActual(name, error);
       });
       this.$delete(this.additionalErrors, name);
       return () => this.unregister(fieldComponent);
@@ -268,6 +284,8 @@ var ValidationProvider = {
       handleSubmit: this.onSubmit,
       onFieldChange: this.onFieldChange,
       reset: this.reset,
+      setError: this.setError,
+      focusInvalidField: this.focusInvalidField,
       values: this.values,
       dirty: this.dirty,
       pristine: this.pristine,
@@ -354,7 +372,7 @@ var ValidationField = {
     reset() {
       this.resetErrors();
       this.$nextTick(() => {
-        this.onChange(this.defaultValue);
+        this.value = this.defaultValue;
         this.pristine = true;
       });
     },
@@ -370,7 +388,10 @@ var ValidationField = {
       }
       this.validate(this.name);
     },
-    setError({ message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
+    setError(message, type = null, resetBehaviour = ON_FIELD_CHANGE) {
+      this.setErrorActual({ message, type, resetBehaviour });
+    },
+    setErrorActual({ message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       this.errors.push({
         type,
         message,
@@ -387,9 +408,7 @@ var ValidationField = {
     const children = normalizeChildren(this, {
       name: this.name,
       onChange: this.onChange,
-      setError: (message, type = null, resetBehaviour = ON_FIELD_CHANGE) => {
-        this.setError({ message, type, resetBehaviour });
-      },
+      setError: this.setError,
       modelValue: this.value,
       errors: this.errors,
       firstError: this.firstError,
@@ -481,7 +500,7 @@ var ValidationFieldArray = {
     getValue() {
       return [];
     },
-    setError() {
+    setErrorActual() {
     },
     resetErrors() {
     },
