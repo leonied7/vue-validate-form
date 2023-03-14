@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/leonied7/vue-validate-form/compare/v1.4.1...v1.4.2) (2023-03-14)
+
+
+### Bug Fixes
+
+* render ValidationField slot after registered only ([966807c](https://github.com/leonied7/vue-validate-form/commit/966807c50eea56e92f62a713434cbae597f5e928))
+
 ### [1.4.1](https://github.com/leonied7/vue-validate-form/compare/v1.4.0...v1.4.1) (2023-03-14)
 
 

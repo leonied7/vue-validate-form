@@ -309,6 +309,7 @@ var ValidationField = {
   },
   data() {
     return {
+      registered: false,
       value: void 0,
       pristine: true,
       errors: []
@@ -358,6 +359,7 @@ var ValidationField = {
   mounted() {
     this.value = this.hasProvidedValue ? this.providedValue : this.defaultValue;
     this.unregister = this.register(this);
+    this.registered = true;
   },
   beforeDestroy() {
     this.unregister();
@@ -407,6 +409,9 @@ var ValidationField = {
     }
   },
   render(h) {
+    if (!this.registered) {
+      return;
+    }
     const children = normalizeChildren(this, {
       name: this.name,
       onChange: this.onChange,
