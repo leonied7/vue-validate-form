@@ -21,6 +21,7 @@ export default {
   },
   data() {
     return {
+      registered: false,
       value: undefined,
       pristine: true,
       errors: []
@@ -70,6 +71,7 @@ export default {
   mounted() {
     this.value = this.hasProvidedValue ? this.providedValue : this.defaultValue;
     this.unregister = this.register(this);
+    this.registered = true;
   },
   beforeDestroy() {
     this.unregister();
@@ -122,6 +124,9 @@ export default {
     }
   },
   render(h) {
+    if (!this.registered) {
+      return;
+    }
     const children = normalizeChildren(this, {
       name: this.name,
       onChange: this.onChange,

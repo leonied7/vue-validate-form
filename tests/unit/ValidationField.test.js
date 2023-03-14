@@ -30,6 +30,7 @@ describe('ValidationField', () => {
         }
       }
     });
+    await nextTick();
     const myInputWrapper = wrapper.findComponent(BaseInput);
 
     expect(myInputWrapper.props().invalid).toBe(false);
@@ -66,6 +67,7 @@ describe('ValidationField', () => {
         }
       }
     });
+    await nextTick();
     const myInputWrapper = wrapper.findComponent(BaseInput);
 
     await wrapper.find('button[type=submit]').trigger('click');
@@ -91,6 +93,7 @@ describe('ValidationField', () => {
         }
       }
     });
+    await nextTick();
 
     const fieldWrapper = wrapper.findComponent(ValidationField);
     const inputWrapper = wrapper.findComponent(BaseInput);
@@ -108,6 +111,7 @@ describe('ValidationField', () => {
         }
       }
     });
+    await nextTick();
 
     const fieldWrapper = wrapper.findComponent(ValidationField);
     const inputWrapper = wrapper.findComponent(BaseInput);
@@ -125,6 +129,7 @@ describe('ValidationField', () => {
         }
       }
     });
+    await nextTick();
 
     const inputWrapper = wrapper.findComponent(BaseInput);
 

@@ -41,6 +41,7 @@ describe('ValidationProvider', () => {
 
   it('check dirty event', async () => {
     createComponent();
+    await nextTick();
     expect(wrapper.emitted().dirty[0]).toEqual([false]);
 
     wrapper.findComponent(BaseInput).vm.$emit('update:modelValue', 42);
@@ -422,6 +423,7 @@ describe('ValidationProvider', () => {
         }
       }
     });
+    await nextTick();
 
     const inputWrapper = wrapper.findComponent(BaseInput);
     const formInfoWrapper = wrapper.findComponent(FormInfo);
