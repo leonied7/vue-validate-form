@@ -104,10 +104,12 @@ export default {
       if (!Object.values(this.defaultErrors).some((errors) => errors.length)) {
         return;
       }
-      this.submitted = true;
       this.setErrorsList(this.defaultErrors, ON_FIELD_CHANGE);
       const { errors } = await this.validate();
       this.setErrorsList(errors);
+      this.$nextTick(() => {
+        this.submitted = true;
+      });
     },
     getFieldDefaultValue(name, defaultValue) {
       return get(this.innerDefaultValues, name, defaultValue);

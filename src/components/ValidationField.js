@@ -86,7 +86,7 @@ export default {
     reset() {
       this.resetErrors();
       this.$nextTick(() => {
-        this.value = this.defaultValue;
+        this.onChange(this.defaultValue);
         this.pristine = true;
       });
     },
