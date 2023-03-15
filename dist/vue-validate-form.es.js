@@ -164,6 +164,7 @@ var ValidationProvider = {
   methods: {
     async setDefaultData() {
       this.reset(this.defaultValues);
+      this.additionalErrors = {};
       if (!Object.values(this.defaultErrors).some((errors2) => errors2.length)) {
         return;
       }
