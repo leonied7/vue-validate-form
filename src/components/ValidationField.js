@@ -32,10 +32,6 @@ export default {
       type: String,
       required: true
     },
-    rules: {
-      type: Object,
-      default: () => ({})
-    },
     isEqual: {
       type: Function,
       default: (a, b) => a === b

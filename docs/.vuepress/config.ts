@@ -35,5 +35,15 @@ export default defineConfig({
         '@vue-validate-form/validators': resolve(__dirname, './util/validators.js')
       }
     }
+  },
+  chainWebpack: (config) => {
+    const defaultExclude = config.module.rule('js').exclude.values().at(0);
+    config.module.rule('js').exclude.clear();
+    config.module.rule('js').exclude.add(filePath => {
+      if(/@vue-validate-form\/resolvers.*\.js$/.test(filePath)) {
+        return false;
+      }
+      return defaultExclude(filePath);
+    });
   }
 });

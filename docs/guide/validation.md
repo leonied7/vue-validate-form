@@ -1,23 +1,16 @@
 # Валидация
 
+Валидация осуществляется с помощью ресолвера (параметр `resolver` у `ValidationProvder`)
+
 ::: tip
 `vue-validate-form` начинает валидировать только после первой попытки отправить форму
 :::
 
-vue-validate-form поддерживает несколько вариантов валидации
+## Валидация с помощью ресолвера
 
-- Правила валиации на уровне поля
-- Использование резолвера на верхнем уровне
+Ресолвер опеределяется на уровне `ValidationProvider`, через параметр `resolver`
 
-## Валиации на уровне поля
-
-Правила определяются на уровне поля, используя `ValidationField` и передачу параметра `rules`
-
-::: warning
-Все правила должны регистрироваться через `registerValidator`
-:::
-
-<<< @/docs/.vuepress/components/VFieldLevelValidation.vue{5,19-21,25-30}
+<<< @/docs/.vuepress/components/VResolver.vue{2,23-38}
 
 ### Базовые валидаторы
 
@@ -29,14 +22,7 @@ npm install @vue-validate-form/validators
 
 Использование
 
-<<< @/docs/.vuepress/components/VFieldLevelValidationWithValidators.vue{19-20}
-
-
-## Валидация с помощью ресолвера
-
-Ресолвер опеределяется на уровне `ValidationProvider`, через параметр `resolver`
-
-<<< @/docs/.vuepress/components/VResolver.vue{2,23-38}
+<<< @/docs/.vuepress/components/VResolverWithValidators.vue{2,19,23-32}
 
 ### Базовые ресолверы
 

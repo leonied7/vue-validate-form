@@ -1,8 +1,8 @@
 <template>
-  <validation-provider @submit="onSubmit">
+  <validation-provider :resolver="$options.resolver" @submit="onSubmit">
     <template #default="{ handleSubmit, errors }">
       <form novalidate @submit.prevent="handleSubmit">
-        <validation-field name="firstName" :rules="$options.rules">
+        <validation-field name="firstName">
           <template #default="{ modelValue, onChange }">
             <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
           </template>
@@ -15,16 +15,20 @@
 </template>
 
 <script>
-import { ValidationProvider, ValidationField, registerValidator } from 'vue-validate-form'
-registerValidator('required', (value) => !!value);
+import { ValidationProvider, ValidationField } from 'vue-validate-form'
+const required = (value) => !!value;
 
 export default {
   components: {ValidationProvider, ValidationField},
-  rules: {
-    required: {
-      value: true,
-      message: 'field required'
+  resolver(values) {
+    const result = {
+      values,
+      errors: {}
+    };
+    if(!required(values.firstName)) {
+      result.errors.firstName = [{message: 'field required'}]
     }
+    return result;
   },
   methods: {
     onSubmit(values) {

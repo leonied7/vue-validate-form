@@ -19,7 +19,7 @@
       }"
     >
       <form @submit.prevent="handleSubmit">
-        <ValidationField name="my-input" :rules="rulesByField['my-input']">
+        <ValidationField name="my-input">
           <template
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
@@ -36,7 +36,7 @@
           </template>
         </ValidationField>
 
-        <ValidationField name="my.nested.value" :rules="rulesByField['my.nested.value']">
+        <ValidationField name="my.nested.value">
           <template
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
@@ -123,14 +123,11 @@ import {
   ValidationProvider,
   ValidationField,
   ValidationFieldArray,
-  ValidationErrors,
-  registerValidator
+  ValidationErrors
 } from '../../src/index.js';
 import BaseInput from './BaseInput';
 import FormInfo from './FormInfo';
 import BaseErrors from './BaseErrors';
-
-registerValidator('required', (value) => !!value);
 
 export default {
   name: 'ValidationForm',
@@ -155,11 +152,7 @@ export default {
     },
     resolver: {
       type: Function,
-      default: null
-    },
-    rulesByField: {
-      type: Object,
-      default: () => ({})
+      default: (values) => ({ values, errors: {} })
     }
   },
   methods: {

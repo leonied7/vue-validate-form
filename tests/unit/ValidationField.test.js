@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
-import { ValidationField } from '../../src/index';
+import { ValidationField, get } from '../../src/index';
 import ValidationForm from './ValidationForm';
 import BaseInput from './BaseInput';
 
@@ -20,13 +20,19 @@ describe('ValidationField', () => {
         defaultValues: {
           'my-input': 42
         },
-        rulesByField: {
-          'my-input': {
-            required: {
-              value: true,
-              message: 'field required'
-            }
+        resolver(values) {
+          if (!get(values, 'my-input')) {
+            return {
+              values,
+              errors: {
+                'my-input': [{ message: 'field required' }]
+              }
+            };
           }
+          return {
+            values,
+            errors: {}
+          };
         }
       }
     });
@@ -57,13 +63,19 @@ describe('ValidationField', () => {
   it('recalculate errors on each change', async () => {
     createComponent({
       props: {
-        rulesByField: {
-          'my-input': {
-            required: {
-              value: true,
-              message: 'field required'
-            }
+        resolver(values) {
+          if (!get(values, 'my-input')) {
+            return {
+              values,
+              errors: {
+                'my-input': [{ message: 'field required' }]
+              }
+            };
           }
+          return {
+            values,
+            errors: {}
+          };
         }
       }
     });

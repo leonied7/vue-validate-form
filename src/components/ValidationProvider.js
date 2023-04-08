@@ -1,4 +1,3 @@
-import { validators } from '../validators.js';
 import {
   getFieldDefaultValue,
   getFieldValue,
@@ -136,8 +135,7 @@ export default {
       });
     },
     async validate(triggerFieldName = null) {
-      const { values, errors } = await this.resolveSchema();
-      const errorsList = this.getLegacyValidateErrors(errors);
+      const { values, errors: errorsList } = await this.resolveSchema();
 
       this.fieldComponents.forEach(({ resetErrors, errors, name }) => {
         if (triggerFieldName !== name) {
@@ -153,21 +151,6 @@ export default {
     resolveSchema() {
       const values = this.values;
       return this.resolver ? this.resolver(values) : { values, errors: {} };
-    },
-    getLegacyValidateErrors(initialErrors = {}) {
-      return this.fieldComponents.reduce((errorsList, { name, rules, getValue }) => {
-        errorsList[name] = Object.entries(rules).reduce((errors, [ruleName, options]) => {
-          const validator = validators[ruleName];
-          if (!validator) {
-            throw new Error(`validator '${ruleName}' must be registered`);
-          }
-          if (!validator(getValue(), options.params)) {
-            errors.push({ message: options.message, type: ruleName });
-          }
-          return errors;
-        }, errorsList[name] || []);
-        return errorsList;
-      }, initialErrors);
     },
     onFieldChange(name, value) {
       this.fieldComponentMap[name].onChange(value);

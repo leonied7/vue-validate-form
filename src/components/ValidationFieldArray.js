@@ -38,7 +38,6 @@ export default {
       focusOptions: null,
       // common fields with ValidationField
       errors: [],
-      rules: [],
       dirty: false,
       pristine: true
     };
