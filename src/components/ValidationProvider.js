@@ -167,17 +167,14 @@ export default {
     setErrorsList(errorsList, defaultResetBehaviour = ON_FORM_CHANGE) {
       Object.entries(errorsList).forEach(([name, errors]) => {
         errors.forEach(({ message, type, resetBehaviour = defaultResetBehaviour }) => {
-          this.setErrorActual(name, { message, type, resetBehaviour });
+          this.setError(name, { message, type, resetBehaviour });
         });
       });
     },
-    setError(name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) {
-      this.setErrorActual(name, { message, type, resetBehaviour });
-    },
-    setErrorActual(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
+    setError(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       const fieldComponent = this.fieldComponentMap[name];
       if (fieldComponent) {
-        fieldComponent.setErrorActual({ message, type, resetBehaviour });
+        fieldComponent.setError({ message, type, resetBehaviour });
         return;
       }
       if (this.additionalErrors[name] === undefined) {
@@ -196,7 +193,7 @@ export default {
       const name = fieldComponent.name;
       this.fieldComponents.push(fieldComponent);
       (this.additionalErrors[name] || []).forEach((error) => {
-        this.setErrorActual(name, error);
+        this.setError(name, error);
       });
       this.$delete(this.additionalErrors, name);
       return () => this.unregister(fieldComponent);

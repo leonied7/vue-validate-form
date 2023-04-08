@@ -40,7 +40,7 @@ export default {
       result.errors.secondName = [{message: 'field required'}]
     }
     if(!required(values.lastName)) {
-      result.errors.lastName = [{message: 'field required'}]
+      result.errors.lastName = [{ message: 'field required' }]
     }
     return result;
   },
@@ -49,7 +49,7 @@ export default {
       alert(`Фокус поля: ${name}`)
     },
     onSubmit(values, { setError, focusInvalidField }) {
-      setError('lastName', 'invalid', 'serverError');
+      setError('lastName', { message:'invalid', type:'serverError' });
       focusInvalidField();
     }
   }
