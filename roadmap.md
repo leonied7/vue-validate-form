@@ -11,5 +11,5 @@
 - [ ] Описать в документации об ValidationFieldArray/ValidationErrors
 
 # Для v2
-- [ ] Выпилить rules, интегрировать vue-validate-form-validators через vue-validate-form-resolvers
+- [x] Выпилить rules, @vue-validate-form/validators используются через `resolver`
 - [ ] Поменять формат параметров setError (из вне нужно передавать объект ошибки)

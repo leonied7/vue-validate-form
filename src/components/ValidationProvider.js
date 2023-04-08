@@ -37,7 +37,7 @@ export default {
     },
     resolver: {
       type: Function,
-      default: null
+      required: true
     },
     tag: {
       type: String,
@@ -150,7 +150,7 @@ export default {
     },
     resolveSchema() {
       const values = this.values;
-      return this.resolver ? this.resolver(values) : { values, errors: {} };
+      return this.resolver(values);
     },
     onFieldChange(name, value) {
       this.fieldComponentMap[name].onChange(value);
