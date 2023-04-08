@@ -1,3 +1,4 @@
+import { Resolver, ResolverResult, Errors, Error } from '@vue-validate-form/resolvers';
 import ValidationProvider from './components/ValidationProvider.js';
 import ValidationField from './components/ValidationField.js';
 import ValidationFieldArray from './components/ValidationFieldArray.js';
@@ -11,5 +12,9 @@ export {
   ValidationFieldArray,
   ValidationErrors,
   symbols,
-  get
+  get,
+  Resolver,
+  ResolverResult,
+  Errors,
+  Error
 };
