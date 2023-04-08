@@ -1,4 +1,3 @@
-import { validators } from '../validators.js';
 import {
   getFieldDefaultValue,
   getFieldValue,
@@ -38,7 +37,7 @@ export default {
     },
     resolver: {
       type: Function,
-      default: null
+      required: true
     },
     tag: {
       type: String,
@@ -136,8 +135,7 @@ export default {
       });
     },
     async validate(triggerFieldName = null) {
-      const { values, errors } = await this.resolveSchema();
-      const errorsList = this.getLegacyValidateErrors(errors);
+      const { values, errors: errorsList } = await this.resolveSchema();
 
       this.fieldComponents.forEach(({ resetErrors, errors, name }) => {
         if (triggerFieldName !== name) {
@@ -152,22 +150,7 @@ export default {
     },
     resolveSchema() {
       const values = this.values;
-      return this.resolver ? this.resolver(values) : { values, errors: {} };
-    },
-    getLegacyValidateErrors(initialErrors = {}) {
-      return this.fieldComponents.reduce((errorsList, { name, rules, getValue }) => {
-        errorsList[name] = Object.entries(rules).reduce((errors, [ruleName, options]) => {
-          const validator = validators[ruleName];
-          if (!validator) {
-            throw new Error(`validator '${ruleName}' must be registered`);
-          }
-          if (!validator(getValue(), options.params)) {
-            errors.push({ message: options.message, type: ruleName });
-          }
-          return errors;
-        }, errorsList[name] || []);
-        return errorsList;
-      }, initialErrors);
+      return this.resolver(values);
     },
     onFieldChange(name, value) {
       this.fieldComponentMap[name].onChange(value);
@@ -184,17 +167,14 @@ export default {
     setErrorsList(errorsList, defaultResetBehaviour = ON_FORM_CHANGE) {
       Object.entries(errorsList).forEach(([name, errors]) => {
         errors.forEach(({ message, type, resetBehaviour = defaultResetBehaviour }) => {
-          this.setErrorActual(name, { message, type, resetBehaviour });
+          this.setError(name, { message, type, resetBehaviour });
         });
       });
     },
-    setError(name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) {
-      this.setErrorActual(name, { message, type, resetBehaviour });
-    },
-    setErrorActual(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
+    setError(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       const fieldComponent = this.fieldComponentMap[name];
       if (fieldComponent) {
-        fieldComponent.setErrorActual({ message, type, resetBehaviour });
+        fieldComponent.setError({ message, type, resetBehaviour });
         return;
       }
       if (this.additionalErrors[name] === undefined) {
@@ -213,7 +193,7 @@ export default {
       const name = fieldComponent.name;
       this.fieldComponents.push(fieldComponent);
       (this.additionalErrors[name] || []).forEach((error) => {
-        this.setErrorActual(name, error);
+        this.setError(name, error);
       });
       this.$delete(this.additionalErrors, name);
       return () => this.unregister(fieldComponent);

@@ -32,10 +32,6 @@ export default {
       type: String,
       required: true
     },
-    rules: {
-      type: Object,
-      default: () => ({})
-    },
     isEqual: {
       type: Function,
       default: (a, b) => a === b
@@ -107,10 +103,7 @@ export default {
 
       this.validate(this.name);
     },
-    setError(message, type = null, resetBehaviour = ON_FIELD_CHANGE) {
-      this.setErrorActual({ message, type, resetBehaviour });
-    },
-    setErrorActual({ message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
+    setError({ message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       this.errors.push({
         type,
         message,

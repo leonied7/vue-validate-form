@@ -6,6 +6,7 @@
         'my-input': [{ message: 'outer error' }],
         'my.nested.value': [{ message: 'qwe' }]
       }"
+      :resolver="$options.resolver"
       @submit="onSubmit"
     >
       <template #default="{ handleSubmit, values, dirty, errors, reset, onFieldChange }">
@@ -16,13 +17,13 @@
           <pre>{{ dirty }}</pre>
           <label>errors</label>
           <pre>{{ errors }}</pre>
-          <ValidationField name="my-input" :rules="rules">
+          <ValidationField name="my-input">
             <template #default="{ modelValue, onChange }">
               <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
             </template>
           </ValidationField>
 
-          <ValidationField name="my.nested.value" :rules="rules">
+          <ValidationField name="my.nested.value">
             <template #default="{ modelValue, onChange }">
               <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
             </template>
@@ -50,7 +51,7 @@
                       />
                     </template>
                   </ValidationField>
-                  <ValidationField :name="`${name}.${index}.firstName`" :rules="rules">
+                  <ValidationField :name="`${name}.${index}.firstName`">
                     <template #default="{ modelValue, onChange }">
                       <input
                         :value="modelValue"
@@ -96,10 +97,10 @@ import {
   ValidationProvider,
   ValidationFieldArray,
   ValidationErrors,
-  registerValidator
+  get
 } from './index';
 
-registerValidator('required', (value) => !!value);
+const required = (value) => !!value;
 
 export default {
   name: 'App',
@@ -109,14 +110,26 @@ export default {
     ValidationFieldArray,
     ValidationErrors
   },
+  resolver(values) {
+    const result = {
+      values,
+      errors: {}
+    };
+    if (!required(get(values, 'my-input'))) {
+      result.errors['my-input'] = [{ message: 'field required' }];
+    }
+    if (!required(get(values, 'my.nested.value'))) {
+      result.errors['my.nested.value'] = [{ message: 'field required' }];
+    }
+    get(values, 'arrayField', []).forEach(({ firstName }, index) => {
+      if (!required(firstName)) {
+        result.errors[`arrayField.${index}.firstName`] = [{ message: 'field required' }];
+      }
+    });
+    return result;
+  },
   data() {
     return {
-      rules: {
-        required: {
-          value: true,
-          message: 'field required'
-        }
-      },
       defaultValues: {
         my: {
           nested: {
@@ -146,8 +159,8 @@ export default {
   methods: {
     onSubmit(values, { setError }) {
       setTimeout(() => {
-        setError('my-input', 'invalid field', 'custom');
-        setError('common', 'invalid common field', 'custom');
+        setError('my-input', { message: 'invalid field', type: 'custom' });
+        setError('common', { message: 'invalid common field', type: 'custom' });
       }, 250);
 
       console.log(values);

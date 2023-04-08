@@ -28,11 +28,14 @@ export function get(object, path, defaultValue) {
     return defaultValue;
   }
   let pathParts = path.split('.');
-  while (pathParts.length && object) {
+  while (pathParts.length) {
     const key = pathParts.shift();
+    if (!(key in object)) {
+      return defaultValue;
+    }
     object = object[key];
   }
-  return !pathParts.length ? object : defaultValue;
+  return object;
 }
 
 export function set(object, path, value) {
