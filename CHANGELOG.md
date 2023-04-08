@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/leonied7/vue-validate-form/compare/v1.5.0...v2.0.0) (2023-04-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* change setError format
+* resolver props is required now
+* drop rules props for ValidationField
+
+### Features
+
+* change setError format ([bc856b2](https://github.com/leonied7/vue-validate-form/commit/bc856b22271daeea8a925ddcbdc1de86f2b56325))
+* drop rules props for ValidationField ([2039a11](https://github.com/leonied7/vue-validate-form/commit/2039a11b9547151be118506f6d9251955637c431))
+* resolver props is required now ([8d3f2de](https://github.com/leonied7/vue-validate-form/commit/8d3f2deac4543460187b4bbae685aaeed6064ab7))
+
 ## [1.5.0](https://github.com/leonied7/vue-validate-form/compare/v1.4.3...v1.5.0) (2023-04-07)
 
 
