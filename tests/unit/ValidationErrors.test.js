@@ -20,7 +20,7 @@ describe('ValidationErrors', () => {
     createComponent({
       listeners: {
         submit(values, { setError }) {
-          setError('common', 'invalid', 'custom');
+          setError('common', { message: 'invalid', type: 'custom' });
         }
       }
     });

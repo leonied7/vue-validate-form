@@ -138,7 +138,6 @@ export default {
     ValidationField,
     ValidationFieldArray,
     ValidationErrors,
-
     BaseInput
   },
   props: {
@@ -152,7 +151,7 @@ export default {
     },
     resolver: {
       type: Function,
-      default: (values) => ({ values, errors: {} })
+      default: undefined
     }
   },
   methods: {
