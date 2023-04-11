@@ -37,7 +37,7 @@ export default {
     },
     resolver: {
       type: Function,
-      required: true
+      default: (values) => ({ values, errors: {} })
     },
     tag: {
       type: String,
