@@ -1,25 +1,26 @@
+import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
 
-import ValidationForm from './ValidationForm';
-import BaseErrors from './BaseErrors';
+import ValidationForm from './ValidationForm.vue';
+import BaseErrors from './BaseErrors.vue';
 import { ON_FIELD_CHANGE } from '../../src/components/constants';
 
 describe('ValidationErrors', () => {
   let wrapper;
 
-  const createComponent = ({ props, listeners } = {}) => {
+  const createComponent = ({ props, attrs } = {}) => {
     wrapper = mount(ValidationForm, {
-      propsData: props,
-      listeners,
+      props,
+      attrs,
       attachTo: document.body
     });
   };
 
   it('should submitted without settings', async () => {
     createComponent({
-      listeners: {
-        submit(values, { setError }) {
+      attrs: {
+        onSubmit(values, { setError }) {
           setError('common', { message: 'invalid', type: 'custom' });
         }
       }

@@ -1,18 +1,14 @@
-const path = require('node:path');
-const { defineConfig } = require('vite');
-const { createVuePlugin } = require('vite-plugin-vue2');
+import { resolve } from 'node:path';
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 module.exports = defineConfig({
-  // esbuild: {
-  //   minify: true
-  // },
-  plugins: [createVuePlugin()],
+  plugins: [vue()],
   build: {
-    // minify: 'terser',
     lib: {
-      entry: path.resolve(__dirname, 'src/index.js'),
-      formats: ['es', 'umd'],
+      entry: resolve(__dirname, 'src/index.js'),
+      formats: ['cjs', 'es'],
       name: 'vue-validate-form',
       fileName: (format) => `vue-validate-form.${format}.js`
     },
@@ -24,5 +20,9 @@ module.exports = defineConfig({
         })
       ]
     }
+  },
+  test: {
+    setupFiles: ['./tests/unit/testSetup.js'],
+    environment: 'jsdom'
   }
 });

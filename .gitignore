@@ -1,6 +1,8 @@
 .DS_Store
 .idea
+docs/.vitepress/cache
+docs/.vitepress/dist
 coverage
 node_modules
-dev
-dev-rollup.config.js
+dist
+stats.html

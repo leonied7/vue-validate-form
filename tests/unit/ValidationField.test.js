@@ -1,15 +1,16 @@
+import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
 import { ValidationField, get } from '../../src/index';
-import ValidationForm from './ValidationForm';
-import BaseInput from './BaseInput';
+import ValidationForm from './ValidationForm.vue';
+import BaseInput from './BaseInput.vue';
 
 describe('ValidationField', () => {
   let wrapper;
 
   const createComponent = ({ props } = {}) => {
     wrapper = mount(ValidationForm, {
-      propsData: props,
+      props,
       attachTo: document.body
     });
   };

@@ -1,5 +1,11 @@
+<template>
+  <slot v-if="invalid" :errors="errors" />
+</template>
+
+<script>
+// import { h } from 'vue';
+
 import { getErrors, getIsSubmitted } from './symbols';
-import { normalizeChildren } from './helpers';
 
 export default {
   name: 'ValidationErrors',
@@ -7,6 +13,7 @@ export default {
     getErrors,
     getIsSubmitted
   },
+  inheritAttrs: false,
   props: {
     name: {
       type: String,
@@ -28,14 +35,6 @@ export default {
     invalid() {
       return this.submitted && !!this.errors.length;
     }
-  },
-  render(h) {
-    if (!this.invalid) {
-      return;
-    }
-    const children = normalizeChildren(this, {
-      errors: this.errors
-    });
-    return children.length <= 1 ? children[0] : h(this.tag, children);
   }
 };
+</script>

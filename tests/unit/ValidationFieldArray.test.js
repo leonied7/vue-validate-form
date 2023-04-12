@@ -1,11 +1,13 @@
+import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { yupResolver } from '@vue-validate-form/resolvers';
 import { nextTick } from 'vue';
 import { array, object, string } from 'yup';
 
-import ValidationForm from './ValidationForm';
-import FormInfo from './FormInfo';
-import BaseInput from './BaseInput';
+import ValidationForm from './ValidationForm.vue';
+import { ValidationProvider } from '../../src/index.js';
+import FormInfo from './FormInfo.vue';
+import BaseInput from './BaseInput.vue';
 import { ON_FORM_CHANGE } from '../../src/components/constants';
 
 const resolver = yupResolver(
@@ -23,7 +25,7 @@ describe('ValidationFieldArray', () => {
 
   const createComponent = ({ props } = {}) => {
     wrapper = mount(ValidationForm, {
-      propsData: props,
+      props,
       attachTo: document.body
     });
   };
@@ -74,6 +76,7 @@ describe('ValidationFieldArray', () => {
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
     // wait async yup validate
+    await nextTick();
     await nextTick();
     await nextTick();
     await nextTick();
@@ -149,6 +152,7 @@ describe('ValidationFieldArray', () => {
     await nextTick();
     await nextTick();
     await nextTick();
+    await nextTick();
 
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
@@ -216,6 +220,7 @@ describe('ValidationFieldArray', () => {
     await nextTick();
     await nextTick();
     await nextTick();
+    await nextTick();
 
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
@@ -268,6 +273,7 @@ describe('ValidationFieldArray', () => {
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
     // wait async yup validate
+    await nextTick();
     await nextTick();
     await nextTick();
     await nextTick();
@@ -328,6 +334,7 @@ describe('ValidationFieldArray', () => {
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
     // wait async yup validate
+    await nextTick();
     await nextTick();
     await nextTick();
     await nextTick();
@@ -450,6 +457,7 @@ describe('ValidationFieldArray', () => {
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
     // wait async yup validate
+    await nextTick();
     await nextTick();
     await nextTick();
     await nextTick();

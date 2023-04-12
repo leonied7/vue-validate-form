@@ -1,3 +1,4 @@
-import { enableAutoDestroy } from '@vue/test-utils';
+import { afterEach } from 'vitest';
+import { enableAutoUnmount } from '@vue/test-utils';
 
-enableAutoDestroy(global.afterEach);
+enableAutoUnmount(afterEach);
