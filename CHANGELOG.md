@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-alpha.0](https://github.com/leonied7/vue-validate-form/compare/v2.0.3...v3.0.0-alpha.0) (2023-04-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate to vue3/vitest/vitepress
+
+### Features
+
+* migrate to vue3/vitest/vitepress ([ca75188](https://github.com/leonied7/vue-validate-form/commit/ca7518887a7b54fd09a93f671116735df3ee8b9b))
+
 ## [2.0.3](https://github.com/leonied7/vue-validate-form/compare/v2.0.2...v2.0.3) (2023-04-11)
 
 
