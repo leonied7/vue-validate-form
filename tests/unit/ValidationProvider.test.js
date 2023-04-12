@@ -1,18 +1,19 @@
+import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
 import { yupResolver } from '@vue-validate-form/resolvers';
 import * as yup from 'yup';
 
-import ValidationForm from './ValidationForm';
-import FormInfo from './FormInfo';
-import BaseInput from './BaseInput';
+import ValidationForm from './ValidationForm.vue';
+import FormInfo from './FormInfo.vue';
+import BaseInput from './BaseInput.vue';
 
 describe('ValidationProvider', () => {
   let wrapper;
 
   const createComponent = ({ props } = {}) => {
     wrapper = mount(ValidationForm, {
-      propsData: props,
+      props,
       attachTo: document.body
     });
   };

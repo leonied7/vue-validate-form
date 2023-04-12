@@ -1,3 +1,5 @@
+import { h } from 'vue';
+
 import {
   getFieldDefaultValue,
   getFieldValue,
@@ -7,11 +9,12 @@ import {
   validate,
   getErrors
 } from './symbols.js';
-import { set, get, has, normalizeChildren } from './helpers';
+import { set, get, has } from './helpers';
 import { ON_FIELD_CHANGE, ON_FORM_CHANGE } from './constants';
 
 export default {
   name: 'ValidationProvider',
+  // inheritAttrs: false,
   provide() {
     return {
       [register]: this.register,
@@ -25,6 +28,17 @@ export default {
       [hasFieldValue]: (name) => has(this.values, name),
       [getIsSubmitted]: () => this.submitted
     };
+  },
+  emits: {
+    // TODO: доописать при переходе на ts
+    submit: null,
+    dirty: (flag) => {
+      if (typeof flag === 'boolean') {
+        return true;
+      }
+      console.warn(`Invalid dirty event payload!`);
+      return false;
+    }
   },
   props: {
     defaultValues: {
@@ -82,6 +96,9 @@ export default {
     },
     firstInvalidFieldComponent() {
       return this.fieldComponents.find(({ name }) => this.errors[name].length);
+    },
+    invalid() {
+      return this.submitted && this.existsErrors;
     }
   },
   watch: {
@@ -120,6 +137,7 @@ export default {
     async onSubmit() {
       this.submitted = true;
       this.additionalErrors = {};
+      this.fieldComponents.forEach(({ resetErrors }) => resetErrors());
 
       const { values, errors } = await this.validate();
       this.setErrorsList(errors);
@@ -178,7 +196,7 @@ export default {
         return;
       }
       if (this.additionalErrors[name] === undefined) {
-        this.$set(this.additionalErrors, name, []);
+        this.additionalErrors[name] = [];
       }
       this.additionalErrors[name].push({
         type,
@@ -195,15 +213,15 @@ export default {
       (this.additionalErrors[name] || []).forEach((error) => {
         this.setError(name, error);
       });
-      this.$delete(this.additionalErrors, name);
+      delete this.additionalErrors[name];
       return () => this.unregister(fieldComponent);
     },
     unregister(fieldComponent) {
       this.fieldComponents = this.fieldComponents.filter((field) => field !== fieldComponent);
     }
   },
-  render(h) {
-    const children = normalizeChildren(this, {
+  render() {
+    const children = this.$slots.default({
       handleSubmit: this.onSubmit,
       onFieldChange: this.onFieldChange,
       reset: this.reset,
@@ -212,7 +230,7 @@ export default {
       values: this.values,
       dirty: this.dirty,
       pristine: this.pristine,
-      invalid: this.submitted && this.existsErrors,
+      invalid: this.invalid,
       errors: this.errors
     });
 

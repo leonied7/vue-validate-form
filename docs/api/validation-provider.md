@@ -16,6 +16,7 @@
 | onFieldChange      |  `(name: string, value: any) => void`  | Метод, который устанавливает значение для поля                                                                                |
 
 <sup>*</sup> [ErrorsMap](./types.md#errorsmap)
+
 <sup>*</sup> [Error](./types.md#error)
 
 ## Входные параметры

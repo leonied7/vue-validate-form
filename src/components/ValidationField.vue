@@ -1,3 +1,19 @@
+<template>
+  <slot
+    v-if="registered"
+    v-bind="{ name }"
+    :onChange="onChange"
+    :setError="setError"
+    :modelValue="value"
+    :errors="errors"
+    :firstError="firstError"
+    :dirty="dirty"
+    :invalid="invalid"
+    :pristine="pristine"
+  />
+</template>
+
+<script>
 import {
   getFieldDefaultValue,
   getFieldValue,
@@ -6,7 +22,6 @@ import {
   register,
   validate
 } from './symbols';
-import { normalizeChildren } from './helpers';
 import { ON_FIELD_CHANGE } from './constants';
 
 export default {
@@ -19,14 +34,7 @@ export default {
     register,
     validate
   },
-  data() {
-    return {
-      registered: false,
-      value: undefined,
-      pristine: true,
-      errors: []
-    };
-  },
+  inheritAttrs: false,
   props: {
     name: {
       type: String,
@@ -40,6 +48,19 @@ export default {
       type: String,
       default: 'div'
     }
+  },
+  // TODO: доописать при переходе на ts
+  emits: {
+    'should-focus': null,
+    change: null
+  },
+  data() {
+    return {
+      registered: false,
+      value: undefined,
+      pristine: true,
+      errors: []
+    };
   },
   computed: {
     defaultValue() {
@@ -69,7 +90,7 @@ export default {
     this.unregister = this.register(this);
     this.registered = true;
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.unregister();
   },
   methods: {
@@ -115,23 +136,6 @@ export default {
         this.errors = [];
       }
     }
-  },
-  render(h) {
-    if (!this.registered) {
-      return;
-    }
-    const children = normalizeChildren(this, {
-      name: this.name,
-      onChange: this.onChange,
-      setError: this.setError,
-      modelValue: this.value,
-      errors: this.errors,
-      firstError: this.firstError,
-      dirty: this.dirty,
-      invalid: this.invalid,
-      pristine: this.pristine
-    });
-
-    return children.length <= 1 ? children[0] : h(this.tag, children);
   }
 };
+</script>

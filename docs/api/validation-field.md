@@ -15,6 +15,7 @@
 | setError   | `(error: Error) => void` | Метод, который устанавливает ошибку для поля              |
 
 <sup>*</sup> [Errors](./types.md#errors)
+
 <sup>*</sup> [Error](./types.md#error)
 
 ## Входные параметры

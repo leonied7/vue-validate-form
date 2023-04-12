@@ -1,9 +1,12 @@
 import { nanoid } from 'nanoid';
+import { h } from 'vue';
+
 import { getFieldDefaultValue, getFieldValue, hasFieldValue, register } from './symbols';
-import { get, has, normalizeChildren } from './helpers';
+import { get, has } from './helpers';
 
 export default {
   name: 'ValidationFieldArray',
+  inheritAttrs: false,
   inject: {
     register,
     getFieldDefaultValue,
@@ -105,8 +108,8 @@ export default {
     },
     swap(from, to) {
       const temp = this.fields[from];
-      this.$set(this.fields, from, this.fields[to]);
-      this.$set(this.fields, to, temp);
+      this.fields[from] = this.fields[to];
+      this.fields[to] = temp;
     },
     move(from, to) {
       this.fields.splice(to, 0, this.fields.splice(from, 1)[0]);
@@ -115,8 +118,8 @@ export default {
       this.fields = this.fields.filter((field, i) => index !== i);
     }
   },
-  render(h) {
-    const children = normalizeChildren(this, {
+  render() {
+    const children = this.$slots.default({
       name: this.name,
       fields: this.actualValue,
       append: this.append,

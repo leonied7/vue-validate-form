@@ -125,9 +125,9 @@ import {
   ValidationFieldArray,
   ValidationErrors
 } from '../../src/index.js';
-import BaseInput from './BaseInput';
-import FormInfo from './FormInfo';
-import BaseErrors from './BaseErrors';
+import BaseInput from './BaseInput.vue';
+import FormInfo from './FormInfo.vue';
+import BaseErrors from './BaseErrors.vue';
 
 export default {
   name: 'ValidationForm',
@@ -140,6 +140,7 @@ export default {
     ValidationErrors,
     BaseInput
   },
+  inheritAttrs: false,
   props: {
     defaultValues: {
       type: Object,
@@ -153,6 +154,10 @@ export default {
       type: Function,
       default: undefined
     }
+  },
+  emits: {
+    submit: null,
+    dirty: null
   },
   methods: {
     onSubmit(values, options) {

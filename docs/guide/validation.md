@@ -10,7 +10,7 @@
 
 Ресолвер опеределяется на уровне `ValidationProvider`, через параметр `resolver`
 
-<<< @/docs/.vuepress/components/VResolver.vue{2,23-38}
+<<< @/.vitepress/components/VResolver.vue{2,23-38}
 
 ### Базовые валидаторы
 
@@ -22,7 +22,7 @@ npm install @vue-validate-form/validators
 
 Использование
 
-<<< @/docs/.vuepress/components/VResolverWithValidators.vue{2,19,23-32}
+<<< @/.vitepress/components/VResolverWithValidators.vue{2,19,23-32}
 
 ### Базовые ресолверы
 
@@ -34,7 +34,7 @@ npm install @vue-validate-form/resolvers yup
 
 Использование
 
-<<< @/docs/.vuepress/components/VResolverWithYup.vue{2,18,20,24-28}
+<<< @/.vitepress/components/VResolverWithYup.vue{2,18,20,24-28}
 
 ## Работа с ошибками валидации
 
