@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-alpha.1](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.0...v3.0.0-alpha.1) (2023-04-13)
+
+
+### Tests
+
+* small fixes ([6882949](https://github.com/leonied7/vue-validate-form/commit/6882949773f75a0497afab3e89816dc3975f478c))
+
+
+### Continuous Integration
+
+* add dts ([1b73936](https://github.com/leonied7/vue-validate-form/commit/1b73936b565abdcdb92f4135dcf9e328b9a7b897))
+* add lint action ([e6837f5](https://github.com/leonied7/vue-validate-form/commit/e6837f5a4cd674e11ea91f6586e793e0937a4cb4))
+
 ## [3.0.0-alpha.0](https://github.com/leonied7/vue-validate-form/compare/v2.0.3...v3.0.0-alpha.0) (2023-04-12)
 
 
