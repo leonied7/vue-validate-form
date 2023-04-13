@@ -24,7 +24,7 @@ module.exports = defineConfig({
   },
   plugins: [vue()],
   test: {
-    setupFiles: ['./tests/unit/testSetup.js'],
+    setupFiles: ['./tests/unit/testSetup.ts'],
     environment: 'jsdom'
   }
 });
