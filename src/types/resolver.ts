@@ -1,5 +1,5 @@
-import { Values } from './values';
-import { ValidationsErrors } from './error';
+import type { Values } from './values';
+import type { ValidationsErrors } from './error';
 
 export interface ResolverResult {
   values: Values;

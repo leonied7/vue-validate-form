@@ -50,7 +50,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "lint": "eslint src/*.{js,ts,vue}",
+    "lint": "eslint .",
     "test": "vitest run",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",

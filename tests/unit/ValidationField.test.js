@@ -21,7 +21,7 @@ describe('ValidationField', () => {
         defaultValues: {
           'my-input': 42
         },
-        resolver (values) {
+        resolver(values) {
           if (!get(values, 'my-input')) {
             return {
               values,
@@ -64,7 +64,7 @@ describe('ValidationField', () => {
   it('recalculate errors on each change', async () => {
     createComponent({
       props: {
-        resolver (values) {
+        resolver(values) {
           if (!get(values, 'my-input')) {
             return {
               values,

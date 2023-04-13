@@ -14,16 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  computed,
-  inject,
-  ref,
-  toRefs,
-  getCurrentInstance,
-  onBeforeUnmount,
-  reactive,
-  nextTick
-} from 'vue';
+import { computed, inject, ref, toRefs, onBeforeUnmount, reactive, nextTick } from 'vue';
 
 import type { InnerValidationError } from '../types/error';
 import {
@@ -34,7 +25,7 @@ import {
   registerSymbol,
   validateSymbol
 } from './symbols';
-import { Field } from '../types/field';
+import type { Field } from '../types/field';
 import { ON_FIELD_CHANGE } from './constants';
 
 interface Props {

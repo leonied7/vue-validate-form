@@ -9,7 +9,7 @@ module.exports = defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       formats: ['cjs', 'es'],
       name: 'vue-validate-form',
-      fileName: format => `vue-validate-form.${format}.js`,
+      fileName: (format) => `vue-validate-form.${format}.js`
     },
     rollupOptions: {
       external: ['vue', 'nanoid'],
@@ -17,14 +17,14 @@ module.exports = defineConfig({
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         visualizer({
-          open: true,
-        }),
-      ],
-    },
+          open: true
+        })
+      ]
+    }
   },
   plugins: [vue()],
   test: {
     setupFiles: ['./tests/unit/testSetup.js'],
-    environment: 'jsdom',
-  },
+    environment: 'jsdom'
+  }
 });

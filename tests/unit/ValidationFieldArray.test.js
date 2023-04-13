@@ -5,7 +5,6 @@ import { nextTick } from 'vue';
 import { array, object, string } from 'yup';
 
 import ValidationForm from './ValidationForm.vue';
-import { ValidationProvider } from '../../src';
 import FormInfo from './FormInfo.vue';
 import BaseInput from './BaseInput.vue';
 import { ON_FORM_CHANGE } from '../../src/components/constants';
