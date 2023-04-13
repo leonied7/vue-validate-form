@@ -29,7 +29,9 @@ export function get(object: Values, path: string, defaultValue?: unknown): unkno
   const pathParts = path.split('.');
   while (pathParts.length > 0) {
     const key = pathParts.shift() ?? '';
-    if (!(key in tempObject)) { return defaultValue; }
+    if (!(key in tempObject)) {
+      return defaultValue;
+    }
 
     tempObject = tempObject[key];
   }
@@ -38,13 +40,17 @@ export function get(object: Values, path: string, defaultValue?: unknown): unkno
 
 export function set(object: Values, path: string, value: unknown): void {
   let tempObject = object;
-  if (!isObject(tempObject)) { return; }
+  if (!isObject(tempObject)) {
+    return;
+  }
 
   const pathParts = path.split('.');
 
   while (pathParts.length > 1) {
     const key = pathParts.shift() ?? '';
-    if (!isObject(tempObject[key])) { tempObject[key] = isIndex(pathParts[0]) ? [] : {}; }
+    if (!isObject(tempObject[key])) {
+      tempObject[key] = isIndex(pathParts[0]) ? [] : {};
+    }
 
     tempObject = tempObject[key];
   }

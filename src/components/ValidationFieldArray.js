@@ -1,7 +1,12 @@
 import { nanoid } from 'nanoid';
 import { h } from 'vue';
 
-import { getFieldDefaultValueSymbol, getFieldValueSymbol, hasFieldValueSymbol, registerSymbol } from './symbols';
+import {
+  getFieldDefaultValueSymbol,
+  getFieldValueSymbol,
+  hasFieldValueSymbol,
+  registerSymbol,
+} from './symbols';
 import { get, has } from './helpers';
 
 export default {
@@ -14,15 +19,15 @@ export default {
   },
   provide() {
     return {
-      [hasFieldValueSymbol]: (name) => {
+      [hasFieldValueSymbol]: name => {
         const normalizedName = name.replace(new RegExp(`^${this.name}.`), '');
         return has(this.actualValue, normalizedName) || has(this.fields, normalizedName);
       },
-      [getFieldValueSymbol]: (name) => {
+      [getFieldValueSymbol]: name => {
         const normalizedName = name.replace(new RegExp(`^${this.name}.`), '');
         return get(this.actualValue, normalizedName) || get(this.fields, normalizedName);
       },
-      [registerSymbol]: (fieldComponent) => {
+      [registerSymbol]: fieldComponent => {
         if (this.focusOptions) {
           const { focusName } = this.focusOptions;
           const { onFocus, name } = fieldComponent;

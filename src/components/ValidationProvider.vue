@@ -1,12 +1,5 @@
 <script lang="ts" setup>
-import {
-  computed,
-  nextTick,
-  provide,
-  ref,
-  toRefs,
-  watch,
-} from 'vue';
+import { computed, nextTick, provide, ref, toRefs, watch } from 'vue';
 
 import type { Values } from '../types/values';
 import type {
@@ -31,10 +24,10 @@ import { get, has, set } from './helpers';
 import { ON_FIELD_CHANGE, ON_FORM_CHANGE } from './constants';
 
 export interface Props {
-  defaultValues?: Values
-  defaultErrors?: ValidationsErrors
+  defaultValues?: Values;
+  defaultErrors?: ValidationsErrors;
   // TODO: type it
-  resolver?: Function
+  resolver?: Function;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -43,13 +36,17 @@ const props = withDefaults(defineProps<Props>(), {
   resolver: values => ({ values, errors: {} }),
 });
 const emit = defineEmits<{
-  (e: 'submit', values: Values, opt: {
-    setError: (name: string, error: ValidationError) => void
-    reset: (defaultValue?: Values) => void
-    onFieldChange: (name: string, value: unknown) => void
-    focusInvalidField: () => void
-  }): void
-  (e: 'dirty', dirty: boolean): void
+  (
+    e: 'submit',
+    values: Values,
+    opt: {
+      setError: (name: string, error: ValidationError) => void;
+      reset: (defaultValue?: Values) => void;
+      onFieldChange: (name: string, value: unknown) => void;
+      focusInvalidField: () => void;
+    },
+  ): void;
+  (e: 'dirty', dirty: boolean): void;
 }>();
 
 const { defaultValues, defaultErrors, resolver } = toRefs(props);
@@ -95,11 +92,15 @@ const invalid = computed(() => {
 
 watch(defaultValues, setDefaultData);
 watch(defaultErrors, setDefaultData);
-watch(dirty, (dirty) => {
-  emit('dirty', dirty);
-}, {
-  immediate: true,
-});
+watch(
+  dirty,
+  dirty => {
+    emit('dirty', dirty);
+  },
+  {
+    immediate: true,
+  },
+);
 setDefaultData();
 
 async function setDefaultData() {
@@ -116,11 +117,14 @@ async function setDefaultData() {
   submitted.value = true;
 }
 
-const getFieldDefaultValue: GetFieldDefaultValue = (name: string, defaultValue: unknown): unknown => {
+const getFieldDefaultValue: GetFieldDefaultValue = (
+  name: string,
+  defaultValue: unknown,
+): unknown => {
   return get(innerDefaultValues.value, name, defaultValue);
 };
 const getErrors: GetErrors = (name?: string) => {
-  return name ? (errors.value[name] || []) : errors.value;
+  return name ? errors.value[name] || [] : errors.value;
 };
 async function handleSubmit(): Promise<void> {
   submitted.value = true;
@@ -145,9 +149,7 @@ async function validate(triggerFieldName?: string) {
 
   fieldComponents.value.forEach(({ resetErrors, errors, name }) => {
     if (triggerFieldName !== name) {
-      const actualErrors = errors.filter(
-        ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE,
-      );
+      const actualErrors = errors.filter(({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE);
       errorsList[name] = actualErrors.concat(errorsList[name] || []);
     }
     resetErrors();
@@ -171,14 +173,26 @@ function reset(values?: Values) {
   });
 }
 
-function setErrorsList(errorsList: InnerValidationsErrors | ValidationsErrors, defaultResetBehaviour: ResetBehaviour = ON_FORM_CHANGE) {
+function setErrorsList(
+  errorsList: InnerValidationsErrors | ValidationsErrors,
+  defaultResetBehaviour: ResetBehaviour = ON_FORM_CHANGE,
+) {
   Object.entries(errorsList).forEach(([name, errors]) => {
-    errors.forEach(({ message, type, resetBehaviour = defaultResetBehaviour }: InnerValidationError) => {
-      setError(name, { message, type, resetBehaviour });
-    });
+    errors.forEach(
+      ({ message, type, resetBehaviour = defaultResetBehaviour }: InnerValidationError) => {
+        setError(name, { message, type, resetBehaviour });
+      },
+    );
   });
 }
-function setError(name: string, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }: InnerValidationError | ValidationError) {
+function setError(
+  name: string,
+  {
+    message,
+    type = null,
+    resetBehaviour = ON_FIELD_CHANGE,
+  }: InnerValidationError | ValidationError,
+) {
   const fieldComponent = fieldComponentMap.value[name];
   if (fieldComponent) {
     fieldComponent.setError({ message, type, resetBehaviour });
@@ -198,10 +212,10 @@ function focusInvalidField(): void {
   return firstInvalidFieldComponent.value && firstInvalidFieldComponent.value.onFocus();
 }
 
-const register: Register = (fieldComponent) => {
+const register: Register = fieldComponent => {
   const name = fieldComponent.name;
   fieldComponents.value.push(fieldComponent);
-  (additionalErrors.value[name] || []).forEach((error) => {
+  (additionalErrors.value[name] || []).forEach(error => {
     setError(name, error);
   });
   delete additionalErrors.value[name];

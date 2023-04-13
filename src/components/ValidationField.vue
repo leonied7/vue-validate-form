@@ -37,7 +37,7 @@ export default {
   // TODO: доописать при переходе на ts
   emits: {
     'should-focus': null,
-    'change': null,
+    change: null,
   },
   data() {
     return {
