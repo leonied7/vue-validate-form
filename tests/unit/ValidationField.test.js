@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
-import { ValidationField, get } from '../../src/index';
+import { ValidationField, get } from '../../src';
 import ValidationForm from './ValidationForm.vue';
 import BaseInput from './BaseInput.vue';
 
@@ -21,7 +21,7 @@ describe('ValidationField', () => {
         defaultValues: {
           'my-input': 42
         },
-        resolver(values) {
+        resolver (values) {
           if (!get(values, 'my-input')) {
             return {
               values,
@@ -64,7 +64,7 @@ describe('ValidationField', () => {
   it('recalculate errors on each change', async () => {
     createComponent({
       props: {
-        resolver(values) {
+        resolver (values) {
           if (!get(values, 'my-input')) {
             return {
               values,

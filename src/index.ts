@@ -1,4 +1,4 @@
-import ValidationProvider from './components/ValidationProvider.js';
+import ValidationProvider from './components/ValidationProvider.vue';
 import ValidationField from './components/ValidationField.vue';
 import ValidationFieldArray from './components/ValidationFieldArray.js';
 import ValidationErrors from './components/ValidationErrors.vue';

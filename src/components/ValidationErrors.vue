@@ -1,40 +1,32 @@
+<script lang="ts" setup>
+import { computed, inject } from 'vue';
+
+import type { ValidationError } from '../types/error';
+import { getErrorsSymbol, getIsSubmittedSymbol } from './symbols';
+
+const props = defineProps({
+  name: { type: String, default: undefined },
+});
+
+const getIsSubmitted = inject(getIsSubmittedSymbol);
+if (!getIsSubmitted) {
+  throw new Error('getIsSubmitted not provided');
+}
+
+const submitted = computed(() => getIsSubmitted());
+const getErrors = inject(getErrorsSymbol);
+if (!getErrors) {
+  throw new Error('getErrors not provided');
+}
+
+const errors = computed<Array<ValidationError>>(() => {
+  const errors = getErrors(props.name);
+  return Array.isArray(errors) ? errors : [].concat(...Object.values(errors));
+});
+
+const invalid = computed(() => submitted.value && !!errors.value.length);
+</script>
+
 <template>
   <slot v-if="invalid" :errors="errors" />
 </template>
-
-<script>
-// import { h } from 'vue';
-
-import { getErrors, getIsSubmitted } from './symbols';
-
-export default {
-  name: 'ValidationErrors',
-  inject: {
-    getErrors,
-    getIsSubmitted
-  },
-  inheritAttrs: false,
-  props: {
-    name: {
-      type: String,
-      default: undefined
-    },
-    tag: {
-      type: String,
-      default: 'div'
-    }
-  },
-  computed: {
-    submitted() {
-      return this.getIsSubmitted();
-    },
-    errors() {
-      const errors = this.getErrors(this.name);
-      return Array.isArray(errors) ? errors : [].concat(...Object.values(errors));
-    },
-    invalid() {
-      return this.submitted && !!this.errors.length;
-    }
-  }
-};
-</script>

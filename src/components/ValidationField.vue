@@ -1,65 +1,50 @@
-<template>
-  <slot
-    v-if="registered"
-    v-bind="{ name }"
-    :onChange="onChange"
-    :setError="setError"
-    :modelValue="value"
-    :errors="errors"
-    :firstError="firstError"
-    :dirty="dirty"
-    :invalid="invalid"
-    :pristine="pristine"
-  />
-</template>
-
 <script>
 import {
-  getFieldDefaultValue,
-  getFieldValue,
-  hasFieldValue,
-  getIsSubmitted,
-  register,
-  validate
+  getFieldDefaultValueSymbol,
+  getFieldValueSymbol,
+  getIsSubmittedSymbol,
+  hasFieldValueSymbol,
+  registerSymbol,
+  validateSymbol,
 } from './symbols';
 import { ON_FIELD_CHANGE } from './constants';
 
 export default {
   name: 'ValidationField',
   inject: {
-    hasFieldValue,
-    getFieldDefaultValue,
-    getFieldValue,
-    getIsSubmitted,
-    register,
-    validate
+    hasFieldValue: hasFieldValueSymbol,
+    getFieldDefaultValue: getFieldDefaultValueSymbol,
+    getFieldValue: getFieldValueSymbol,
+    getIsSubmitted: getIsSubmittedSymbol,
+    register: registerSymbol,
+    validate: validateSymbol,
   },
   inheritAttrs: false,
   props: {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     isEqual: {
       type: Function,
-      default: (a, b) => a === b
+      default: (a, b) => a === b,
     },
     tag: {
       type: String,
-      default: 'div'
-    }
+      default: 'div',
+    },
   },
   // TODO: доописать при переходе на ts
   emits: {
     'should-focus': null,
-    change: null
+    'change': null,
   },
   data() {
     return {
       registered: false,
       value: undefined,
       pristine: true,
-      errors: []
+      errors: [],
     };
   },
   computed: {
@@ -83,7 +68,7 @@ export default {
     },
     invalid() {
       return this.submitted && !!this.errors.length;
-    }
+    },
   },
   mounted() {
     this.value = this.hasProvidedValue ? this.providedValue : this.defaultValue;
@@ -99,7 +84,7 @@ export default {
     },
     onFocus() {
       this.$emit('should-focus', {
-        name: this.name
+        name: this.name,
       });
     },
     reset() {
@@ -128,14 +113,29 @@ export default {
       this.errors.push({
         type,
         message,
-        resetBehaviour
+        resetBehaviour,
       });
     },
     resetErrors() {
       if (this.errors.length) {
         this.errors = [];
       }
-    }
-  }
+    },
+  },
 };
 </script>
+
+<template>
+  <slot
+    v-if="registered"
+    v-bind="{ name }"
+    :on-change="onChange"
+    :set-error="setError"
+    :model-value="value"
+    :errors="errors"
+    :first-error="firstError"
+    :dirty="dirty"
+    :invalid="invalid"
+    :pristine="pristine"
+  />
+</template>
