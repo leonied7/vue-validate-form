@@ -7,7 +7,7 @@ export const hasFieldValueSymbol: InjectionKey<(name: string) => boolean> = Symb
 export type GetFieldValue = (name: string) => unknown;
 export const getFieldValueSymbol: InjectionKey<GetFieldValue> = Symbol('getFieldValue');
 
-export type GetFieldDefaultValue = (name: string, defaultValue: unknown) => unknown;
+export type GetFieldDefaultValue = (name: string, defaultValue?: unknown) => unknown;
 export const getFieldDefaultValueSymbol: InjectionKey<GetFieldDefaultValue> =
   Symbol('getFieldDefaultValue');
 

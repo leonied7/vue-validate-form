@@ -13,14 +13,6 @@
   />
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  inheritAttrs: false
-});
-</script>
-
 <script lang="ts" setup>
 import { computed, nextTick, provide, ref, toRefs, watch } from 'vue';
 
@@ -47,7 +39,7 @@ import {
 import { get, has, set } from './helpers';
 import { ON_FIELD_CHANGE, ON_FORM_CHANGE } from './constants';
 
-export interface Props {
+interface Props {
   defaultValues?: Values;
   defaultErrors?: ValidationsErrors;
   resolver?: Resolver;
@@ -56,7 +48,7 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
   defaultValues: () => ({}),
   defaultErrors: () => ({}),
-  resolver: (values) => ({ values, errors: {} })
+  resolver: () => (values) => ({ values, errors: {} })
 });
 const emit = defineEmits<{
   (
@@ -79,7 +71,7 @@ const innerDefaultValues = ref<Values>({});
 const fieldComponents = ref<Field[]>([]);
 const additionalErrors = ref<InnerValidationsErrors>({});
 
-const fieldComponentMap = computed(() => {
+const fieldComponentMap = computed<Record<string, Field>>(() => {
   return fieldComponents.value.reduce((map, fieldComponent) => {
     map[fieldComponent.name] = fieldComponent;
     return map;
@@ -142,7 +134,7 @@ async function setDefaultData() {
 
 const getFieldDefaultValue: GetFieldDefaultValue = (
   name: string,
-  defaultValue: unknown
+  defaultValue?: unknown
 ): unknown => {
   return get(innerDefaultValues.value, name, defaultValue);
 };
@@ -256,4 +248,12 @@ provide(getFieldValueSymbol, (name: string) => get(values.value, name));
 provide(getErrorsSymbol, getErrors);
 provide(hasFieldValueSymbol, (name: string) => has(values.value, name));
 provide(getIsSubmittedSymbol, () => submitted.value);
+</script>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  inheritAttrs: false
+});
 </script>

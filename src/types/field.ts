@@ -1,12 +1,14 @@
 import type { InnerValidationError } from './error';
 
 export interface Field {
-  resetErrors: () => void;
-  errors: InnerValidationError[];
   name: string;
-  reset: () => void;
-  onFocus: () => void;
   dirty: boolean;
   pristine: boolean;
+  errors: InnerValidationError[];
   getValue: () => unknown;
+  onChange: (value: unknown) => void;
+  setError: (error: InnerValidationError) => void;
+  resetErrors: () => void;
+  reset: () => void;
+  onFocus: () => void;
 }

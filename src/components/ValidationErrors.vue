@@ -12,16 +12,10 @@ const props = defineProps({
   name: { type: String, default: undefined }
 });
 
-const getIsSubmitted = inject(getIsSubmittedSymbol);
-if (!getIsSubmitted) {
-  throw new Error('getIsSubmitted not provided');
-}
+const getIsSubmitted = inject(getIsSubmittedSymbol)!;
 
 const submitted = computed(() => getIsSubmitted());
-const getErrors = inject(getErrorsSymbol);
-if (!getErrors) {
-  throw new Error('getErrors not provided');
-}
+const getErrors = inject(getErrorsSymbol)!;
 
 const errors = computed<Array<ValidationError>>(() => {
   const errors = getErrors(props.name);

@@ -13,7 +13,19 @@
   />
 </template>
 
-<script>
+<script lang="ts" setup>
+import {
+  computed,
+  inject,
+  ref,
+  toRefs,
+  getCurrentInstance,
+  onBeforeUnmount,
+  reactive,
+  nextTick
+} from 'vue';
+
+import type { InnerValidationError } from '../types/error';
 import {
   getFieldDefaultValueSymbol,
   getFieldValueSymbol,
@@ -22,120 +34,116 @@ import {
   registerSymbol,
   validateSymbol
 } from './symbols';
+import { Field } from '../types/field';
 import { ON_FIELD_CHANGE } from './constants';
 
-export default {
-  name: 'ValidationField',
-  inject: {
-    hasFieldValue: hasFieldValueSymbol,
-    getFieldDefaultValue: getFieldDefaultValueSymbol,
-    getFieldValue: getFieldValueSymbol,
-    getIsSubmitted: getIsSubmittedSymbol,
-    register: registerSymbol,
-    validate: validateSymbol
-  },
-  inheritAttrs: false,
-  props: {
-    name: {
-      type: String,
-      required: true
-    },
-    isEqual: {
-      type: Function,
-      default: (a, b) => a === b
-    },
-    tag: {
-      type: String,
-      default: 'div'
-    }
-  },
-  // TODO: доописать при переходе на ts
-  emits: {
-    'should-focus': null,
-    change: null
-  },
-  data() {
-    return {
-      registered: false,
-      value: undefined,
-      pristine: true,
-      errors: []
-    };
-  },
-  computed: {
-    defaultValue() {
-      return this.getFieldDefaultValue(this.name);
-    },
-    hasProvidedValue() {
-      return this.hasFieldValue(this.name);
-    },
-    providedValue() {
-      return this.getFieldValue(this.name);
-    },
-    submitted() {
-      return this.getIsSubmitted();
-    },
-    dirty() {
-      return !this.isEqual(this.value, this.defaultValue);
-    },
-    firstError() {
-      return this.errors[0];
-    },
-    invalid() {
-      return this.submitted && !!this.errors.length;
-    }
-  },
-  mounted() {
-    this.value = this.hasProvidedValue ? this.providedValue : this.defaultValue;
-    this.unregister = this.register(this);
-    this.registered = true;
-  },
-  beforeUnmount() {
-    this.unregister();
-  },
-  methods: {
-    getValue() {
-      return this.value;
-    },
-    onFocus() {
-      this.$emit('should-focus', {
-        name: this.name
-      });
-    },
-    reset() {
-      this.resetErrors();
-      this.$nextTick(() => {
-        this.onChange(this.defaultValue);
-        this.pristine = true;
-      });
-    },
-    onChange(value) {
-      if (this.isEqual(this.value, value)) {
-        return;
-      }
+interface Props {
+  name: string;
+  isEqual?: (a: unknown, b: unknown) => boolean;
+}
 
-      this.value = value;
-      this.pristine = false;
-      this.$emit('change', value);
+const props = withDefaults(defineProps<Props>(), {
+  isEqual: (a, b) => a === b
+});
 
-      if (!this.submitted) {
-        return;
-      }
+const emit = defineEmits<{
+  (e: 'should-focus', options: { name: string }): void;
+  (e: 'change', value: unknown): void;
+}>();
 
-      this.validate(this.name);
-    },
-    setError({ message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
-      this.errors.push({
-        type,
-        message,
-        resetBehaviour
-      });
-    },
-    resetErrors() {
-      if (this.errors.length) {
-        this.errors = [];
-      }
-    }
+const { name, isEqual } = toRefs(props);
+
+const registered = ref(false);
+const value = ref<unknown>();
+const pristine = ref<unknown>(true);
+const errors = ref<InnerValidationError[]>([]);
+
+const hasFieldValue = inject(hasFieldValueSymbol)!;
+const getFieldDefaultValue = inject(getFieldDefaultValueSymbol)!;
+const getFieldValue = inject(getFieldValueSymbol)!;
+const getIsSubmitted = inject(getIsSubmittedSymbol)!;
+const register = inject(registerSymbol)!;
+const validate = inject(validateSymbol)!;
+
+const defaultValue = computed(() => getFieldDefaultValue(name.value));
+const hasProvidedValue = computed(() => hasFieldValue(name.value));
+const providedValue = computed(() => getFieldValue(name.value));
+const submitted = computed(() => getIsSubmitted());
+const dirty = computed(() => !isEqual.value(value.value, defaultValue.value));
+const firstError = computed(() => errors.value[0]);
+const invalid = computed(() => submitted.value && !!errors.value.length);
+
+const reset: Field['reset'] = () => {
+  resetErrors();
+  nextTick(() => {
+    onChange(defaultValue.value);
+    pristine.value = true;
+  });
+};
+
+const onChange: Field['onChange'] = (newValue: unknown) => {
+  if (isEqual.value(value.value, newValue)) {
+    return;
+  }
+
+  value.value = newValue;
+  pristine.value = false;
+  emit('change', newValue);
+
+  if (!submitted.value) {
+    return;
+  }
+
+  validate(name.value);
+};
+
+const setError: Field['setError'] = ({
+  message,
+  type = null,
+  resetBehaviour = ON_FIELD_CHANGE
+}: InnerValidationError) => {
+  errors.value.push({
+    type,
+    message,
+    resetBehaviour
+  });
+};
+
+const resetErrors: Field['resetErrors'] = () => {
+  if (errors.value.length) {
+    errors.value = [];
   }
 };
+
+const field: Field = reactive({
+  name,
+  dirty,
+  pristine,
+  errors,
+  getValue: () => value.value,
+  onChange,
+  setError,
+  resetErrors,
+  reset,
+  onFocus: () => {
+    emit('should-focus', {
+      name: name.value
+    });
+  }
+});
+
+value.value = hasProvidedValue.value ? providedValue.value : defaultValue.value;
+const unregister = register(field);
+onBeforeUnmount(() => {
+  unregister();
+});
+registered.value = true;
+</script>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  inheritAttrs: false
+});
 </script>

@@ -17,5 +17,8 @@ module.exports = {
     'prettier',
     'plugin:prettier/recommended'
   ],
-  plugins: ['@typescript-eslint']
+  plugins: ['@typescript-eslint'],
+  rules: {
+    '@typescript-eslint/no-non-null-assertion': ['off']
+  }
 };
