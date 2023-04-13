@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import dts from 'vite-plugin-dts';
 import visualizer from 'rollup-plugin-visualizer';
 
 module.exports = defineConfig({
@@ -22,7 +23,13 @@ module.exports = defineConfig({
       ]
     }
   },
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    dts({
+      // удалить после поддержки vite-plugin-dts typescript ^5.x.x
+      skipDiagnostics: true
+    })
+  ],
   test: {
     setupFiles: ['./tests/unit/testSetup.ts'],
     environment: 'jsdom'
