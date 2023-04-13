@@ -1,3 +1,7 @@
+<template>
+  <slot v-if="invalid" :errors="errors" />
+</template>
+
 <script lang="ts" setup>
 import { computed, inject } from 'vue';
 
@@ -5,7 +9,7 @@ import type { ValidationError } from '../types/error';
 import { getErrorsSymbol, getIsSubmittedSymbol } from './symbols';
 
 const props = defineProps({
-  name: { type: String, default: undefined },
+  name: { type: String, default: undefined }
 });
 
 const getIsSubmitted = inject(getIsSubmittedSymbol);
@@ -26,7 +30,3 @@ const errors = computed<Array<ValidationError>>(() => {
 
 const invalid = computed(() => submitted.value && !!errors.value.length);
 </script>
-
-<template>
-  <slot v-if="invalid" :errors="errors" />
-</template>

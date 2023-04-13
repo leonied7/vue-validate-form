@@ -1,3 +1,26 @@
+<template>
+  <slot
+    :handle-submit="handleSubmit"
+    :on-field-change="onFieldChange"
+    :reset="reset"
+    :set-error="setError"
+    :focus-invalid-field="focusInvalidField"
+    :values="values"
+    :dirty="dirty"
+    :pristine="pristine"
+    :invalid="invalid"
+    :errors="errors"
+  />
+</template>
+
+<script>
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  inheritAttrs: false
+});
+</script>
+
 <script lang="ts" setup>
 import { computed, nextTick, provide, ref, toRefs, watch } from 'vue';
 
@@ -7,9 +30,10 @@ import type {
   InnerValidationsErrors,
   ResetBehaviour,
   ValidationError,
-  ValidationsErrors,
+  ValidationsErrors
 } from '../types/error';
 import type { Field } from '../types/field';
+import type { Resolver } from '../types/resolver';
 import type { GetErrors, GetFieldDefaultValue, Register } from './symbols';
 import {
   getErrorsSymbol,
@@ -18,7 +42,7 @@ import {
   getIsSubmittedSymbol,
   hasFieldValueSymbol,
   registerSymbol,
-  validateSymbol,
+  validateSymbol
 } from './symbols';
 import { get, has, set } from './helpers';
 import { ON_FIELD_CHANGE, ON_FORM_CHANGE } from './constants';
@@ -26,14 +50,13 @@ import { ON_FIELD_CHANGE, ON_FORM_CHANGE } from './constants';
 export interface Props {
   defaultValues?: Values;
   defaultErrors?: ValidationsErrors;
-  // TODO: type it
-  resolver?: Function;
+  resolver?: Resolver;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   defaultValues: () => ({}),
   defaultErrors: () => ({}),
-  resolver: values => ({ values, errors: {} }),
+  resolver: (values) => ({ values, errors: {} })
 });
 const emit = defineEmits<{
   (
@@ -44,7 +67,7 @@ const emit = defineEmits<{
       reset: (defaultValue?: Values) => void;
       onFieldChange: (name: string, value: unknown) => void;
       focusInvalidField: () => void;
-    },
+    }
   ): void;
   (e: 'dirty', dirty: boolean): void;
 }>();
@@ -81,7 +104,7 @@ const errors = computed(() => {
   }, Object.assign({}, additionalErrors.value));
 });
 const existsErrors = computed(() => {
-  return Object.values(errors.value).some(errors => errors.length);
+  return Object.values(errors.value).some((errors) => errors.length);
 });
 const firstInvalidFieldComponent = computed<Field>(() => {
   return fieldComponents.value.find(({ name }) => errors.value[name].length);
@@ -94,19 +117,19 @@ watch(defaultValues, setDefaultData);
 watch(defaultErrors, setDefaultData);
 watch(
   dirty,
-  dirty => {
+  (dirty) => {
     emit('dirty', dirty);
   },
   {
-    immediate: true,
-  },
+    immediate: true
+  }
 );
 setDefaultData();
 
 async function setDefaultData() {
   reset(defaultValues.value);
   additionalErrors.value = {};
-  if (!Object.values(defaultErrors.value).some(errors => errors.length)) {
+  if (!Object.values(defaultErrors.value).some((errors) => errors.length)) {
     return;
   }
 
@@ -119,7 +142,7 @@ async function setDefaultData() {
 
 const getFieldDefaultValue: GetFieldDefaultValue = (
   name: string,
-  defaultValue: unknown,
+  defaultValue: unknown
 ): unknown => {
   return get(innerDefaultValues.value, name, defaultValue);
 };
@@ -141,7 +164,7 @@ async function handleSubmit(): Promise<void> {
     setError,
     reset,
     onFieldChange,
-    focusInvalidField,
+    focusInvalidField
   });
 }
 async function validate(triggerFieldName?: string) {
@@ -175,23 +198,19 @@ function reset(values?: Values) {
 
 function setErrorsList(
   errorsList: InnerValidationsErrors | ValidationsErrors,
-  defaultResetBehaviour: ResetBehaviour = ON_FORM_CHANGE,
+  defaultResetBehaviour: ResetBehaviour = ON_FORM_CHANGE
 ) {
   Object.entries(errorsList).forEach(([name, errors]) => {
     errors.forEach(
       ({ message, type, resetBehaviour = defaultResetBehaviour }: InnerValidationError) => {
         setError(name, { message, type, resetBehaviour });
-      },
+      }
     );
   });
 }
 function setError(
   name: string,
-  {
-    message,
-    type = null,
-    resetBehaviour = ON_FIELD_CHANGE,
-  }: InnerValidationError | ValidationError,
+  { message, type = null, resetBehaviour = ON_FIELD_CHANGE }: InnerValidationError | ValidationError
 ) {
   const fieldComponent = fieldComponentMap.value[name];
   if (fieldComponent) {
@@ -205,17 +224,17 @@ function setError(
   additionalErrors.value[name].push({
     type,
     message,
-    resetBehaviour,
+    resetBehaviour
   });
 }
 function focusInvalidField(): void {
   return firstInvalidFieldComponent.value && firstInvalidFieldComponent.value.onFocus();
 }
 
-const register: Register = fieldComponent => {
+const register: Register = (fieldComponent) => {
   const name = fieldComponent.name;
   fieldComponents.value.push(fieldComponent);
-  (additionalErrors.value[name] || []).forEach(error => {
+  (additionalErrors.value[name] || []).forEach((error) => {
     setError(name, error);
   });
   delete additionalErrors.value[name];
@@ -224,7 +243,7 @@ const register: Register = fieldComponent => {
   };
 };
 function unregister(fieldComponent: Field) {
-  fieldComponents.value = fieldComponents.value.filter(field => field !== fieldComponent);
+  fieldComponents.value = fieldComponents.value.filter((field) => field !== fieldComponent);
 }
 
 provide(registerSymbol, register);
@@ -238,18 +257,3 @@ provide(getErrorsSymbol, getErrors);
 provide(hasFieldValueSymbol, (name: string) => has(values.value, name));
 provide(getIsSubmittedSymbol, () => submitted.value);
 </script>
-
-<template>
-  <slot
-    :handle-submit="handleSubmit"
-    :on-field-change="onFieldChange"
-    :reset="reset"
-    :set-error="setError"
-    :focus-invalid-field="focusInvalidField"
-    :values="values"
-    :dirty="dirty"
-    :pristine="pristine"
-    :invalid="invalid"
-    :errors="errors"
-  />
-</template>

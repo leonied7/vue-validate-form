@@ -12,7 +12,7 @@ export const getFieldDefaultValueSymbol: InjectionKey<GetFieldDefaultValue> =
   Symbol('getFieldDefaultValue');
 
 export type GetErrors = <Type extends string | undefined>(
-  name: Type,
+  name: Type
 ) => Type extends string ? InnerValidationError[] : InnerValidationsErrors;
 export const getErrorsSymbol: InjectionKey<GetErrors> = Symbol('getErrors');
 

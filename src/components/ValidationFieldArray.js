@@ -5,7 +5,7 @@ import {
   getFieldDefaultValueSymbol,
   getFieldValueSymbol,
   hasFieldValueSymbol,
-  registerSymbol,
+  registerSymbol
 } from './symbols';
 import { get, has } from './helpers';
 
@@ -15,19 +15,19 @@ export default {
   inject: {
     register: registerSymbol,
     getFieldDefaultValue: getFieldDefaultValueSymbol,
-    getFieldValue: getFieldValueSymbol,
+    getFieldValue: getFieldValueSymbol
   },
   provide() {
     return {
-      [hasFieldValueSymbol]: name => {
+      [hasFieldValueSymbol]: (name) => {
         const normalizedName = name.replace(new RegExp(`^${this.name}.`), '');
         return has(this.actualValue, normalizedName) || has(this.fields, normalizedName);
       },
-      [getFieldValueSymbol]: name => {
+      [getFieldValueSymbol]: (name) => {
         const normalizedName = name.replace(new RegExp(`^${this.name}.`), '');
         return get(this.actualValue, normalizedName) || get(this.fields, normalizedName);
       },
-      [registerSymbol]: fieldComponent => {
+      [registerSymbol]: (fieldComponent) => {
         if (this.focusOptions) {
           const { focusName } = this.focusOptions;
           const { onFocus, name } = fieldComponent;
@@ -37,7 +37,7 @@ export default {
           }
         }
         return this.register(fieldComponent);
-      },
+      }
     };
   },
   data() {
@@ -47,22 +47,22 @@ export default {
       // common fields with ValidationField
       errors: [],
       dirty: false,
-      pristine: true,
+      pristine: true
     };
   },
   props: {
     name: {
       type: String,
-      required: true,
+      required: true
     },
     keyName: {
       type: String,
-      default: 'id',
+      default: 'id'
     },
     tag: {
       type: String,
-      default: 'div',
-    },
+      default: 'div'
+    }
   },
   computed: {
     defaultValue() {
@@ -73,9 +73,9 @@ export default {
       const providedValues = this.getFieldValue(this.name) || [];
       return this.fields.map((field, index) => ({
         ...providedValues[index],
-        [keyName]: field[keyName],
+        [keyName]: field[keyName]
       }));
-    },
+    }
   },
   mounted() {
     this.fields = [...this.defaultValue];
@@ -121,7 +121,7 @@ export default {
     },
     remove(index) {
       this.fields = this.fields.filter((field, i) => index !== i);
-    },
+    }
   },
   render() {
     const children = this.$slots.default({
@@ -132,8 +132,8 @@ export default {
       insert: this.insert,
       swap: this.swap,
       move: this.move,
-      remove: this.remove,
+      remove: this.remove
     });
     return children.length <= 1 ? children[0] : h(this.tag, children);
-  },
+  }
 };
