@@ -124,7 +124,7 @@ import {
   ValidationField,
   ValidationFieldArray,
   ValidationErrors
-} from '../../src/index.js';
+} from '../../src';
 import BaseInput from './BaseInput.vue';
 import FormInfo from './FormInfo.vue';
 import BaseErrors from './BaseErrors.vue';
@@ -160,7 +160,7 @@ export default {
     dirty: null
   },
   methods: {
-    onSubmit(values, options) {
+    onSubmit (values, options) {
       this.$emit('submit', values, options);
     }
   }

@@ -2,39 +2,25 @@
   <slot v-if="invalid" :errors="errors" />
 </template>
 
-<script>
-// import { h } from 'vue';
+<script lang="ts" setup>
+import { computed, inject } from 'vue';
 
-import { getErrors, getIsSubmitted } from './symbols';
+import type { ValidationError } from '../types/error';
+import { getErrorsSymbol, getIsSubmittedSymbol } from './symbols';
 
-export default {
-  name: 'ValidationErrors',
-  inject: {
-    getErrors,
-    getIsSubmitted
-  },
-  inheritAttrs: false,
-  props: {
-    name: {
-      type: String,
-      default: undefined
-    },
-    tag: {
-      type: String,
-      default: 'div'
-    }
-  },
-  computed: {
-    submitted() {
-      return this.getIsSubmitted();
-    },
-    errors() {
-      const errors = this.getErrors(this.name);
-      return Array.isArray(errors) ? errors : [].concat(...Object.values(errors));
-    },
-    invalid() {
-      return this.submitted && !!this.errors.length;
-    }
-  }
-};
+const props = defineProps({
+  name: { type: String, default: undefined }
+});
+
+const getIsSubmitted = inject(getIsSubmittedSymbol)!;
+
+const submitted = computed(() => getIsSubmitted());
+const getErrors = inject(getErrorsSymbol)!;
+
+const errors = computed<Array<ValidationError>>(() => {
+  const errors = getErrors(props.name);
+  return Array.isArray(errors) ? errors : [].concat(...Object.values(errors));
+});
+
+const invalid = computed(() => submitted.value && !!errors.value.length);
 </script>

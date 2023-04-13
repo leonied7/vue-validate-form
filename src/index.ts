@@ -1,6 +1,6 @@
-import ValidationProvider from './components/ValidationProvider.js';
+import ValidationProvider from './components/ValidationProvider.vue';
 import ValidationField from './components/ValidationField.vue';
-import ValidationFieldArray from './components/ValidationFieldArray.js';
+import ValidationFieldArray from './components/ValidationFieldArray.vue';
 import ValidationErrors from './components/ValidationErrors.vue';
 import * as symbols from './components/symbols';
 import { get } from './components/helpers';

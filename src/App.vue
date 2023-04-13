@@ -78,14 +78,24 @@
               </div>
             </template>
           </ValidationFieldArray>
-
-          <ValidationErrors />
-          <ValidationErrors name="my-input" />
           <button type="button" @click="onFieldChange('my-input', 123)">
             Set 'my-input' field
           </button>
           <button type="submit">Send</button>
         </form>
+
+        <div>All errors</div>
+        <ValidationErrors>
+          <template #default="{ errors }">
+            <pre>{{ errors }}</pre>
+          </template>
+        </ValidationErrors>
+        <div>'my-input' errors</div>
+        <ValidationErrors name="my-input">
+          <template #default="{ errors }">
+            <pre>{{ errors }}</pre>
+          </template>
+        </ValidationErrors>
       </template>
     </ValidationProvider>
   </div>
@@ -93,14 +103,16 @@
 
 <script>
 import {
-  ValidationField,
-  ValidationProvider,
-  ValidationFieldArray,
   ValidationErrors,
+  ValidationField,
+  ValidationFieldArray,
+  ValidationProvider,
   get
 } from './index';
 
-const required = (value) => !!value;
+function required(value) {
+  return !!value;
+}
 
 export default {
   name: 'App',
@@ -163,6 +175,7 @@ export default {
         setError('common', { message: 'invalid common field', type: 'custom' });
       }, 250);
 
+      // eslint-disable-next-line no-console
       console.log(values);
     }
   }

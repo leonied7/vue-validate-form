@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
-import { ValidationField, get } from '../../src/index';
+import { ValidationField, get } from '../../src';
 import ValidationForm from './ValidationForm.vue';
 import BaseInput from './BaseInput.vue';
 
