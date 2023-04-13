@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-alpha.2](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.1...v3.0.0-alpha.2) (2023-04-13)
+
+
+### Bug Fixes
+
+* drop vue-template-compiler ([ab88e7c](https://github.com/leonied7/vue-validate-form/commit/ab88e7c07af3ee259d80a0df709e1a0f8dba7643))
+
 ## [3.0.0-alpha.1](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.0...v3.0.0-alpha.1) (2023-04-13)
 
 
