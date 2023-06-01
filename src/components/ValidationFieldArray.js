@@ -11,25 +11,9 @@ export default {
   },
   provide() {
     return {
-      [hasFieldValue]: (name) => {
-        const normalizedName = name.replace(new RegExp(`^${this.name}.`), '');
-        return has(this.actualValue, normalizedName) || has(this.fields, normalizedName);
-      },
-      [getFieldValue]: (name) => {
-        const normalizedName = name.replace(new RegExp(`^${this.name}.`), '');
-        return get(this.actualValue, normalizedName) || get(this.fields, normalizedName);
-      },
-      [register]: (fieldComponent) => {
-        if (this.focusOptions) {
-          const { focusName } = this.focusOptions;
-          const { onFocus, name } = fieldComponent;
-          if (name === focusName) {
-            onFocus();
-            this.focusOptions = null;
-          }
-        }
-        return this.register(fieldComponent);
-      }
+      [hasFieldValue]: this.hasValueByFieldName,
+      [getFieldValue]: this.getValueByFieldName,
+      [register]: this.handleRegister
     };
   },
   data() {
@@ -77,6 +61,27 @@ export default {
     this.unregister();
   },
   methods: {
+    hasValueByFieldName(name) {
+      const arrayName = `${this.name}.`;
+      const normalizedName = name.startsWith(arrayName) ? name.slice(arrayName.length) : name;
+      return has(this.actualValue, normalizedName) || has(this.fields, normalizedName);
+    },
+    getValueByFieldName(name) {
+      const arrayName = `${this.name}.`;
+      const normalizedName = name.startsWith(arrayName) ? name.slice(arrayName.length) : name;
+      return get(this.actualValue, normalizedName) || get(this.fields, normalizedName);
+    },
+    handleRegister(fieldComponent) {
+      if (this.focusOptions) {
+        const { focusName } = this.focusOptions;
+        const { onFocus, name } = fieldComponent;
+        if (name === focusName) {
+          onFocus();
+          this.focusOptions = null;
+        }
+      }
+      return this.register(fieldComponent);
+    },
     onChange(value) {
       this.fields = [...value];
     },

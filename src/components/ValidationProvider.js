@@ -15,15 +15,12 @@ export default {
   provide() {
     return {
       [register]: this.register,
-      [validate]: async (name) => {
-        const { errors } = await this.validate(name);
-        this.setErrorsList(errors);
-      },
+      [validate]: this.handleValidate,
       [getFieldDefaultValue]: this.getFieldDefaultValue,
-      [getFieldValue]: (name) => get(this.values, name),
+      [getFieldValue]: this.getValueByFieldName,
       [getErrors]: this.getErrors,
-      [hasFieldValue]: (name) => has(this.values, name),
-      [getIsSubmitted]: () => this.submitted
+      [hasFieldValue]: this.hasValueByFieldName,
+      [getIsSubmitted]: this.getIsSubmitted
     };
   },
   props: {
@@ -98,6 +95,19 @@ export default {
     }
   },
   methods: {
+    async handleValidate(name) {
+      const { errors } = await this.validate(name);
+      this.setErrorsList(errors);
+    },
+    getValueByFieldName(name) {
+      return get(this.values, name);
+    },
+    hasValueByFieldName(name) {
+      return has(this.values, name);
+    },
+    getIsSubmitted() {
+      return this.submitted;
+    },
     async setDefaultData() {
       this.reset(this.defaultValues);
       this.additionalErrors = {};
