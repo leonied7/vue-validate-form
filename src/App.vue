@@ -79,6 +79,45 @@
             </template>
           </ValidationFieldArray>
 
+          <ValidationFieldArray name="bigArray">
+            <template #default="{ name, fields, append, prepend, insert, swap, move, remove }">
+              <div>
+                <div v-for="(field, index) in fields" :key="field.id">
+                  <ValidationField :name="`${name}.${index}.id`">
+                    <template #default="{ modelValue, onChange }">
+                      <input
+                        :value="modelValue"
+                        type="text"
+                        @input="onChange($event.target.value)"
+                      />
+                    </template>
+                  </ValidationField>
+                  <ValidationField :name="`${name}.${index}.name`">
+                    <template #default="{ modelValue, onChange }">
+                      <input
+                        :value="modelValue"
+                        type="text"
+                        @input="onChange($event.target.value)"
+                      />
+                    </template>
+                  </ValidationField>
+                </div>
+                <button
+                  type="button"
+                  @click="prepend({ name: 'prepend' }, { focusName: 'bigArray.0.name' })"
+                >
+                  Prepend
+                </button>
+                <button type="button" @click="append({ name: 'append' })">Append</button>
+                <button type="button" @click="insert(1, { name: 'insert' })">Insert</button>
+                <button type="button" @click="swap(0, 2)">Swap</button>
+                <button type="button" @click="move(0, 2)">Move</button>
+                <button type="button" @click="remove(0)">Remove</button>
+                <button type="button" @click="reset()">Reset</button>
+              </div>
+            </template>
+          </ValidationFieldArray>
+
           <ValidationErrors />
           <ValidationErrors name="my-input" />
           <button type="button" @click="onFieldChange('my-input', 123)">
@@ -99,6 +138,7 @@ import {
   ValidationErrors,
   get
 } from './index';
+import { nanoid } from 'nanoid';
 
 const required = (value) => !!value;
 
@@ -152,7 +192,14 @@ export default {
             firstName: '333',
             type: null
           }
-        ]
+        ],
+        bigArray: Array.from(Array(300)).map(() => {
+          const id = nanoid();
+          return {
+            id,
+            name: `name-${id}`
+          };
+        })
       }
     };
   },
