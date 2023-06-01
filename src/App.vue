@@ -193,7 +193,7 @@ export default {
             type: null
           }
         ],
-        bigArray: Array.from(Array(300)).map(() => {
+        bigArray: Array.from(Array(400)).map(() => {
           const id = nanoid();
           return {
             id,
