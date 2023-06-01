@@ -1,8 +1,4 @@
 import { nanoid } from "nanoid";
-const validators = {};
-function register$1(name, validate2) {
-  validators[name] = validate2;
-}
 const hasFieldValue = Symbol("hasFieldValue");
 const getFieldValue = Symbol("getFieldValue");
 const getFieldDefaultValue = Symbol("getFieldDefaultValue");
@@ -45,11 +41,14 @@ function get(object, path, defaultValue) {
     return defaultValue;
   }
   let pathParts = path.split(".");
-  while (pathParts.length && object) {
+  while (pathParts.length) {
     const key = pathParts.shift();
+    if (!(key in object)) {
+      return defaultValue;
+    }
     object = object[key];
   }
-  return !pathParts.length ? object : defaultValue;
+  return object;
 }
 function set(object, path, value) {
   if (!isObject(object)) {
@@ -79,15 +78,12 @@ var ValidationProvider = {
   provide() {
     return {
       [register]: this.register,
-      [validate]: async (name) => {
-        const { errors } = await this.validate(name);
-        this.setErrorsList(errors);
-      },
+      [validate]: this.handleValidate,
       [getFieldDefaultValue]: this.getFieldDefaultValue,
-      [getFieldValue]: (name) => get(this.values, name),
+      [getFieldValue]: this.getValueByFieldName,
       [getErrors]: this.getErrors,
-      [hasFieldValue]: (name) => has(this.values, name),
-      [getIsSubmitted]: () => this.submitted
+      [hasFieldValue]: this.hasValueByFieldName,
+      [getIsSubmitted]: this.getIsSubmitted
     };
   },
   props: {
@@ -101,7 +97,7 @@ var ValidationProvider = {
     },
     resolver: {
       type: Function,
-      default: null
+      default: (values) => ({ values, errors: {} })
     },
     tag: {
       type: String,
@@ -162,6 +158,19 @@ var ValidationProvider = {
     }
   },
   methods: {
+    async handleValidate(name) {
+      const { errors } = await this.validate(name);
+      this.setErrorsList(errors);
+    },
+    getValueByFieldName(name) {
+      return get(this.values, name);
+    },
+    hasValueByFieldName(name) {
+      return has(this.values, name);
+    },
+    getIsSubmitted() {
+      return this.submitted;
+    },
     async setDefaultData() {
       this.reset(this.defaultValues);
       this.additionalErrors = {};
@@ -197,11 +206,10 @@ var ValidationProvider = {
       });
     },
     async validate(triggerFieldName = null) {
-      const { values, errors } = await this.resolveSchema();
-      const errorsList = this.getLegacyValidateErrors(errors);
-      this.fieldComponents.forEach(({ resetErrors, errors: errors2, name }) => {
+      const { values, errors: errorsList } = await this.resolveSchema();
+      this.fieldComponents.forEach(({ resetErrors, errors, name }) => {
         if (triggerFieldName !== name) {
-          const actualErrors = errors2.filter(
+          const actualErrors = errors.filter(
             ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
           );
           errorsList[name] = actualErrors.concat(errorsList[name] || []);
@@ -212,22 +220,7 @@ var ValidationProvider = {
     },
     resolveSchema() {
       const values = this.values;
-      return this.resolver ? this.resolver(values) : { values, errors: {} };
-    },
-    getLegacyValidateErrors(initialErrors = {}) {
-      return this.fieldComponents.reduce((errorsList, { name, rules, getValue }) => {
-        errorsList[name] = Object.entries(rules).reduce((errors, [ruleName, options]) => {
-          const validator = validators[ruleName];
-          if (!validator) {
-            throw new Error(`validator '${ruleName}' must be registered`);
-          }
-          if (!validator(getValue(), options.params)) {
-            errors.push({ message: options.message, type: ruleName });
-          }
-          return errors;
-        }, errorsList[name] || []);
-        return errorsList;
-      }, initialErrors);
+      return this.resolver(values);
     },
     onFieldChange(name, value) {
       this.fieldComponentMap[name].onChange(value);
@@ -244,17 +237,14 @@ var ValidationProvider = {
     setErrorsList(errorsList, defaultResetBehaviour = ON_FORM_CHANGE) {
       Object.entries(errorsList).forEach(([name, errors]) => {
         errors.forEach(({ message, type, resetBehaviour = defaultResetBehaviour }) => {
-          this.setErrorActual(name, { message, type, resetBehaviour });
+          this.setError(name, { message, type, resetBehaviour });
         });
       });
     },
-    setError(name, message, type = null, resetBehaviour = ON_FIELD_CHANGE) {
-      this.setErrorActual(name, { message, type, resetBehaviour });
-    },
-    setErrorActual(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
+    setError(name, { message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       const fieldComponent = this.fieldComponentMap[name];
       if (fieldComponent) {
-        fieldComponent.setErrorActual({ message, type, resetBehaviour });
+        fieldComponent.setError({ message, type, resetBehaviour });
         return;
       }
       if (this.additionalErrors[name] === void 0) {
@@ -273,7 +263,7 @@ var ValidationProvider = {
       const name = fieldComponent.name;
       this.fieldComponents.push(fieldComponent);
       (this.additionalErrors[name] || []).forEach((error) => {
-        this.setErrorActual(name, error);
+        this.setError(name, error);
       });
       this.$delete(this.additionalErrors, name);
       return () => this.unregister(fieldComponent);
@@ -320,10 +310,6 @@ var ValidationField = {
     name: {
       type: String,
       required: true
-    },
-    rules: {
-      type: Object,
-      default: () => ({})
     },
     isEqual: {
       type: Function,
@@ -393,10 +379,7 @@ var ValidationField = {
       }
       this.validate(this.name);
     },
-    setError(message, type = null, resetBehaviour = ON_FIELD_CHANGE) {
-      this.setErrorActual({ message, type, resetBehaviour });
-    },
-    setErrorActual({ message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
+    setError({ message, type = null, resetBehaviour = ON_FIELD_CHANGE }) {
       this.errors.push({
         type,
         message,
@@ -436,25 +419,9 @@ var ValidationFieldArray = {
   },
   provide() {
     return {
-      [hasFieldValue]: (name) => {
-        const normalizedName = name.replace(new RegExp(`^${this.name}.`), "");
-        return has(this.actualValue, normalizedName) || has(this.fields, normalizedName);
-      },
-      [getFieldValue]: (name) => {
-        const normalizedName = name.replace(new RegExp(`^${this.name}.`), "");
-        return get(this.actualValue, normalizedName) || get(this.fields, normalizedName);
-      },
-      [register]: (fieldComponent) => {
-        if (this.focusOptions) {
-          const { focusName } = this.focusOptions;
-          const { onFocus, name } = fieldComponent;
-          if (name === focusName) {
-            onFocus();
-            this.focusOptions = null;
-          }
-        }
-        return this.register(fieldComponent);
-      }
+      [hasFieldValue]: this.hasValueByFieldName,
+      [getFieldValue]: this.getValueByFieldName,
+      [register]: this.handleRegister
     };
   },
   data() {
@@ -462,7 +429,6 @@ var ValidationFieldArray = {
       fields: [],
       focusOptions: null,
       errors: [],
-      rules: [],
       dirty: false,
       pristine: true
     };
@@ -502,6 +468,27 @@ var ValidationFieldArray = {
     this.unregister();
   },
   methods: {
+    hasValueByFieldName(name) {
+      const arrayName = `${this.name}.`;
+      const normalizedName = name.startsWith(arrayName) ? name.slice(arrayName.length) : name;
+      return has(this.actualValue, normalizedName) || has(this.fields, normalizedName);
+    },
+    getValueByFieldName(name) {
+      const arrayName = `${this.name}.`;
+      const normalizedName = name.startsWith(arrayName) ? name.slice(arrayName.length) : name;
+      return get(this.actualValue, normalizedName) || get(this.fields, normalizedName);
+    },
+    handleRegister(fieldComponent) {
+      if (this.focusOptions) {
+        const { focusName } = this.focusOptions;
+        const { onFocus, name } = fieldComponent;
+        if (name === focusName) {
+          onFocus();
+          this.focusOptions = null;
+        }
+      }
+      return this.register(fieldComponent);
+    },
     onChange(value) {
       this.fields = [...value];
     },
@@ -597,4 +584,4 @@ var ValidationErrors = {
     return children.length <= 1 ? children[0] : h(this.tag, children);
   }
 };
-export { ValidationErrors, ValidationField, ValidationFieldArray, ValidationProvider, register$1 as registerValidator, symbols };
+export { ValidationErrors, ValidationField, ValidationFieldArray, ValidationProvider, get, symbols };
