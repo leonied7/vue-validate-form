@@ -46,7 +46,7 @@ const { name, isEqual } = toRefs(props);
 
 const registered = ref(false);
 const value = ref<unknown>();
-const pristine = ref<unknown>(true);
+const pristine = ref<boolean>(true);
 const errors = ref<InnerValidationError[]>([]);
 
 const hasFieldValue = inject(hasFieldValueSymbol)!;
