@@ -235,7 +235,8 @@ const register: Register = (fieldComponent) => {
   };
 };
 function unregister(fieldComponent: Field) {
-  fieldComponents.value = fieldComponents.value.filter((field) => field !== fieldComponent);
+  const index = fieldComponents.value.indexOf(fieldComponent);
+  fieldComponents.value.splice(index, 1);
 }
 
 provide(registerSymbol, register);
