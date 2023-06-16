@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, provide, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, provide, ref, toRefs, watch, onBeforeUnmount } from 'vue';
 
 import type { Values } from '../types/values';
 import type {
@@ -238,6 +238,10 @@ function unregister(fieldComponent: Field) {
   const index = fieldComponents.value.indexOf(fieldComponent);
   fieldComponents.value.splice(index, 1);
 }
+
+onBeforeUnmount(() => {
+  fieldComponents.value = [];
+});
 
 provide(registerSymbol, register);
 provide(validateSymbol, async (name: string) => {
