@@ -235,7 +235,15 @@ const register: Register = (fieldComponent) => {
   };
 };
 function unregister(fieldComponent: Field) {
+  if (fieldComponents.value.length === 0) {
+    return;
+  }
+
   const index = fieldComponents.value.indexOf(fieldComponent);
+  if (index === -1) {
+    return;
+  }
+
   fieldComponents.value.splice(index, 1);
 }
 
