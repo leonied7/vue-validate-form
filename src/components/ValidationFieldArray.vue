@@ -76,7 +76,7 @@ function move(from: number, to: number) {
   fields.value.splice(to, 0, fields.value.splice(from, 1)[0]);
 }
 function remove(index: number) {
-  fields.value = fields.value.filter((field, i) => index !== i);
+  fields.value.splice(index, 1);
 }
 
 const onChange: Field['onChange'] = (value: unknown) => {
