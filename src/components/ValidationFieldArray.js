@@ -117,7 +117,7 @@ export default {
       this.fields.splice(to, 0, this.fields.splice(from, 1)[0]);
     },
     remove(index) {
-      this.fields = this.fields.filter((field, i) => index !== i);
+      this.fields.splice(index, 1);
     }
   },
   render(h) {

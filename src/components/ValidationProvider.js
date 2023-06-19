@@ -209,8 +209,20 @@ export default {
       return () => this.unregister(fieldComponent);
     },
     unregister(fieldComponent) {
-      this.fieldComponents = this.fieldComponents.filter((field) => field !== fieldComponent);
+      if (this.fieldComponents.length === 0) {
+        return;
+      }
+
+      const index = this.fieldComponents.indexOf(fieldComponent);
+      if (index === -1) {
+        return;
+      }
+
+      this.fieldComponents.splice(index, 1);
     }
+  },
+  beforeDestroy() {
+    this.fieldComponents = [];
   },
   render(h) {
     const children = normalizeChildren(this, {
