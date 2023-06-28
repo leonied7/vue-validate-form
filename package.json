@@ -9,6 +9,7 @@
       "require": "./dist/vue-validate-form.cjs.js"
     }
   },
+  "types": "./dist/index.d.ts",
   "repository": "https://github.com/leonied7/vue-validate-form.git",
   "author": {
     "name": "Denis",
