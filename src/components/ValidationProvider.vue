@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, provide, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, provide, ref, toRefs, watch, onBeforeUnmount } from 'vue';
 
 import type { Values } from '../types/values';
 import type {
@@ -235,8 +235,21 @@ const register: Register = (fieldComponent) => {
   };
 };
 function unregister(fieldComponent: Field) {
-  fieldComponents.value = fieldComponents.value.filter((field) => field !== fieldComponent);
+  if (fieldComponents.value.length === 0) {
+    return;
+  }
+
+  const index = fieldComponents.value.indexOf(fieldComponent);
+  if (index === -1) {
+    return;
+  }
+
+  fieldComponents.value.splice(index, 1);
 }
+
+onBeforeUnmount(() => {
+  fieldComponents.value = [];
+});
 
 provide(registerSymbol, register);
 provide(validateSymbol, async (name: string) => {
