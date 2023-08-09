@@ -1,6 +1,7 @@
 <template>
   <slot
     v-bind="{ name }"
+    :on-change="onChange"
     :fields="actualValue"
     :append="append"
     :prepend="prepend"
@@ -38,10 +39,12 @@ interface FocusOptions {
 const focusOptions = ref<FocusOptions>();
 
 const register = inject(registerSymbol)!;
-const getFieldDefaultValue = inject(getFieldDefaultValueSymbol)!;
-const getFieldValue = inject(getFieldValueSymbol)!;
+const getFieldDefaultValue = inject<(name: string, defaultValue?: any[]) => any[]>(
+  getFieldDefaultValueSymbol
+)!;
+const getFieldValue = inject<(name: string) => any[]>(getFieldValueSymbol)!;
 
-const defaultValue = computed(() => getFieldDefaultValue(name.value) || []);
+const defaultValue = computed(() => getFieldDefaultValue(name.value, []));
 const actualValue = computed(() => {
   const providedValues = getFieldValue(name.value) || [];
   return fields.value.map((field, index) => ({
@@ -52,17 +55,17 @@ const actualValue = computed(() => {
 
 const fields = ref([...defaultValue.value]);
 
-function append(value: unknown, options?: FocusOptions) {
+function append(value: Record<string, any>, options?: FocusOptions) {
   value[keyName.value] = value[keyName.value] ?? nanoid();
   focusOptions.value = options;
   fields.value.push(value);
 }
-function prepend(value, options?: FocusOptions) {
+function prepend(value: Record<string, any>, options?: FocusOptions) {
   value[keyName.value] = value[keyName.value] ?? nanoid();
   focusOptions.value = options;
   fields.value.unshift(value);
 }
-function insert(index, value, options?: FocusOptions) {
+function insert(index: number, value: Record<string, any>, options?: FocusOptions) {
   value[keyName.value] = value[keyName.value] ?? nanoid();
   focusOptions.value = options;
   fields.value.splice(index, 0, value);
@@ -79,7 +82,7 @@ function remove(index: number) {
   fields.value.splice(index, 1);
 }
 
-const onChange: Field['onChange'] = (value: unknown) => {
+const onChange: Field['onChange'] = (value: any) => {
   fields.value = [...value];
 };
 

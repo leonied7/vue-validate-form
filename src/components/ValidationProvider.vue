@@ -48,7 +48,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   defaultValues: () => ({}),
   defaultErrors: () => ({}),
-  resolver: () => (values) => ({ values, errors: {} })
+  resolver: () => (values: Record<string, unknown>) => ({ values, errors: {} })
 });
 const emit = defineEmits<{
   (
@@ -72,7 +72,7 @@ const fieldComponents = ref<Field[]>([]);
 const additionalErrors = ref<InnerValidationsErrors>({});
 
 const fieldComponentMap = computed<Record<string, Field>>(() => {
-  return fieldComponents.value.reduce((map, fieldComponent) => {
+  return fieldComponents.value.reduce<Record<string, Field>>((map, fieldComponent) => {
     map[fieldComponent.name] = fieldComponent;
     return map;
   }, {});
@@ -98,7 +98,7 @@ const errors = computed(() => {
 const existsErrors = computed(() => {
   return Object.values(errors.value).some((errors) => errors.length);
 });
-const firstInvalidFieldComponent = computed<Field>(() => {
+const firstInvalidFieldComponent = computed<Field | undefined>(() => {
   return fieldComponents.value.find(({ name }) => errors.value[name].length);
 });
 const invalid = computed(() => {
@@ -164,7 +164,9 @@ async function validate(triggerFieldName?: string) {
 
   fieldComponents.value.forEach(({ resetErrors, errors, name }) => {
     if (triggerFieldName !== name) {
-      const actualErrors = errors.filter(({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE);
+      const actualErrors: ValidationError[] = errors.filter(
+        ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
+      );
       errorsList[name] = actualErrors.concat(errorsList[name] || []);
     }
     resetErrors();
@@ -192,18 +194,14 @@ function setErrorsList(
   errorsList: InnerValidationsErrors | ValidationsErrors,
   defaultResetBehaviour: ResetBehaviour = ON_FORM_CHANGE
 ) {
-  Object.entries(errorsList).forEach(([name, errors]) => {
-    errors.forEach(
-      ({ message, type, resetBehaviour = defaultResetBehaviour }: InnerValidationError) => {
-        setError(name, { message, type, resetBehaviour });
-      }
-    );
+  Object.entries(errorsList as InnerValidationsErrors).forEach(([name, errors]) => {
+    errors.forEach(({ message, type, resetBehaviour = defaultResetBehaviour }) => {
+      setError(name, { message, type, resetBehaviour });
+    });
   });
 }
-function setError(
-  name: string,
-  { message, type = null, resetBehaviour = ON_FIELD_CHANGE }: InnerValidationError | ValidationError
-) {
+function setError(name: string, error: InnerValidationError | ValidationError) {
+  const { message, type, resetBehaviour = ON_FIELD_CHANGE } = error as InnerValidationError;
   const fieldComponent = fieldComponentMap.value[name];
   if (fieldComponent) {
     fieldComponent.setError({ message, type, resetBehaviour });

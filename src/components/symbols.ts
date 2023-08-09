@@ -11,9 +11,7 @@ export type GetFieldDefaultValue = (name: string, defaultValue?: unknown) => unk
 export const getFieldDefaultValueSymbol: InjectionKey<GetFieldDefaultValue> =
   Symbol('getFieldDefaultValue');
 
-export type GetErrors = <Type extends string | undefined>(
-  name: Type
-) => Type extends string ? InnerValidationError[] : InnerValidationsErrors;
+export type GetErrors = (name?: string) => InnerValidationError[] | InnerValidationsErrors;
 export const getErrorsSymbol: InjectionKey<GetErrors> = Symbol('getErrors');
 
 export type Register = (fieldComponent: Field) => () => void;
