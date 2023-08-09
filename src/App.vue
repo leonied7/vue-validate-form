@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <ValidationProvider
+      ref="provider"
       :default-values="defaultValues"
       :default-errors="{
         'my-input': [{ message: 'outer error' }],
@@ -104,7 +105,7 @@
                 </div>
                 <button
                   type="button"
-                  @click="prepend({ name: 'prepend' }, { focusName: 'bigArray.0.name' })"
+                  @click="prepend({ name: 'prepend' }, { focusName: 'bigArray.5.name' })"
                 >
                   Prepend
                 </button>
@@ -114,6 +115,7 @@
                 <button type="button" @click="move(0, 2)">Move</button>
                 <button type="button" @click="remove(0)">Remove</button>
                 <button type="button" @click="reset()">Reset</button>
+                <button type="button" @click="handleSetBigArray">Set bigArray</button>
               </div>
             </template>
           </ValidationFieldArray>
@@ -211,6 +213,13 @@ export default {
       }, 250);
 
       console.log(values);
+    },
+    handleSetBigArray() {
+      this.$refs.provider.onFieldChange('bigArray', [
+        this.$refs.provider.values.bigArray[4],
+        this.$refs.provider.values.bigArray[2],
+        this.$refs.provider.values.bigArray[7]
+      ]);
     }
   }
 };
