@@ -18,8 +18,8 @@ export default {
   },
   data() {
     return {
+      fieldComponents: [],
       fields: [],
-      focusOptions: null,
       // common fields with ValidationField
       errors: [],
       dirty: false,
@@ -58,32 +58,60 @@ export default {
     this.unregister = this.register(this);
   },
   beforeDestroy() {
+    this.fieldComponents = [];
     this.unregister();
   },
   methods: {
     hasValueByFieldName(name) {
-      const arrayName = `${this.name}.`;
-      const normalizedName = name.startsWith(arrayName) ? name.slice(arrayName.length) : name;
+      const normalizedName = this.getNormalizedName(name);
       return has(this.actualValue, normalizedName) || has(this.fields, normalizedName);
     },
     getValueByFieldName(name) {
-      const arrayName = `${this.name}.`;
-      const normalizedName = name.startsWith(arrayName) ? name.slice(arrayName.length) : name;
+      const normalizedName = this.getNormalizedName(name);
       return get(this.actualValue, normalizedName) || get(this.fields, normalizedName);
     },
     handleRegister(fieldComponent) {
-      if (this.focusOptions) {
-        const { focusName } = this.focusOptions;
-        const { onFocus, name } = fieldComponent;
-        if (name === focusName) {
-          onFocus();
-          this.focusOptions = null;
-        }
+      this.fieldComponents.push(fieldComponent);
+      const unregister = this.register(fieldComponent);
+      return () => {
+        this.handleUnregister(fieldComponent);
+        return unregister(fieldComponent);
+      };
+    },
+    handleUnregister(fieldComponent) {
+      if (this.fieldComponents.length === 0) {
+        return;
       }
-      return this.register(fieldComponent);
+
+      const index = this.fieldComponents.indexOf(fieldComponent);
+      if (index === -1) {
+        return;
+      }
+
+      this.fieldComponents.splice(index, 1);
+    },
+    handleFocus({ focusName }) {
+      this.$nextTick(() => {
+        const fieldComponent = this.fieldComponents.find(({ name }) => name === focusName);
+        if (!fieldComponent) {
+          return;
+        }
+        fieldComponent.onFocus();
+      });
+    },
+    getNormalizedName(name) {
+      const arrayName = `${this.name}.`;
+      return name.startsWith(arrayName) ? name.slice(arrayName.length) : name;
     },
     onChange(value) {
-      this.fields = [...value];
+      const newFields = [...value];
+      this.fields = newFields;
+      this.$nextTick(() => {
+        this.fieldComponents.forEach(({ name, onChange }) => {
+          const normalizedName = this.getNormalizedName(name);
+          onChange(get(newFields, normalizedName));
+        });
+      });
     },
     getValue() {
       return [];
@@ -95,18 +123,24 @@ export default {
     },
     append(value, focusOptions = null) {
       value[this.keyName] = value[this.keyName] ?? nanoid();
-      this.focusOptions = focusOptions;
       this.fields.push(value);
+      if (focusOptions) {
+        this.handleFocus(focusOptions);
+      }
     },
     prepend(value, focusOptions = null) {
       value[this.keyName] = value[this.keyName] ?? nanoid();
-      this.focusOptions = focusOptions;
       this.fields.unshift(value);
+      if (focusOptions) {
+        this.handleFocus(focusOptions);
+      }
     },
     insert(index, value, focusOptions = null) {
       value[this.keyName] = value[this.keyName] ?? nanoid();
-      this.focusOptions = focusOptions;
       this.fields.splice(index, 0, value);
+      if (focusOptions) {
+        this.handleFocus(focusOptions);
+      }
     },
     swap(from, to) {
       const temp = this.fields[from];
@@ -123,6 +157,7 @@ export default {
   render(h) {
     const children = normalizeChildren(this, {
       name: this.name,
+      onChange: this.onChange,
       fields: this.actualValue,
       append: this.append,
       prepend: this.prepend,
