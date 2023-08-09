@@ -90,7 +90,7 @@ const onChange: Field['onChange'] = (newValue: unknown) => {
 
 const setError: Field['setError'] = ({
   message,
-  type = null,
+  type,
   resetBehaviour = ON_FIELD_CHANGE
 }: InnerValidationError) => {
   errors.value.push({

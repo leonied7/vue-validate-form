@@ -1,6 +1,7 @@
 <template>
   <slot
     v-bind="{ name }"
+    :on-change="onChange"
     :fields="actualValue"
     :append="append"
     :prepend="prepend"
@@ -12,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onBeforeUnmount, provide, reactive, ref, toRefs } from 'vue';
+import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref, toRefs } from 'vue';
 import type { Field } from '../types/field';
 import {
   getFieldDefaultValueSymbol,
@@ -38,10 +39,12 @@ interface FocusOptions {
 const focusOptions = ref<FocusOptions>();
 
 const register = inject(registerSymbol)!;
-const getFieldDefaultValue = inject(getFieldDefaultValueSymbol)!;
-const getFieldValue = inject(getFieldValueSymbol)!;
+const getFieldDefaultValue = inject<(name: string, defaultValue?: any[]) => any[]>(
+  getFieldDefaultValueSymbol
+)!;
+const getFieldValue = inject<(name: string) => any[]>(getFieldValueSymbol)!;
 
-const defaultValue = computed(() => getFieldDefaultValue(name.value) || []);
+const defaultValue = computed(() => getFieldDefaultValue(name.value, []));
 const actualValue = computed(() => {
   const providedValues = getFieldValue(name.value) || [];
   return fields.value.map((field, index) => ({
@@ -50,19 +53,20 @@ const actualValue = computed(() => {
   }));
 });
 
+const fieldComponents = ref<Field[]>([]);
 const fields = ref([...defaultValue.value]);
 
-function append(value: unknown, options?: FocusOptions) {
+function append(value: Record<string, any>, options?: FocusOptions) {
   value[keyName.value] = value[keyName.value] ?? nanoid();
   focusOptions.value = options;
   fields.value.push(value);
 }
-function prepend(value, options?: FocusOptions) {
+function prepend(value: Record<string, any>, options?: FocusOptions) {
   value[keyName.value] = value[keyName.value] ?? nanoid();
   focusOptions.value = options;
   fields.value.unshift(value);
 }
-function insert(index, value, options?: FocusOptions) {
+function insert(index: number, value: Record<string, any>, options?: FocusOptions) {
   value[keyName.value] = value[keyName.value] ?? nanoid();
   focusOptions.value = options;
   fields.value.splice(index, 0, value);
@@ -79,8 +83,15 @@ function remove(index: number) {
   fields.value.splice(index, 1);
 }
 
-const onChange: Field['onChange'] = (value: unknown) => {
-  fields.value = [...value];
+const onChange: Field['onChange'] = (value: any) => {
+  const newFields = [...value];
+  fields.value = newFields;
+  nextTick(() => {
+    fieldComponents.value.forEach(({ name, onChange }) => {
+      const normalizedName = getNormalizedName(name);
+      onChange(get(newFields, normalizedName));
+    });
+  });
 };
 
 const reset: Field['reset'] = () => {
@@ -105,29 +116,43 @@ const field: Field = reactive({
 
 const unregister = register(field);
 onBeforeUnmount(() => {
+  fieldComponents.value = [];
   unregister();
 });
 
+function getNormalizedName(fieldName: string) {
+  return fieldName.replace(new RegExp(`^${name.value}.`), '');
+}
+
 provide(hasFieldValueSymbol, (fieldName) => {
-  const normalizedName = fieldName.replace(new RegExp(`^${name.value}.`), '');
+  const normalizedName = getNormalizedName(fieldName);
   return has(actualValue.value, normalizedName) || has(fields.value, normalizedName);
 });
 provide(getFieldValueSymbol, (fieldName) => {
-  const normalizedName = fieldName.replace(new RegExp(`^${name.value}.`), '');
+  const normalizedName = getNormalizedName(fieldName);
   return get(actualValue.value, normalizedName) || get(fields.value, normalizedName);
 });
 provide(registerSymbol, (fieldComponent) => {
-  const options = focusOptions.value;
-  if (options) {
-    const { focusName } = options;
-    const { onFocus, name } = fieldComponent;
-    if (name === focusName) {
-      onFocus();
-      focusOptions.value = undefined;
-    }
-  }
-  return register(fieldComponent);
+  fieldComponents.value.push(fieldComponent);
+  const unregister = register(fieldComponent);
+  return () => {
+    handleUnregister(fieldComponent);
+    return unregister();
+  };
 });
+
+function handleUnregister(fieldComponent: Field) {
+  if (fieldComponents.value.length === 0) {
+    return;
+  }
+
+  const index = fieldComponents.value.indexOf(fieldComponent);
+  if (index === -1) {
+    return;
+  }
+
+  fieldComponents.value.splice(index, 1);
+}
 </script>
 
 <script lang="ts">

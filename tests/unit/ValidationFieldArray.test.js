@@ -553,4 +553,44 @@ describe('ValidationFieldArray', () => {
       ]
     });
   });
+
+  it('onChange should work', async () => {
+    createComponent({
+      props: {
+        defaultValues: {
+          arrayField: [
+            {
+              id: 1,
+              firstName: 'name 1'
+            },
+            {
+              id: 2,
+              firstName: 'name 2'
+            }
+          ]
+        },
+        resolver
+      }
+    });
+    await nextTick();
+
+    const formInfoWrapper = wrapper.findComponent(FormInfo);
+
+    await wrapper.find('#arrayChange').trigger('click');
+
+    expect(formInfoWrapper.props().values).toEqual({
+      my: {
+        nested: {
+          value: undefined
+        }
+      },
+      'my-input': undefined,
+      arrayField: [
+        {
+          id: 42,
+          firstName: undefined
+        }
+      ]
+    });
+  });
 });
