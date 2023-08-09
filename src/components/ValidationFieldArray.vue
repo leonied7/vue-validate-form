@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onBeforeUnmount, provide, reactive, ref, toRefs } from 'vue';
+import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref, toRefs } from 'vue';
 import type { Field } from '../types/field';
 import {
   getFieldDefaultValueSymbol,
@@ -53,6 +53,7 @@ const actualValue = computed(() => {
   }));
 });
 
+const fieldComponents = ref<Field[]>([]);
 const fields = ref([...defaultValue.value]);
 
 function append(value: Record<string, any>, options?: FocusOptions) {
@@ -83,7 +84,14 @@ function remove(index: number) {
 }
 
 const onChange: Field['onChange'] = (value: any) => {
-  fields.value = [...value];
+  const newFields = [...value];
+  fields.value = newFields;
+  nextTick(() => {
+    fieldComponents.value.forEach(({ name, onChange }) => {
+      const normalizedName = getNormalizedName(name);
+      onChange(get(newFields, normalizedName));
+    });
+  });
 };
 
 const reset: Field['reset'] = () => {
@@ -108,29 +116,43 @@ const field: Field = reactive({
 
 const unregister = register(field);
 onBeforeUnmount(() => {
+  fieldComponents.value = [];
   unregister();
 });
 
+function getNormalizedName(fieldName: string) {
+  return fieldName.replace(new RegExp(`^${name.value}.`), '');
+}
+
 provide(hasFieldValueSymbol, (fieldName) => {
-  const normalizedName = fieldName.replace(new RegExp(`^${name.value}.`), '');
+  const normalizedName = getNormalizedName(fieldName);
   return has(actualValue.value, normalizedName) || has(fields.value, normalizedName);
 });
 provide(getFieldValueSymbol, (fieldName) => {
-  const normalizedName = fieldName.replace(new RegExp(`^${name.value}.`), '');
+  const normalizedName = getNormalizedName(fieldName);
   return get(actualValue.value, normalizedName) || get(fields.value, normalizedName);
 });
 provide(registerSymbol, (fieldComponent) => {
-  const options = focusOptions.value;
-  if (options) {
-    const { focusName } = options;
-    const { onFocus, name } = fieldComponent;
-    if (name === focusName) {
-      onFocus();
-      focusOptions.value = undefined;
-    }
-  }
-  return register(fieldComponent);
+  fieldComponents.value.push(fieldComponent);
+  const unregister = register(fieldComponent);
+  return () => {
+    handleUnregister(fieldComponent);
+    return unregister();
+  };
 });
+
+function handleUnregister(fieldComponent: Field) {
+  if (fieldComponents.value.length === 0) {
+    return;
+  }
+
+  const index = fieldComponents.value.indexOf(fieldComponent);
+  if (index === -1) {
+    return;
+  }
+
+  fieldComponents.value.splice(index, 1);
+}
 </script>
 
 <script lang="ts">

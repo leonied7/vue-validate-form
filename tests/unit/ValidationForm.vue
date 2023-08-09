@@ -55,7 +55,17 @@
 
         <ValidationFieldArray name="arrayField">
           <template
-            #default="{ name: arrayName, fields, append, prepend, insert, swap, move, remove }"
+            #default="{
+              name: arrayName,
+              onChange,
+              fields,
+              append,
+              prepend,
+              insert,
+              swap,
+              move,
+              remove
+            }"
           >
             <div v-for="(field, index) in fields" :key="field.id">
               <ValidationField :name="`${arrayName}.${index}.id`" />
@@ -93,6 +103,9 @@
             <button id="swap" type="button" @click="swap(0, 2)">Swap</button>
             <button id="move" type="button" @click="move(0, 2)">Move</button>
             <button id="remove" type="button" @click="remove(1)">Remove</button>
+            <button id="arrayChange" type="button" @click="onChange([{ id: 42 }])">
+              Change array
+            </button>
           </template>
         </ValidationFieldArray>
 
@@ -160,7 +173,7 @@ export default {
     dirty: null
   },
   methods: {
-    onSubmit (values, options) {
+    onSubmit(values, options) {
       this.$emit('submit', values, options);
     }
   }

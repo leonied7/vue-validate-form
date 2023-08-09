@@ -30,7 +30,9 @@
           </ValidationField>
 
           <ValidationFieldArray name="arrayField">
-            <template #default="{ name, fields, append, prepend, insert, swap, move, remove }">
+            <template
+              #default="{ name, fields, onChange, append, prepend, insert, swap, move, remove }"
+            >
               <div>
                 <div v-for="(field, index) in fields" :key="field.id">
                   <ValidationField :name="`${name}.${index}.id`">
@@ -75,6 +77,9 @@
                 <button type="button" @click="move(0, 2)">Move</button>
                 <button type="button" @click="remove(0)">Remove</button>
                 <button type="button" @click="reset()">Reset</button>
+                <button type="button" @click="onChange([{ id: 42, firstName: 'test' }])">
+                  Change
+                </button>
               </div>
             </template>
           </ValidationFieldArray>
