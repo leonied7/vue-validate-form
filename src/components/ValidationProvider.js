@@ -175,7 +175,10 @@ export default {
       if (values) {
         this.innerDefaultValues = JSON.parse(JSON.stringify(values));
       }
-      this.fieldComponents.forEach(({ reset }) => {
+      this.fieldComponents.forEach(({ dirty, reset }) => {
+        if (dirty) {
+          return;
+        }
         reset();
       });
     },
