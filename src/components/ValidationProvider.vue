@@ -185,7 +185,10 @@ function reset(values?: Values) {
     innerDefaultValues.value = JSON.parse(JSON.stringify(values));
   }
 
-  fieldComponents.value.forEach(({ reset }) => {
+  fieldComponents.value.forEach(({ dirty, reset }) => {
+    if (dirty) {
+      return
+    }
     reset();
   });
 }
