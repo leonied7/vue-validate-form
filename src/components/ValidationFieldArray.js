@@ -65,24 +65,20 @@ export default {
       }));
     }
   },
-  watch: {
-    providedValues: {
-      handler(values) {
-        const name = this.name;
-        const keyName = this.keyName;
-        values.forEach((field, index) => {
-          if (!(keyName in field)) {
-            console.error(
-              `[vue-validate-form]: required key field '${keyName}' not registered for '${name}.${index}'`
-            );
-          }
-        });
-      }
-    }
-  },
   mounted() {
     this.fields = [...this.defaultValue];
     this.unregister = this.register(this);
+  },
+  updated() {
+    const name = this.name;
+    const keyName = this.keyName;
+    this.providedValues.forEach((field, index) => {
+      if (!(keyName in field)) {
+        console.error(
+          `[vue-validate-form]: required key field '${keyName}' not registered for '${name}.${index}'`
+        );
+      }
+    });
   },
   beforeDestroy() {
     this.fieldComponents = [];
