@@ -44,11 +44,25 @@ export default {
     defaultValue() {
       return this.getFieldDefaultValue(this.name) || [];
     },
+    providedValuesMap() {
+      const keyName = this.keyName;
+      const map = {};
+      const providedValues = this.getFieldValue(this.name) || [];
+      providedValues.forEach((field, index) => {
+        if (!(keyName in field)) {
+          console.error(
+            `[vue-validate-form]: required key field '${keyName}' not registered for '${this.name}.${index}'`
+          );
+        }
+        map[field[keyName]] = field;
+      });
+      return map;
+    },
     actualValue() {
       const keyName = this.keyName;
-      const providedValues = this.getFieldValue(this.name) || [];
-      return this.fields.map((field, index) => ({
-        ...providedValues[index],
+      const providedValuesMap = this.providedValuesMap;
+      return this.fields.map((field) => ({
+        ...providedValuesMap[field[keyName]],
         [keyName]: field[keyName]
       }));
     }
@@ -64,11 +78,12 @@ export default {
   methods: {
     hasValueByFieldName(name) {
       const normalizedName = this.getNormalizedName(name);
-      return has(this.actualValue, normalizedName) || has(this.fields, normalizedName);
+      const [fieldIndex] = normalizedName.split('.');
+      return has(this.fields, fieldIndex);
     },
     getValueByFieldName(name) {
       const normalizedName = this.getNormalizedName(name);
-      return get(this.actualValue, normalizedName) || get(this.fields, normalizedName);
+      return get(this.fields, normalizedName);
     },
     handleRegister(fieldComponent) {
       this.fieldComponents.push(fieldComponent);

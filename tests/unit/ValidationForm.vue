@@ -69,6 +69,7 @@
           >
             <div v-for="(field, index) in fields" :key="field.id">
               <ValidationField :name="`${arrayName}.${index}.id`" />
+              <ValidationField :name="`${arrayName}.${index}.type`" />
               <ValidationField :name="`${arrayName}.${index}.firstName`">
                 <template
                   #default="{
