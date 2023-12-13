@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.8](https://github.com/leonied7/vue-validate-form/compare/v2.0.7...v2.0.8) (2023-12-13)
+
+
+### Bug Fixes
+
+* show console error correctly ([a90ab4c](https://github.com/leonied7/vue-validate-form/commit/a90ab4ce3c664170634f684e3a0635a12a8b288d))
+
 ## [2.0.7](https://github.com/leonied7/vue-validate-form/compare/v2.0.6...v2.0.7) (2023-12-13)
 
 
