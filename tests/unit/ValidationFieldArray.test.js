@@ -86,10 +86,12 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': []
     });
     expect(formInfoProps.dirty).toBe(false);
@@ -155,10 +157,13 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
+      'arrayField.2.type': [],
       'arrayField.2.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ]
@@ -171,8 +176,10 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ]
@@ -222,8 +229,10 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ]
@@ -236,10 +245,13 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
+      'arrayField.2.type': [],
       'arrayField.2.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ]
@@ -254,10 +266,12 @@ describe('ValidationFieldArray', () => {
           arrayField: [
             {
               id: 1,
+              type: '1',
               firstName: 'name 1'
             },
             {
               id: 42,
+              type: '42',
               firstName: ''
             }
           ]
@@ -278,8 +292,10 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ]
@@ -292,14 +308,19 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
+      'arrayField.2.type': [],
       'arrayField.2.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ]
     });
+
+    expect(wrapper.findComponent(FormInfo).props().values.arrayField[1].type).toEqual(undefined);
     expect(wrapper.findAllComponents(BaseInput).at(3).props().modelValue).toBe('insert');
   });
 
@@ -338,10 +359,13 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
+      'arrayField.2.type': [],
       'arrayField.2.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ]
@@ -355,12 +379,15 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
+      'arrayField.2.type': [],
       'arrayField.2.firstName': []
     });
     expect(formInfoWrapper.props().values).toEqual({
@@ -393,10 +420,13 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
+      'arrayField.2.type': [],
       'arrayField.2.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ]
@@ -460,10 +490,13 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
+      'arrayField.2.type': [],
       'arrayField.2.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ]
@@ -477,12 +510,15 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ],
       'arrayField.2.id': [],
+      'arrayField.2.type': [],
       'arrayField.2.firstName': []
     });
     expect(formInfoWrapper.props().values).toEqual({
@@ -515,12 +551,15 @@ describe('ValidationFieldArray', () => {
       'my-input': [],
       arrayField: [],
       'arrayField.0.id': [],
+      'arrayField.0.type': [],
       'arrayField.0.firstName': [
         { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
       ],
       'arrayField.1.id': [],
+      'arrayField.1.type': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
+      'arrayField.2.type': [],
       'arrayField.2.firstName': []
     });
     expect(formInfoWrapper.props().values).toEqual({
