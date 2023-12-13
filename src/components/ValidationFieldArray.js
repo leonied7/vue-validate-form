@@ -44,16 +44,14 @@ export default {
     defaultValue() {
       return this.getFieldDefaultValue(this.name) || [];
     },
+    providedValues() {
+      return this.getFieldValue(this.name) || [];
+    },
     providedValuesMap() {
       const keyName = this.keyName;
       const map = {};
-      const providedValues = this.getFieldValue(this.name) || [];
-      providedValues.forEach((field, index) => {
-        if (!(keyName in field)) {
-          console.error(
-            `[vue-validate-form]: required key field '${keyName}' not registered for '${this.name}.${index}'`
-          );
-        }
+      const providedValues = this.providedValues;
+      providedValues.forEach((field) => {
         map[field[keyName]] = field;
       });
       return map;
@@ -65,6 +63,21 @@ export default {
         ...providedValuesMap[field[keyName]],
         [keyName]: field[keyName]
       }));
+    }
+  },
+  watch: {
+    providedValues: {
+      handler(values) {
+        const name = this.name;
+        const keyName = this.keyName;
+        values.forEach((field, index) => {
+          if (!(keyName in field)) {
+            console.error(
+              `[vue-validate-form]: required key field '${keyName}' not registered for '${name}.${index}'`
+            );
+          }
+        });
+      }
     }
   },
   mounted() {
