@@ -13,7 +13,17 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref, toRefs } from 'vue';
+import {
+  computed,
+  inject,
+  nextTick,
+  onUpdated,
+  onBeforeUnmount,
+  provide,
+  reactive,
+  ref,
+  toRefs
+} from 'vue';
 import type { Field } from '../types/field';
 import {
   getFieldDefaultValueSymbol,
@@ -22,7 +32,7 @@ import {
   registerSymbol
 } from './symbols';
 import { nanoid } from 'nanoid';
-import { get, has } from './helpers';
+import { get } from './helpers';
 
 interface Props {
   name: string;
@@ -45,10 +55,18 @@ const getFieldDefaultValue = inject<(name: string, defaultValue?: any[]) => any[
 const getFieldValue = inject<(name: string) => any[]>(getFieldValueSymbol)!;
 
 const defaultValue = computed(() => getFieldDefaultValue(name.value, []));
-const actualValue = computed(() => {
-  const providedValues = getFieldValue(name.value) || [];
-  return fields.value.map((field, index) => ({
-    ...providedValues[index],
+const providedValue = computed<Array<Record<string, any>>>(() => getFieldValue(name.value) || []);
+const providedValueMap = computed(() => {
+  const map: Record<string, Record<string, any>> = {};
+  providedValue.value.forEach((field) => {
+    map[field[keyName.value]] = field;
+  });
+  return map;
+});
+const actualValue = computed<Array<Record<string, any>>>(() => {
+  const map = providedValueMap.value;
+  return fields.value.map((field) => ({
+    ...map[field[keyName.value]],
     [keyName.value]: field[keyName.value]
   }));
 });
@@ -119,18 +137,24 @@ onBeforeUnmount(() => {
   fieldComponents.value = [];
   unregister();
 });
+onUpdated(() => {
+  providedValue.value.forEach((field, index) => {
+    if (!(keyName.value in field)) {
+      console.error(
+        `[vue-validate-form]: required key field '${keyName.value}' not registered for '${name.value}.${index}'`
+      );
+    }
+  });
+});
 
 function getNormalizedName(fieldName: string) {
   return fieldName.replace(new RegExp(`^${name.value}.`), '');
 }
 
-provide(hasFieldValueSymbol, (fieldName) => {
-  const normalizedName = getNormalizedName(fieldName);
-  return has(actualValue.value, normalizedName) || has(fields.value, normalizedName);
-});
+provide(hasFieldValueSymbol, () => true);
 provide(getFieldValueSymbol, (fieldName) => {
   const normalizedName = getNormalizedName(fieldName);
-  return get(actualValue.value, normalizedName) || get(fields.value, normalizedName);
+  return get(fields.value, normalizedName);
 });
 provide(registerSymbol, (fieldComponent) => {
   fieldComponents.value.push(fieldComponent);

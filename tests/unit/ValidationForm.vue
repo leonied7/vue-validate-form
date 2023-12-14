@@ -31,7 +31,7 @@
               :dirty="dirty"
               :pristine="pristine"
               :invalid="invalid"
-              @update:modelValue="onChange"
+              @update:model-value="onChange"
             />
           </template>
         </ValidationField>
@@ -48,7 +48,7 @@
               :dirty="dirty"
               :pristine="pristine"
               :invalid="invalid"
-              @update:modelValue="onChange"
+              @update:model-value="onChange"
             />
           </template>
         </ValidationField>
@@ -69,6 +69,7 @@
           >
             <div v-for="(field, index) in fields" :key="field.id">
               <ValidationField :name="`${arrayName}.${index}.id`" />
+              <ValidationField :name="`${arrayName}.${index}.type`" />
               <ValidationField :name="`${arrayName}.${index}.firstName`">
                 <template
                   #default="{
@@ -90,7 +91,7 @@
                     :dirty="dirty"
                     :pristine="pristine"
                     :invalid="invalid"
-                    @update:modelValue="onChange"
+                    @update:model-value="onChange"
                   />
                 </template>
               </ValidationField>

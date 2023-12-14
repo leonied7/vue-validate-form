@@ -3,7 +3,7 @@
     <input
       :value="modelValue"
       type="text"
-      @input="$emit('update:modelValue', $event.target.value)"
+      @input="$emit('update:model-value', $event.target.value)"
     />
   </div>
 </template>
@@ -13,7 +13,7 @@ export default {
   name: 'BaseInput',
   model: {
     prop: 'modelValue',
-    event: 'update:modelValue'
+    event: 'update:model-value'
   },
   props: {
     modelValue: {
@@ -35,6 +35,7 @@ export default {
     dirty: Boolean,
     pristine: Boolean,
     invalid: Boolean
-  }
+  },
+  emits: ['update:model-value']
 };
 </script>
