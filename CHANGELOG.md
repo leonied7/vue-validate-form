@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-alpha.6](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.5...v3.0.0-alpha.6) (2023-12-14)
+
+
+### Bug Fixes
+
+* calculate actualValue into ValidationFieldArray correctly ([a0315e2](https://github.com/leonied7/vue-validate-form/commit/a0315e2e2ba877bb78a1bccae7ef9b9ea69e780e))
+
 ## [3.0.0-alpha.5](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.4...v3.0.0-alpha.5) (2023-08-09)
 
 
