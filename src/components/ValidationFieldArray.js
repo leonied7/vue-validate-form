@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { getFieldDefaultValue, getFieldValue, hasFieldValue, register } from './symbols';
-import { get, has, normalizeChildren } from './helpers';
+import { get, normalizeChildren } from './helpers';
 
 export default {
   name: 'ValidationFieldArray',
@@ -66,25 +66,20 @@ export default {
     }
   },
   mounted() {
-    this.fields = [...this.defaultValue];
+    this.fields = this.getInitialFields();
     this.unregister = this.register(this);
-  },
-  updated() {
-    const name = this.name;
-    const keyName = this.keyName;
-    this.providedValues.forEach((field, index) => {
-      if (!(keyName in field)) {
-        console.error(
-          `[vue-validate-form]: required key field '${keyName}' not registered for '${name}.${index}'`
-        );
-      }
-    });
   },
   beforeDestroy() {
     this.fieldComponents = [];
     this.unregister();
   },
   methods: {
+    getInitialFields() {
+      return this.defaultValue.map((field) => ({
+        ...field,
+        [this.keyName]: field[this.keyName] ?? nanoid()
+      }));
+    },
     hasValueByFieldName() {
       return true;
     },
@@ -136,12 +131,16 @@ export default {
       });
     },
     getValue() {
-      return [];
+      return this.fields.map((field) => {
+        return {
+          [this.keyName]: field[this.keyName]
+        };
+      });
     },
     setErrorActual() {},
     resetErrors() {},
     reset() {
-      this.fields = [...this.defaultValue];
+      this.fields = this.getInitialFields();
     },
     append(value, focusOptions = null) {
       value[this.keyName] = value[this.keyName] ?? nanoid();
