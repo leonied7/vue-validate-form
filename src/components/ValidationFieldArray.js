@@ -85,10 +85,8 @@ export default {
     this.unregister();
   },
   methods: {
-    hasValueByFieldName(name) {
-      const normalizedName = this.getNormalizedName(name);
-      const [fieldIndex] = normalizedName.split('.');
-      return has(this.fields, fieldIndex);
+    hasValueByFieldName() {
+      return true;
     },
     getValueByFieldName(name) {
       const normalizedName = this.getNormalizedName(name);
