@@ -13,17 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  computed,
-  inject,
-  nextTick,
-  onUpdated,
-  onBeforeUnmount,
-  provide,
-  reactive,
-  ref,
-  toRefs
-} from 'vue';
+import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref, toRefs } from 'vue';
 import type { Field } from '../types/field';
 import {
   getFieldDefaultValueSymbol,
@@ -72,7 +62,14 @@ const actualValue = computed<Array<Record<string, any>>>(() => {
 });
 
 const fieldComponents = ref<Field[]>([]);
-const fields = ref([...defaultValue.value]);
+const fields = ref(getInitialFields());
+
+function getInitialFields() {
+  return defaultValue.value.map((field) => ({
+    ...field,
+    [keyName.value]: field[keyName.value] ?? nanoid()
+  }));
+}
 
 function append(value: Record<string, any>, options?: FocusOptions) {
   value[keyName.value] = value[keyName.value] ?? nanoid();
@@ -113,7 +110,7 @@ const onChange: Field['onChange'] = (value: any) => {
 };
 
 const reset: Field['reset'] = () => {
-  fields.value = [...defaultValue.value];
+  fields.value = getInitialFields();
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -124,7 +121,13 @@ const field: Field = reactive({
   dirty: false,
   pristine: true,
   errors: [],
-  getValue: () => [],
+  getValue: () => {
+    return fields.value.map((field) => {
+      return {
+        [keyName.value]: field[keyName.value]
+      };
+    });
+  },
   onChange,
   setError: noop,
   resetErrors: noop,
@@ -136,15 +139,6 @@ const unregister = register(field);
 onBeforeUnmount(() => {
   fieldComponents.value = [];
   unregister();
-});
-onUpdated(() => {
-  providedValue.value.forEach((field, index) => {
-    if (!(keyName.value in field)) {
-      console.error(
-        `[vue-validate-form]: required key field '${keyName.value}' not registered for '${name.value}.${index}'`
-      );
-    }
-  });
 });
 
 function getNormalizedName(fieldName: string) {
