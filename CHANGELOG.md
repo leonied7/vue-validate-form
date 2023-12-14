@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-alpha.8](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.7...v3.0.0-alpha.8) (2023-12-14)
+
+
+### Bug Fixes
+
+* set id not required for field-array ([d121ea4](https://github.com/leonied7/vue-validate-form/commit/d121ea45184f5cba42f127860c9cfce2ef5970c5))
+
 ## [3.0.0-alpha.7](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.6...v3.0.0-alpha.7) (2023-12-14)
 
 
