@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.9](https://github.com/leonied7/vue-validate-form/compare/v2.0.8...v2.0.9) (2023-12-14)
+
+
+### Bug Fixes
+
+* return true always for value by field into field-array ([4184e02](https://github.com/leonied7/vue-validate-form/commit/4184e02a33b923e54e13ccd294df0c12205a7d03))
+
 ## [2.0.8](https://github.com/leonied7/vue-validate-form/compare/v2.0.7...v2.0.8) (2023-12-13)
 
 
