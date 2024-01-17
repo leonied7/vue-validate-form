@@ -77,7 +77,7 @@ export default {
     getInitialFields() {
       return this.defaultValue.map((field) => ({
         ...field,
-        [this.keyName]: field[this.keyName] ?? nanoid()
+        [this.keyName]: this.getId(field)
       }));
     },
     hasValueByFieldName() {
@@ -142,22 +142,25 @@ export default {
     reset() {
       this.fields = this.getInitialFields();
     },
+    getId(field) {
+      return this.keyName in field ? field[this.keyName] : nanoid();
+    },
     append(value, focusOptions = null) {
-      value[this.keyName] = value[this.keyName] ?? nanoid();
+      value[this.keyName] = this.getId(value);
       this.fields.push(value);
       if (focusOptions) {
         this.handleFocus(focusOptions);
       }
     },
     prepend(value, focusOptions = null) {
-      value[this.keyName] = value[this.keyName] ?? nanoid();
+      value[this.keyName] = this.getId(value);
       this.fields.unshift(value);
       if (focusOptions) {
         this.handleFocus(focusOptions);
       }
     },
     insert(index, value, focusOptions = null) {
-      value[this.keyName] = value[this.keyName] ?? nanoid();
+      value[this.keyName] = this.getId(value);
       this.fields.splice(index, 0, value);
       if (focusOptions) {
         this.handleFocus(focusOptions);
