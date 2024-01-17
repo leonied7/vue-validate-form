@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-alpha.9](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.8...v3.0.0-alpha.9) (2024-01-17)
+
+
+### Bug Fixes
+
+* set id only for unset id field ([5a6c57c](https://github.com/leonied7/vue-validate-form/commit/5a6c57c528ffff3b819c646571c6f7283e84aa9e))
+
 ## [3.0.0-alpha.8](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.7...v3.0.0-alpha.8) (2023-12-14)
 
 
