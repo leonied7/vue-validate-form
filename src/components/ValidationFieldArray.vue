@@ -67,22 +67,26 @@ const fields = ref(getInitialFields());
 function getInitialFields() {
   return defaultValue.value.map((field) => ({
     ...field,
-    [keyName.value]: field[keyName.value] ?? nanoid()
+    [keyName.value]: getId(field)
   }));
 }
 
+function getId(field: any) {
+  return keyName.value in field ? field[keyName.value] : nanoid();
+}
+
 function append(value: Record<string, any>, options?: FocusOptions) {
-  value[keyName.value] = value[keyName.value] ?? nanoid();
+  value[keyName.value] = getId(value);
   focusOptions.value = options;
   fields.value.push(value);
 }
 function prepend(value: Record<string, any>, options?: FocusOptions) {
-  value[keyName.value] = value[keyName.value] ?? nanoid();
+  value[keyName.value] = getId(value);
   focusOptions.value = options;
   fields.value.unshift(value);
 }
 function insert(index: number, value: Record<string, any>, options?: FocusOptions) {
-  value[keyName.value] = value[keyName.value] ?? nanoid();
+  value[keyName.value] = getId(value);
   focusOptions.value = options;
   fields.value.splice(index, 0, value);
 }
