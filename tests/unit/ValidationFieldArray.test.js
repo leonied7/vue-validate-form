@@ -40,6 +40,10 @@ describe('ValidationFieldArray', () => {
             {
               id: 42,
               firstName: 'name 2'
+            },
+            {
+              id: null,
+              firstName: 'name 3'
             }
           ]
         }
@@ -48,9 +52,34 @@ describe('ValidationFieldArray', () => {
     await nextTick();
     const formInfoProps = wrapper.findComponent(FormInfo).props();
 
-    expect(wrapper.findAllComponents(BaseInput).length).toBe(4);
+    expect(wrapper.findAllComponents(BaseInput).length).toBe(5);
     expect(formInfoProps.dirty).toBe(false);
     expect(formInfoProps.invalid).toBe(false);
+    expect(formInfoProps.values).toEqual({
+      arrayField: [
+        {
+          id: 1,
+          firstName: 'name 1',
+          type: undefined
+        },
+        {
+          id: 42,
+          firstName: 'name 2',
+          type: undefined
+        },
+        {
+          id: null,
+          firstName: 'name 3',
+          type: undefined
+        }
+      ],
+      my: {
+        nested: {
+          value: undefined
+        }
+      },
+      'my-input': undefined
+    });
   });
 
   it('set errors for array fields', async () => {
