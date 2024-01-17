@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.12](https://github.com/leonied7/vue-validate-form/compare/v2.0.11...v2.0.12) (2024-01-17)
+
+
+### Bug Fixes
+
+* publish correctly ([a5e872c](https://github.com/leonied7/vue-validate-form/commit/a5e872cf6f18de5bf7eb8c64361f3593d584cf62))
+* return workflow ([dc50135](https://github.com/leonied7/vue-validate-form/commit/dc50135deb57762f3f0963d11e1b9ead0f33c2f1))
+* revert workflow ([982ae62](https://github.com/leonied7/vue-validate-form/commit/982ae629c3cf07b295b51d64144254fc68458391))
+* revert workflow ([85d21ca](https://github.com/leonied7/vue-validate-form/commit/85d21caf5519cba0416aea5c7ecea6b90f4d9e91))
+* set id only for unset id field ([ee455cf](https://github.com/leonied7/vue-validate-form/commit/ee455cff0d8e57ea33a0c3d702edf7f2f0e1fb75))
+
 ## [2.0.11](https://github.com/leonied7/vue-validate-form/compare/v2.0.10...v2.0.11) (2023-12-14)
 
 
