@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.13](https://github.com/leonied7/vue-validate-form/compare/v2.0.12...v2.0.13) (2024-01-22)
+
+
+### Bug Fixes
+
+* keep field state on rerender ([7340760](https://github.com/leonied7/vue-validate-form/commit/73407604f40ee70de12b632bfd7d46902c68c515))
+
 ## [2.0.12](https://github.com/leonied7/vue-validate-form/compare/v2.0.11...v2.0.12) (2024-01-17)
 
 
