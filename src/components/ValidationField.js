@@ -1,6 +1,7 @@
 import {
   getFieldDefaultValue,
   getFieldValue,
+  getFieldPristine,
   hasFieldValue,
   getIsSubmitted,
   register,
@@ -15,6 +16,7 @@ export default {
     hasFieldValue,
     getFieldDefaultValue,
     getFieldValue,
+    getFieldPristine,
     getIsSubmitted,
     register,
     validate
@@ -64,8 +66,11 @@ export default {
       return this.submitted && !!this.errors.length;
     }
   },
-  mounted() {
+  created() {
     this.value = this.hasProvidedValue ? this.providedValue : this.defaultValue;
+    this.pristine = this.getFieldPristine(this.name);
+  },
+  mounted() {
     this.unregister = this.register(this);
     this.registered = true;
   },

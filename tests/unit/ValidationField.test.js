@@ -115,6 +115,26 @@ describe('ValidationField', () => {
     expect(fieldWrapper.emitted().change).toBeUndefined();
   });
 
+  it('keep field state on component rerender', async () => {
+    createComponent();
+    await nextTick();
+
+    wrapper.findComponent(BaseInput);
+
+    expect(wrapper.findComponent(BaseInput).props().modelValue).toBeUndefined();
+    expect(wrapper.findComponent(BaseInput).props().pristine).toBe(true);
+    wrapper.findComponent(BaseInput).vm.$emit('update:modelValue', 42);
+
+    await nextTick();
+    expect(wrapper.findComponent(BaseInput).props().modelValue).toBe(42);
+    expect(wrapper.findComponent(BaseInput).props().pristine).toBe(false);
+
+    wrapper.findComponent({ ref: 'myNestedValueInput' }).vm.$emit('update:modelValue', 'test');
+    await nextTick();
+    expect(wrapper.findComponent(BaseInput).props().modelValue).toBe(42);
+    expect(wrapper.findComponent(BaseInput).props().pristine).toBe(false);
+  });
+
   it('should emit event on change', async () => {
     createComponent({
       props: {

@@ -18,7 +18,16 @@
           <pre>{{ dirty }}</pre>
           <label>errors</label>
           <pre>{{ errors }}</pre>
-          <ValidationField name="my-input">
+          <ValidationField
+            v-if="$options.get(values, 'my.nested.value') === 'test'"
+            key="1"
+            name="my-input"
+          >
+            <template #default="{ modelValue, onChange }">
+              <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
+            </template>
+          </ValidationField>
+          <ValidationField v-else key="2" name="my-input">
             <template #default="{ modelValue, onChange }">
               <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
             </template>
@@ -152,6 +161,7 @@ export default {
     ValidationFieldArray,
     ValidationErrors
   },
+  get,
   resolver(values) {
     const result = {
       values,
