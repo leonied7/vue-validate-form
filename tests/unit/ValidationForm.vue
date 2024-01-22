@@ -19,7 +19,27 @@
       }"
     >
       <form @submit.prevent="handleSubmit">
-        <ValidationField name="my-input">
+        <ValidationField
+          v-if="$options.get(values, 'my.nested.value') === 'test'"
+          key="1"
+          name="my-input"
+        >
+          <template
+            #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
+          >
+            <base-input
+              :name="name"
+              :first-error="firstError"
+              :errors="errors"
+              :model-value="modelValue"
+              :dirty="dirty"
+              :pristine="pristine"
+              :invalid="invalid"
+              @update:modelValue="onChange"
+            />
+          </template>
+        </ValidationField>
+        <ValidationField v-else key="2" name="my-input">
           <template
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
@@ -41,6 +61,7 @@
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
             <base-input
+              ref="myNestedValueInput"
               :name="name"
               :first-error="firstError"
               :errors="errors"
@@ -139,7 +160,8 @@ import {
   ValidationProvider,
   ValidationField,
   ValidationFieldArray,
-  ValidationErrors
+  ValidationErrors,
+  get
 } from '../../src/index.js';
 import BaseInput from './BaseInput';
 import FormInfo from './FormInfo';
@@ -147,6 +169,7 @@ import BaseErrors from './BaseErrors';
 
 export default {
   name: 'ValidationForm',
+  get,
   components: {
     BaseErrors,
     FormInfo,

@@ -1,6 +1,7 @@
 export const hasFieldValue = Symbol('hasFieldValue');
 export const getFieldValue = Symbol('getFieldValue');
 export const getFieldDefaultValue = Symbol('getFieldDefaultValue');
+export const getFieldPristine = Symbol('getFieldPristine');
 export const getErrors = Symbol('getErrors');
 export const register = Symbol('register');
 export const validate = Symbol('validate');

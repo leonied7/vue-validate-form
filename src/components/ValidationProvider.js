@@ -1,6 +1,7 @@
 import {
   getFieldDefaultValue,
   getFieldValue,
+  getFieldPristine,
   hasFieldValue,
   getIsSubmitted,
   register,
@@ -18,6 +19,7 @@ export default {
       [validate]: this.handleValidate,
       [getFieldDefaultValue]: this.getFieldDefaultValue,
       [getFieldValue]: this.getValueByFieldName,
+      [getFieldPristine]: this.getFieldPristine,
       [getErrors]: this.getErrors,
       [hasFieldValue]: this.hasValueByFieldName,
       [getIsSubmitted]: this.getIsSubmitted
@@ -123,6 +125,9 @@ export default {
     },
     getFieldDefaultValue(name, defaultValue) {
       return get(this.innerDefaultValues, name, defaultValue);
+    },
+    getFieldPristine(name) {
+      return this.fieldComponentMap[name]?.pristine ?? true;
     },
     getErrors(name) {
       return name ? this.errors[name] || [] : this.errors;
