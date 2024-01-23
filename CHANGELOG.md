@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0-alpha.10](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.9...v3.0.0-alpha.10) (2024-01-23)
+
+
+### Bug Fixes
+
+* keep field state on rerender ([b442d1f](https://github.com/leonied7/vue-validate-form/commit/b442d1f702416778db31d08606264917e5560de6))
+
 ## [3.0.0-alpha.9](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.8...v3.0.0-alpha.9) (2024-01-17)
 
 
