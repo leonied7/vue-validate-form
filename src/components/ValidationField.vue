@@ -14,11 +14,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, ref, toRefs, onBeforeUnmount, reactive, nextTick } from 'vue';
+import { computed, inject, ref, toRefs, reactive, nextTick, onUnmounted } from 'vue';
 
 import type { InnerValidationError } from '../types/error';
 import {
   getFieldDefaultValueSymbol,
+  getFieldPristineSymbol,
   getFieldValueSymbol,
   getIsSubmittedSymbol,
   hasFieldValueSymbol,
@@ -45,13 +46,12 @@ const emit = defineEmits<{
 const { name, isEqual } = toRefs(props);
 
 const registered = ref(false);
-const value = ref<unknown>();
-const pristine = ref<boolean>(true);
 const errors = ref<InnerValidationError[]>([]);
 
 const hasFieldValue = inject(hasFieldValueSymbol)!;
 const getFieldDefaultValue = inject(getFieldDefaultValueSymbol)!;
 const getFieldValue = inject(getFieldValueSymbol)!;
+const getFieldPristine = inject(getFieldPristineSymbol)!;
 const getIsSubmitted = inject(getIsSubmittedSymbol)!;
 const register = inject(registerSymbol)!;
 const validate = inject(validateSymbol)!;
@@ -60,6 +60,9 @@ const defaultValue = computed(() => getFieldDefaultValue(name.value));
 const hasProvidedValue = computed(() => hasFieldValue(name.value));
 const providedValue = computed(() => getFieldValue(name.value));
 const submitted = computed(() => getIsSubmitted());
+const value = ref<unknown>(hasProvidedValue.value ? providedValue.value : defaultValue.value);
+const pristine = ref<boolean>(getFieldPristine(name.value));
+
 const dirty = computed(() => !isEqual.value(value.value, defaultValue.value));
 const firstError = computed(() => errors.value[0]);
 const invalid = computed(() => submitted.value && !!errors.value.length);
@@ -123,9 +126,8 @@ const field: Field = reactive({
   }
 });
 
-value.value = hasProvidedValue.value ? providedValue.value : defaultValue.value;
 const unregister = register(field);
-onBeforeUnmount(() => {
+onUnmounted(() => {
   unregister();
 });
 registered.value = true;

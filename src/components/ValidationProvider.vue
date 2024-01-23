@@ -31,6 +31,7 @@ import {
   getErrorsSymbol,
   getFieldDefaultValueSymbol,
   getFieldValueSymbol,
+  getFieldPristineSymbol,
   getIsSubmittedSymbol,
   hasFieldValueSymbol,
   registerSymbol,
@@ -256,6 +257,7 @@ provide(validateSymbol, async (name: string) => {
 });
 provide(getFieldDefaultValueSymbol, getFieldDefaultValue);
 provide(getFieldValueSymbol, (name: string) => get(values.value, name));
+provide(getFieldPristineSymbol, (name: string) => fieldComponentMap.value[name]?.pristine ?? true);
 provide(getErrorsSymbol, getErrors);
 provide(hasFieldValueSymbol, (name: string) => has(values.value, name));
 provide(getIsSubmittedSymbol, () => submitted.value);

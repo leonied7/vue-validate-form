@@ -11,6 +11,9 @@ export type GetFieldDefaultValue = (name: string, defaultValue?: unknown) => unk
 export const getFieldDefaultValueSymbol: InjectionKey<GetFieldDefaultValue> =
   Symbol('getFieldDefaultValue');
 
+export type GetFieldPristine = (name: string) => boolean;
+export const getFieldPristineSymbol: InjectionKey<GetFieldPristine> = Symbol('getFieldPristine');
+
 export type GetErrors = (name?: string) => InnerValidationError[] | InnerValidationsErrors;
 export const getErrorsSymbol: InjectionKey<GetErrors> = Symbol('getErrors');
 
