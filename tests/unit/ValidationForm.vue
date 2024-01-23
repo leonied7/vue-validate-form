@@ -28,6 +28,7 @@
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
             <base-input
+              ref="myInputValueFirst"
               :name="name"
               :first-error="firstError"
               :errors="errors"
@@ -44,6 +45,7 @@
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
             <base-input
+              ref="myInputValueSecond"
               :name="name"
               :first-error="firstError"
               :errors="errors"

@@ -121,18 +121,21 @@ describe('ValidationField', () => {
 
     wrapper.findComponent(BaseInput);
 
-    expect(wrapper.findComponent(BaseInput).props().modelValue).toBeUndefined();
-    expect(wrapper.findComponent(BaseInput).props().pristine).toBe(true);
+    expect(wrapper.findComponent({ ref: 'myInputValueSecond' }).props().modelValue).toBeUndefined();
+    expect(wrapper.findComponent({ ref: 'myInputValueSecond' }).props().pristine).toBe(true);
+    expect(wrapper.findComponent({ ref: 'myInputValueFirst' }).exists()).toBe(false);
     wrapper.findComponent(BaseInput).vm.$emit('update:modelValue', 42);
 
     await nextTick();
-    expect(wrapper.findComponent(BaseInput).props().modelValue).toBe(42);
-    expect(wrapper.findComponent(BaseInput).props().pristine).toBe(false);
+    expect(wrapper.findComponent({ ref: 'myInputValueSecond' }).props().modelValue).toBe(42);
+    expect(wrapper.findComponent({ ref: 'myInputValueSecond' }).props().pristine).toBe(false);
+    expect(wrapper.findComponent({ ref: 'myInputValueFirst' }).exists()).toBe(false);
 
     wrapper.findComponent({ ref: 'myNestedValueInput' }).vm.$emit('update:modelValue', 'test');
     await nextTick();
-    expect(wrapper.findComponent(BaseInput).props().modelValue).toBe(42);
-    expect(wrapper.findComponent(BaseInput).props().pristine).toBe(false);
+    expect(wrapper.findComponent({ ref: 'myInputValueFirst' }).props().modelValue).toBe(42);
+    expect(wrapper.findComponent({ ref: 'myInputValueFirst' }).props().pristine).toBe(false);
+    expect(wrapper.findComponent({ ref: 'myInputValueSecond' }).exists()).toBe(false);
   });
 
   it('should emit event on change', async () => {
