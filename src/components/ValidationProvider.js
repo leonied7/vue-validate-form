@@ -43,7 +43,8 @@ export default {
       default: 'div'
     },
     resetFieldsAfterUpdate: {
-      type: Boolean
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -179,7 +180,7 @@ export default {
         this.innerDefaultValues = JSON.parse(JSON.stringify(values));
       }
       this.fieldComponents.forEach(({ dirty, reset }) => {
-        if (this.resetFieldsAfterUpdate && dirty) {
+        if (!this.resetFieldsAfterUpdate && dirty) {
           return;
         }
         reset();
