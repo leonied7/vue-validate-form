@@ -188,7 +188,7 @@ function reset(values?: Values) {
   }
 
   fieldComponents.value.forEach(({ dirty, reset }) => {
-    if (resetFieldsAfterUpdate && dirty) {
+    if (!resetFieldsAfterUpdate && dirty) {
       return;
     }
     reset();
