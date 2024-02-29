@@ -43,12 +43,14 @@ interface Props {
   defaultValues?: Values;
   defaultErrors?: ValidationsErrors;
   resolver?: Resolver;
+  resetFieldsAfterUpdate?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   defaultValues: () => ({}),
   defaultErrors: () => ({}),
-  resolver: () => (values: Record<string, unknown>) => ({ values, errors: {} })
+  resolver: () => (values: Record<string, unknown>) => ({ values, errors: {} }),
+  resetFieldsAfterUpdate: true
 });
 const emit = defineEmits<{
   (
@@ -64,7 +66,7 @@ const emit = defineEmits<{
   (e: 'dirty', dirty: boolean): void;
 }>();
 
-const { defaultValues, defaultErrors, resolver } = toRefs(props);
+const { defaultValues, defaultErrors, resolver, resetFieldsAfterUpdate } = toRefs(props);
 
 const submitted = ref(false);
 const innerDefaultValues = ref<Values>({});
@@ -186,8 +188,8 @@ function reset(values?: Values) {
   }
 
   fieldComponents.value.forEach(({ dirty, reset }) => {
-    if (dirty) {
-      return
+    if (resetFieldsAfterUpdate && dirty) {
+      return;
     }
     reset();
   });
