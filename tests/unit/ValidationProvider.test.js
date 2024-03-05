@@ -196,6 +196,7 @@ describe('ValidationProvider', () => {
       });
       await nextTick();
       await nextTick();
+      await nextTick();
 
       const inputWrapper = wrapper.findAllComponents(BaseInput).at(1);
       const formInfoWrapper = wrapper.findComponent(FormInfo);
