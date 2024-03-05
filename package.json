@@ -1,6 +1,6 @@
 {
   "name": "vue-validate-form",
-  "version": "3.0.0-alpha.10",
+  "version": "3.0.0-alpha.11",
   "main": "./dist/vue-validate-form.cjs.js",
   "module": "./dist/vue-validate-form.es.js",
   "exports": {
