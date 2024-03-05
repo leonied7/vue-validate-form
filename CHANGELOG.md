@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/leonied7/vue-validate-form/compare/v2.0.14...v2.1.0) (2024-03-05)
+
+
+### Features
+
+* add instantValidate prop for ValidationProvider.js ([d03498f](https://github.com/leonied7/vue-validate-form/commit/d03498f3ab05215ac29ee1727c2327271789417a))
+
 ## [2.0.14](https://github.com/leonied7/vue-validate-form/compare/v2.0.13...v2.0.14) (2024-01-23)
 
 
