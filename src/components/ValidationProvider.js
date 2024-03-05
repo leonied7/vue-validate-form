@@ -38,6 +38,7 @@ export default {
       type: Function,
       default: (values) => ({ values, errors: {} })
     },
+    instantValidate: Boolean,
     tag: {
       type: String,
       default: 'div'
@@ -113,15 +114,17 @@ export default {
     async setDefaultData() {
       this.reset(this.defaultValues);
       this.additionalErrors = {};
-      if (!Object.values(this.defaultErrors).some((errors) => errors.length)) {
+      if (
+        !this.instantValidate &&
+        !Object.values(this.defaultErrors).some((errors) => errors.length)
+      ) {
         return;
       }
+      await this.$nextTick();
       this.setErrorsList(this.defaultErrors, ON_FIELD_CHANGE);
       const { errors } = await this.validate();
       this.setErrorsList(errors);
-      this.$nextTick(() => {
-        this.submitted = true;
-      });
+      this.submitted = true;
     },
     getFieldDefaultValue(name, defaultValue) {
       return get(this.innerDefaultValues, name, defaultValue);
