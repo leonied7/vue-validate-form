@@ -44,12 +44,14 @@ interface Props {
   defaultValues?: Values;
   defaultErrors?: ValidationsErrors;
   resolver?: Resolver;
+  instantValidate: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   defaultValues: () => ({}),
   defaultErrors: () => ({}),
-  resolver: () => (values: Record<string, unknown>) => ({ values, errors: {} })
+  resolver: () => (values: Record<string, unknown>) => ({ values, errors: {} }),
+  instantValidate: false
 });
 const emit = defineEmits<{
   (
@@ -65,7 +67,7 @@ const emit = defineEmits<{
   (e: 'dirty', dirty: boolean): void;
 }>();
 
-const { defaultValues, defaultErrors, resolver } = toRefs(props);
+const { defaultValues, defaultErrors, resolver, instantValidate } = toRefs(props);
 
 const submitted = ref(false);
 const innerDefaultValues = ref<Values>({});
@@ -122,14 +124,17 @@ setDefaultData();
 async function setDefaultData() {
   reset(defaultValues.value);
   additionalErrors.value = {};
-  if (!Object.values(defaultErrors.value).some((errors) => errors.length)) {
+  if (
+    !instantValidate.value &&
+    !Object.values(defaultErrors.value).some((errors) => errors.length)
+  ) {
     return;
   }
 
+  await nextTick();
   setErrorsList(defaultErrors.value, ON_FIELD_CHANGE);
   const { errors } = await validate();
   setErrorsList(errors);
-  await nextTick();
   submitted.value = true;
 }
 
