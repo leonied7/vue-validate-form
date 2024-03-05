@@ -125,14 +125,17 @@ export default {
     async setDefaultData() {
       this.reset(this.defaultValues);
       this.additionalErrors = {};
-      if (!Object.values(this.defaultErrors).some((errors) => errors.length)) {
+      const hasErrors = Object.values(this.defaultErrors).some((errors) => errors.length);
+      if (!this.instantValidate && !hasErrors) {
         return;
       }
       await this.$nextTick();
       this.setErrorsList(this.defaultErrors, ON_FIELD_CHANGE);
       const { errors } = await this.validate();
       this.setErrorsList(errors);
-      this.submitted = true;
+      if (hasErrors) {
+        this.submitted = true;
+      }
     },
     getFieldDefaultValue(name, defaultValue) {
       return get(this.innerDefaultValues, name, defaultValue);
