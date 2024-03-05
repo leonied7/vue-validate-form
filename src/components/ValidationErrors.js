@@ -23,10 +23,10 @@ export default {
     },
     errors() {
       const errors = this.getErrors(this.name);
-      return Array.isArray(errors) ? errors : [].concat(...Object.values(errors));
+      return Array.isArray(errors) ? errors : Object.values(errors).flat();
     },
     invalid() {
-      return this.submitted && !!this.errors.length;
+      return !!this.errors.length;
     }
   },
   render(h) {
@@ -34,7 +34,8 @@ export default {
       return;
     }
     const children = normalizeChildren(this, {
-      errors: this.errors
+      errors: this.errors,
+      submitted: this.submitted
     });
     return children.length <= 1 ? children[0] : h(this.tag, children);
   }

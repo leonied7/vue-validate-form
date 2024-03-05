@@ -15,7 +15,8 @@
         dirty: formDirty,
         pristine: formPristine,
         invalid: formInvalid,
-        errors: formErrors
+        errors: formErrors,
+        setError
       }"
     >
       <form @submit.prevent="handleSubmit">
@@ -136,10 +137,14 @@
         </ValidationFieldArray>
 
         <ValidationErrors name="common">
-          <template #default="{ errors }">
-            <BaseErrors :errors="errors" />
+          <template #default="{ errors, submitted }">
+            <BaseErrors :errors="errors" :submitted="submitted" />
           </template>
         </ValidationErrors>
+
+        <button id="setError" type="button" @click="setError('common', { message: 'test' })">
+          Set error
+        </button>
 
         <FormInfo
           :values="values"
