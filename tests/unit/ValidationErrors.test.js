@@ -25,7 +25,7 @@ describe('ValidationErrors', () => {
       }
     });
 
-    expect(wrapper.findComponent(BaseErrors).exists()).toBe(false);
+    expect(wrapper.findComponent(BaseErrors).props().errors.length).toBe(0);
 
     await wrapper.find('button[type=submit]').trigger('click');
     await nextTick();

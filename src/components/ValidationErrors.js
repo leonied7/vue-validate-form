@@ -30,9 +30,6 @@ export default {
     }
   },
   render(h) {
-    if (!this.invalid) {
-      return;
-    }
     const children = normalizeChildren(this, {
       errors: this.errors,
       submitted: this.submitted
