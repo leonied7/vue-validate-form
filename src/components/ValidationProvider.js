@@ -103,6 +103,10 @@ export default {
       handler(dirty) {
         this.$emit('dirty', dirty);
       }
+    },
+    async values() {
+      const { values } = await this.resolveSchema();
+      this.$emit('change', values);
     }
   },
   methods: {

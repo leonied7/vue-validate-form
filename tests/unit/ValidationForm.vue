@@ -5,6 +5,7 @@
     :resolver="resolver"
     @submit="onSubmit"
     @dirty="$emit('dirty', $event)"
+    @change="$emit('change', $event)"
   >
     <template
       #default="{

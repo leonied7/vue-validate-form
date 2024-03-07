@@ -250,9 +250,37 @@ describe('ValidationProvider', () => {
       expect(wrapper.emitted().submit).toBeUndefined();
     });
 
+    it('check change emit', async () => {
+      const myInputDefault = '42';
+      createComponent({
+        props: {
+          resolver: yupResolver(
+            yup.object({
+              'my-input': yup.string().required().default(myInputDefault)
+            })
+          )
+        }
+      });
+
+      await nextTick();
+      await nextTick();
+      await nextTick();
+
+      const values = wrapper.emitted().change[0][0];
+      expect(values).toEqual({
+        'my-input': myInputDefault,
+        my: {
+          nested: {
+            value: undefined
+          }
+        },
+        arrayField: []
+      });
+    });
+
     it('should set default values', async () => {
       const MESSAGE = 'required field';
-      const schema = yup.object().shape({
+      const schema = yup.object({
         'my-input': yup.string().required(MESSAGE).default('42')
       });
       createComponent({
