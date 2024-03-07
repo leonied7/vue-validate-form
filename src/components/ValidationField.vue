@@ -29,7 +29,7 @@ import {
 import type { Field } from '../types/field';
 import { ON_FIELD_CHANGE } from './constants';
 
-interface Props {
+export interface Props {
   name: string;
   isEqual?: (a: unknown, b: unknown) => boolean;
 }

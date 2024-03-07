@@ -5,6 +5,7 @@
     :resolver="resolver"
     @submit="onSubmit"
     @dirty="$emit('dirty', $event)"
+    @change="$emit('change', $event)"
   >
     <template
       #default="{
@@ -15,7 +16,8 @@
         dirty: formDirty,
         pristine: formPristine,
         invalid: formInvalid,
-        errors: formErrors
+        errors: formErrors,
+        setError
       }"
     >
       <form @submit.prevent="handleSubmit">
@@ -36,7 +38,7 @@
               :dirty="dirty"
               :pristine="pristine"
               :invalid="invalid"
-              @update:modelValue="onChange"
+              @update:model-value="onChange"
             />
           </template>
         </ValidationField>
@@ -134,10 +136,14 @@
         </ValidationFieldArray>
 
         <ValidationErrors name="common">
-          <template #default="{ errors }">
-            <BaseErrors :errors="errors" />
+          <template #default="{ errors, submitted }">
+            <BaseErrors :errors="errors" :submitted="submitted" />
           </template>
         </ValidationErrors>
+
+        <button id="setError" type="button" @click="setError('common', { message: 'test' })">
+          Set error
+        </button>
 
         <FormInfo
           :values="values"
@@ -196,7 +202,8 @@ export default {
   },
   emits: {
     submit: null,
-    dirty: null
+    dirty: null,
+    change: null
   },
   methods: {
     onSubmit(values, options) {

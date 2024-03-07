@@ -10,6 +10,7 @@
     :pristine="pristine"
     :invalid="invalid"
     :errors="errors"
+    :submitted="submitted"
   />
 </template>
 
@@ -40,11 +41,11 @@ import {
 import { get, has, set } from './helpers';
 import { ON_FIELD_CHANGE, ON_FORM_CHANGE } from './constants';
 
-interface Props {
+export interface Props {
   defaultValues?: Values;
   defaultErrors?: ValidationsErrors;
   resolver?: Resolver;
-  instantValidate: boolean;
+  instantValidate?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
