@@ -21,7 +21,7 @@ import {
   getFieldDefaultValueSymbol,
   getFieldPristineSymbol,
   getFieldValueSymbol,
-  getIsSubmittedSymbol,
+  getIsValidateAvailableSymbol,
   hasFieldValueSymbol,
   registerSymbol,
   validateSymbol
@@ -52,20 +52,20 @@ const hasFieldValue = inject(hasFieldValueSymbol)!;
 const getFieldDefaultValue = inject(getFieldDefaultValueSymbol)!;
 const getFieldValue = inject(getFieldValueSymbol)!;
 const getFieldPristine = inject(getFieldPristineSymbol)!;
-const getIsSubmitted = inject(getIsSubmittedSymbol)!;
+const getIsValidateAvailable = inject(getIsValidateAvailableSymbol)!;
 const register = inject(registerSymbol)!;
 const validate = inject(validateSymbol)!;
 
 const defaultValue = computed(() => getFieldDefaultValue(name.value));
 const hasProvidedValue = computed(() => hasFieldValue(name.value));
 const providedValue = computed(() => getFieldValue(name.value));
-const submitted = computed(() => getIsSubmitted());
+const validateAvailable = computed(() => getIsValidateAvailable());
 const value = ref<unknown>(hasProvidedValue.value ? providedValue.value : defaultValue.value);
 const pristine = ref<boolean>(getFieldPristine(name.value));
 
 const dirty = computed(() => !isEqual.value(value.value, defaultValue.value));
 const firstError = computed(() => errors.value[0]);
-const invalid = computed(() => submitted.value && !!errors.value.length);
+const invalid = computed(() => !!errors.value.length);
 
 const reset: Field['reset'] = () => {
   resetErrors();
@@ -84,7 +84,7 @@ const onChange: Field['onChange'] = (newValue: unknown) => {
   pristine.value = false;
   emit('change', newValue);
 
-  if (!submitted.value) {
+  if (!validateAvailable.value) {
     return;
   }
 

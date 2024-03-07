@@ -21,3 +21,5 @@ export type Register = (fieldComponent: Field) => () => void;
 export const registerSymbol: InjectionKey<Register> = Symbol('register');
 export const validateSymbol: InjectionKey<(name: string) => void> = Symbol('validate');
 export const getIsSubmittedSymbol: InjectionKey<() => boolean> = Symbol('getIsSubmitted');
+export const getIsValidateAvailableSymbol: InjectionKey<() => boolean> =
+  Symbol('getIsValidateAvailable');

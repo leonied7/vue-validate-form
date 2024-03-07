@@ -1,5 +1,5 @@
 <template>
-  <slot v-if="invalid" :errors="errors" />
+  <slot :submitted="submitted" :errors="errors" />
 </template>
 
 <script lang="ts" setup>
@@ -21,6 +21,4 @@ const errors = computed<Array<ValidationError>>(() => {
   const errors = getErrors(props.name);
   return Array.isArray(errors) ? errors : Object.values(errors).flat();
 });
-
-const invalid = computed(() => submitted.value && !!errors.value.length);
 </script>

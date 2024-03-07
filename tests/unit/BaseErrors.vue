@@ -11,7 +11,8 @@ export default {
     errors: {
       type: Array,
       required: true
-    }
+    },
+    submitted: Boolean
   }
 };
 </script>

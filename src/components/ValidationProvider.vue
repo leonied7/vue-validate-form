@@ -34,6 +34,7 @@ import {
   getFieldValueSymbol,
   getFieldPristineSymbol,
   getIsSubmittedSymbol,
+  getIsValidateAvailableSymbol,
   hasFieldValueSymbol,
   registerSymbol,
   validateSymbol
@@ -66,6 +67,7 @@ const emit = defineEmits<{
     }
   ): void;
   (e: 'dirty', dirty: boolean): void;
+  (e: 'change', values: Values): void;
 }>();
 
 const { defaultValues, defaultErrors, resolver, instantValidate } = toRefs(props);
@@ -105,8 +107,11 @@ const existsErrors = computed(() => {
 const firstInvalidFieldComponent = computed<Field | undefined>(() => {
   return fieldComponents.value.find(({ name }) => errors.value[name].length);
 });
+const validateAvailable = computed(() => {
+  return submitted.value || instantValidate.value;
+});
 const invalid = computed(() => {
-  return submitted.value && existsErrors.value;
+  return existsErrors.value;
 });
 
 watch(defaultValues, setDefaultData);
@@ -120,15 +125,17 @@ watch(
     immediate: true
   }
 );
+watch(values, async () => {
+  const { values } = await resolveSchema();
+  emit('change', values);
+});
 setDefaultData();
 
 async function setDefaultData() {
   reset(defaultValues.value);
   additionalErrors.value = {};
-  if (
-    !instantValidate.value &&
-    !Object.values(defaultErrors.value).some((errors) => errors.length)
-  ) {
+  const hasErrors = Object.values(defaultErrors.value).some((errors) => errors.length);
+  if (!instantValidate.value && !hasErrors) {
     return;
   }
 
@@ -136,7 +143,9 @@ async function setDefaultData() {
   setErrorsList(defaultErrors.value, ON_FIELD_CHANGE);
   const { errors } = await validate();
   setErrorsList(errors);
-  submitted.value = true;
+  if (hasErrors) {
+    submitted.value = true;
+  }
 }
 
 const getFieldDefaultValue: GetFieldDefaultValue = (
@@ -267,6 +276,7 @@ provide(getFieldPristineSymbol, (name: string) => fieldComponentMap.value[name]?
 provide(getErrorsSymbol, getErrors);
 provide(hasFieldValueSymbol, (name: string) => has(values.value, name));
 provide(getIsSubmittedSymbol, () => submitted.value);
+provide(getIsValidateAvailableSymbol, () => validateAvailable.value);
 </script>
 
 <script lang="ts">
