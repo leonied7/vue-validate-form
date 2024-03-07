@@ -42,7 +42,7 @@ describe('ValidationField', () => {
 
     expect(myInputWrapper.props().invalid).toBe(false);
 
-    myInputWrapper.vm.$emit('update:modelValue', '');
+    myInputWrapper.vm.$emit('update:model-value', '');
 
     expect(myInputWrapper.props().invalid).toBe(false);
 
@@ -91,7 +91,7 @@ describe('ValidationField', () => {
       expect.objectContaining({ message: 'field required' })
     ]);
 
-    myInputWrapper.vm.$emit('update:modelValue', 42);
+    myInputWrapper.vm.$emit('update:model-value', 42);
     await nextTick();
     await nextTick();
     expect(myInputWrapper.props().invalid).toBe(false);
@@ -112,7 +112,7 @@ describe('ValidationField', () => {
     const inputWrapper = wrapper.findComponent(BaseInput);
 
     expect(fieldWrapper.emitted().change).toBeUndefined();
-    inputWrapper.vm.$emit('update:modelValue', 42);
+    inputWrapper.vm.$emit('update:model-value', 42);
     expect(fieldWrapper.emitted().change).toBeUndefined();
   });
 
@@ -125,14 +125,14 @@ describe('ValidationField', () => {
     expect(wrapper.findComponent({ ref: 'myInputValueSecond' }).props().modelValue).toBeUndefined();
     expect(wrapper.findComponent({ ref: 'myInputValueSecond' }).props().pristine).toBe(true);
     expect(wrapper.findComponent({ ref: 'myInputValueFirst' }).exists()).toBe(false);
-    wrapper.findComponent(BaseInput).vm.$emit('update:modelValue', 42);
+    wrapper.findComponent(BaseInput).vm.$emit('update:model-value', 42);
 
     await nextTick();
     expect(wrapper.findComponent({ ref: 'myInputValueSecond' }).props().modelValue).toBe(42);
     expect(wrapper.findComponent({ ref: 'myInputValueSecond' }).props().pristine).toBe(false);
     expect(wrapper.findComponent({ ref: 'myInputValueFirst' }).exists()).toBe(false);
 
-    wrapper.findComponent({ ref: 'myNestedValueInput' }).vm.$emit('update:modelValue', 'test');
+    wrapper.findComponent({ ref: 'myNestedValueInput' }).vm.$emit('update:model-value', 'test');
     await nextTick();
     expect(wrapper.findComponent({ ref: 'myInputValueFirst' }).props().modelValue).toBe(42);
     expect(wrapper.findComponent({ ref: 'myInputValueFirst' }).props().pristine).toBe(false);
@@ -153,7 +153,7 @@ describe('ValidationField', () => {
     const inputWrapper = wrapper.findComponent(BaseInput);
 
     expect(fieldWrapper.emitted().change).toBeUndefined();
-    inputWrapper.vm.$emit('update:modelValue', '');
+    inputWrapper.vm.$emit('update:model-value', '');
     expect(fieldWrapper.emitted().change).toEqual([['']]);
   });
 
@@ -170,13 +170,13 @@ describe('ValidationField', () => {
     const inputWrapper = wrapper.findComponent(BaseInput);
 
     expect(inputWrapper.props().pristine).toBe(true);
-    inputWrapper.vm.$emit('update:modelValue', 42);
+    inputWrapper.vm.$emit('update:model-value', 42);
     await nextTick();
     expect(inputWrapper.props().pristine).toBe(true);
-    inputWrapper.vm.$emit('update:modelValue', '42');
+    inputWrapper.vm.$emit('update:model-value', '42');
     await nextTick();
     expect(inputWrapper.props().pristine).toBe(false);
-    inputWrapper.vm.$emit('update:modelValue', 42);
+    inputWrapper.vm.$emit('update:model-value', 42);
     await nextTick();
     expect(inputWrapper.props().pristine).toBe(false);
   });

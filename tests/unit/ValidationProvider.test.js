@@ -45,12 +45,12 @@ describe('ValidationProvider', () => {
     await nextTick();
     expect(wrapper.emitted().dirty[0]).toEqual([false]);
 
-    wrapper.findComponent(BaseInput).vm.$emit('update:modelValue', 42);
+    wrapper.findComponent(BaseInput).vm.$emit('update:model-value', 42);
     await nextTick();
 
     expect(wrapper.emitted().dirty[1]).toEqual([true]);
 
-    wrapper.findComponent(BaseInput).vm.$emit('update:modelValue', undefined);
+    wrapper.findComponent(BaseInput).vm.$emit('update:model-value', undefined);
     await nextTick();
 
     expect(wrapper.emitted().dirty[2]).toEqual([false]);
@@ -200,7 +200,7 @@ describe('ValidationProvider', () => {
 
       const inputWrapper = wrapper.findAllComponents(BaseInput).at(1);
       const formInfoWrapper = wrapper.findComponent(FormInfo);
-      inputWrapper.vm.$emit('update:modelValue', 42);
+      inputWrapper.vm.$emit('update:model-value', 42);
       await nextTick();
       await nextTick();
 
@@ -250,9 +250,37 @@ describe('ValidationProvider', () => {
       expect(wrapper.emitted().submit).toBeUndefined();
     });
 
+    it('check change emit', async () => {
+      const myInputDefault = '42';
+      createComponent({
+        props: {
+          resolver: yupResolver(
+            yup.object({
+              'my-input': yup.string().required().default(myInputDefault)
+            })
+          )
+        }
+      });
+
+      await nextTick();
+      await nextTick();
+      await nextTick();
+
+      const values = wrapper.emitted().change[0][0];
+      expect(values).toEqual({
+        'my-input': myInputDefault,
+        my: {
+          nested: {
+            value: undefined
+          }
+        },
+        arrayField: []
+      });
+    });
+
     it('should set default values', async () => {
       const MESSAGE = 'required field';
-      const schema = yup.object().shape({
+      const schema = yup.object({
         'my-input': yup.string().required(MESSAGE).default('42')
       });
       createComponent({
@@ -296,7 +324,7 @@ describe('ValidationProvider', () => {
       createComponent();
       await nextTick();
 
-      wrapper.findComponent(BaseInput).vm.$emit('update:modelValue', 42);
+      wrapper.findComponent(BaseInput).vm.$emit('update:model-value', 42);
       await nextTick();
       const formInfo = wrapper.findComponent(FormInfo);
       expect(formInfo.props().values).toEqual({
@@ -328,7 +356,7 @@ describe('ValidationProvider', () => {
       createComponent();
       await nextTick();
 
-      wrapper.findComponent(BaseInput).vm.$emit('update:modelValue', 42);
+      wrapper.findComponent(BaseInput).vm.$emit('update:model-value', 42);
       await nextTick();
       const formInfo = wrapper.findComponent(FormInfo);
       expect(formInfo.props().values).toEqual({
@@ -430,13 +458,13 @@ describe('ValidationProvider', () => {
     const formInfoWrapper = wrapper.findComponent(FormInfo);
 
     expect(formInfoWrapper.props().pristine).toBe(true);
-    inputWrapper.vm.$emit('update:modelValue', 42);
+    inputWrapper.vm.$emit('update:model-value', 42);
     await nextTick();
     expect(formInfoWrapper.props().pristine).toBe(true);
-    inputWrapper.vm.$emit('update:modelValue', '42');
+    inputWrapper.vm.$emit('update:model-value', '42');
     await nextTick();
     expect(formInfoWrapper.props().pristine).toBe(false);
-    inputWrapper.vm.$emit('update:modelValue', 42);
+    inputWrapper.vm.$emit('update:model-value', 42);
     await nextTick();
     expect(formInfoWrapper.props().pristine).toBe(false);
     await wrapper.find('button[type=reset]').trigger('click');

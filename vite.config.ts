@@ -1,10 +1,10 @@
+/// <reference types="vitest" />
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
-import visualizer from 'rollup-plugin-visualizer';
 
-module.exports = defineConfig({
+export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
@@ -13,23 +13,10 @@ module.exports = defineConfig({
       fileName: (format) => `vue-validate-form.${format}.js`
     },
     rollupOptions: {
-      external: ['vue', 'nanoid'],
-      plugins: [
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        visualizer({
-          open: true
-        })
-      ]
+      external: ['vue', 'nanoid']
     }
   },
-  plugins: [
-    vue(),
-    dts({
-      // удалить после поддержки vite-plugin-dts typescript ^5.x.x
-      skipDiagnostics: true
-    })
-  ],
+  plugins: [vue(), dts()],
   test: {
     setupFiles: ['./tests/unit/testSetup.ts'],
     environment: 'jsdom'

@@ -15,6 +15,7 @@
 <script lang="ts" setup>
 import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref, toRefs } from 'vue';
 import type { Field } from '../types/field';
+import type { FocusOptions } from '../types/field-array';
 import {
   getFieldDefaultValueSymbol,
   getFieldValueSymbol,
@@ -24,7 +25,7 @@ import {
 import { nanoid } from 'nanoid';
 import { get } from './helpers';
 
-interface Props {
+export interface Props {
   name: string;
   keyName?: string;
 }
@@ -33,27 +34,28 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const { name, keyName } = toRefs(props);
-interface FocusOptions {
-  focusName: string;
-}
+
 const focusOptions = ref<FocusOptions>();
 
 const register = inject(registerSymbol)!;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getFieldDefaultValue = inject<(name: string, defaultValue?: any[]) => any[]>(
   getFieldDefaultValueSymbol
 )!;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getFieldValue = inject<(name: string) => any[]>(getFieldValueSymbol)!;
 
 const defaultValue = computed(() => getFieldDefaultValue(name.value, []));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const providedValue = computed<Array<Record<string, any>>>(() => getFieldValue(name.value) || []);
 const providedValueMap = computed(() => {
-  const map: Record<string, Record<string, any>> = {};
+  const map: Record<string, Record<string, unknown>> = {};
   providedValue.value.forEach((field) => {
     map[field[keyName.value]] = field;
   });
   return map;
 });
-const actualValue = computed<Array<Record<string, any>>>(() => {
+const actualValue = computed<Array<Record<string, unknown>>>(() => {
   const map = providedValueMap.value;
   return fields.value.map((field) => ({
     ...map[field[keyName.value]],
@@ -71,21 +73,21 @@ function getInitialFields() {
   }));
 }
 
-function getId(field: any) {
+function getId(field: Record<string, unknown>) {
   return keyName.value in field ? field[keyName.value] : nanoid();
 }
 
-function append(value: Record<string, any>, options?: FocusOptions) {
+function append(value: Record<string, unknown>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
   focusOptions.value = options;
   fields.value.push(value);
 }
-function prepend(value: Record<string, any>, options?: FocusOptions) {
+function prepend(value: Record<string, unknown>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
   focusOptions.value = options;
   fields.value.unshift(value);
 }
-function insert(index: number, value: Record<string, any>, options?: FocusOptions) {
+function insert(index: number, value: Record<string, unknown>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
   focusOptions.value = options;
   fields.value.splice(index, 0, value);
@@ -101,7 +103,7 @@ function move(from: number, to: number) {
 function remove(index: number) {
   fields.value.splice(index, 1);
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onChange: Field['onChange'] = (value: any) => {
   const newFields = [...value];
   fields.value = newFields;
