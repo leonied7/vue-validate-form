@@ -6,3 +6,4 @@ export const getErrors = Symbol('getErrors');
 export const register = Symbol('register');
 export const validate = Symbol('validate');
 export const getIsSubmitted = Symbol('getIsSubmitted');
+export const getIsValidateAvailable = Symbol('getIsValidateAvailable');

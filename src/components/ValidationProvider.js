@@ -4,6 +4,7 @@ import {
   getFieldPristine,
   hasFieldValue,
   getIsSubmitted,
+  getIsValidateAvailable,
   register,
   validate,
   getErrors
@@ -22,7 +23,8 @@ export default {
       [getFieldPristine]: this.getFieldPristine,
       [getErrors]: this.getErrors,
       [hasFieldValue]: this.hasValueByFieldName,
-      [getIsSubmitted]: this.getIsSubmitted
+      [getIsSubmitted]: this.getIsSubmitted,
+      [getIsValidateAvailable]: this.getIsValidateAvailable
     };
   },
   props: {
@@ -38,6 +40,7 @@ export default {
       type: Function,
       default: (values) => ({ values, errors: {} })
     },
+    instantValidate: Boolean,
     tag: {
       type: String,
       default: 'div'
@@ -85,6 +88,12 @@ export default {
     },
     firstInvalidFieldComponent() {
       return this.fieldComponents.find(({ name }) => this.errors[name].length);
+    },
+    validateAvailable() {
+      return this.submitted || this.instantValidate;
+    },
+    invalid() {
+      return this.existsErrors;
     }
   },
   watch: {
@@ -98,6 +107,10 @@ export default {
       handler(dirty) {
         this.$emit('dirty', dirty);
       }
+    },
+    async values() {
+      const { values } = await this.resolveSchema();
+      this.$emit('change', values);
     }
   },
   methods: {
@@ -114,18 +127,23 @@ export default {
     getIsSubmitted() {
       return this.submitted;
     },
+    getIsValidateAvailable() {
+      return this.validateAvailable;
+    },
     async setDefaultData() {
       this.reset(this.defaultValues);
       this.additionalErrors = {};
-      if (!Object.values(this.defaultErrors).some((errors) => errors.length)) {
+      const hasErrors = Object.values(this.defaultErrors).some((errors) => errors.length);
+      if (!this.instantValidate && !hasErrors) {
         return;
       }
+      await this.$nextTick();
       this.setErrorsList(this.defaultErrors, ON_FIELD_CHANGE);
       const { errors } = await this.validate();
       this.setErrorsList(errors);
-      this.$nextTick(() => {
+      if (hasErrors) {
         this.submitted = true;
-      });
+      }
     },
     getFieldDefaultValue(name, defaultValue) {
       return get(this.innerDefaultValues, name, defaultValue);
@@ -246,8 +264,9 @@ export default {
       values: this.values,
       dirty: this.dirty,
       pristine: this.pristine,
-      invalid: this.submitted && this.existsErrors,
-      errors: this.errors
+      invalid: this.invalid,
+      errors: this.errors,
+      submitted: this.submitted
     });
 
     return children.length <= 1 ? children[0] : h(this.tag, children);

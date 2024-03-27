@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/leonied7/vue-validate-form/compare/v2.1.3...v2.2.0) (2024-03-07)
+
+
+### Features
+
+* add change event for validation provider ([5a0090b](https://github.com/leonied7/vue-validate-form/commit/5a0090b96be1a43e2f2e0bf8e6b6b5d389b49a47))
+
+## [2.1.3](https://github.com/leonied7/vue-validate-form/compare/v2.1.2...v2.1.3) (2024-03-06)
+
+
+### Bug Fixes
+
+* validation-errors render always ([ef81c45](https://github.com/leonied7/vue-validate-form/commit/ef81c45625355a43c63d603c805766e0c3ed7db4))
+
+## [2.1.2](https://github.com/leonied7/vue-validate-form/compare/v2.1.1...v2.1.2) (2024-03-05)
+
+
+### Bug Fixes
+
+* correctly instant validate ([d9ed6fd](https://github.com/leonied7/vue-validate-form/commit/d9ed6fd0cc3cf029b43835adcb7c4fc80732c46a))
+
+## [2.1.1](https://github.com/leonied7/vue-validate-form/compare/v2.1.0...v2.1.1) (2024-03-05)
+
+
+### Bug Fixes
+
+* correctly detect errors ([f807835](https://github.com/leonied7/vue-validate-form/commit/f80783553b14484f0d1ff94fb4a69ce8bd631580))
+
+## [2.1.0](https://github.com/leonied7/vue-validate-form/compare/v2.0.14...v2.1.0) (2024-03-05)
+
+
+### Features
+
+* add instantValidate prop for ValidationProvider.js ([d03498f](https://github.com/leonied7/vue-validate-form/commit/d03498f3ab05215ac29ee1727c2327271789417a))
+
 ## [2.0.14](https://github.com/leonied7/vue-validate-form/compare/v2.0.13...v2.0.14) (2024-01-23)
 
 

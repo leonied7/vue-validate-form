@@ -25,18 +25,38 @@ describe('ValidationErrors', () => {
       }
     });
 
-    expect(wrapper.findComponent(BaseErrors).exists()).toBe(false);
+    expect(wrapper.findComponent(BaseErrors).props().errors.length).toBe(0);
 
     await wrapper.find('button[type=submit]').trigger('click');
     await nextTick();
     await nextTick();
 
-    expect(wrapper.findComponent(BaseErrors).props().errors).toEqual([
+    const props = wrapper.findComponent(BaseErrors).props();
+
+    expect(props.errors).toEqual([
       {
         type: 'custom',
         message: 'invalid',
         resetBehaviour: ON_FIELD_CHANGE
       }
     ]);
+    expect(props.submitted).toBe(true);
+  });
+
+  it('check set error', async () => {
+    createComponent();
+
+    await wrapper.find('#setError').trigger('click');
+    await nextTick();
+
+    const props = wrapper.findComponent(BaseErrors).props();
+    expect(props.errors).toEqual([
+      {
+        type: null,
+        message: 'test',
+        resetBehaviour: ON_FIELD_CHANGE
+      }
+    ]);
+    expect(props.submitted).toBe(false);
   });
 });

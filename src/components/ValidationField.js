@@ -3,7 +3,7 @@ import {
   getFieldValue,
   getFieldPristine,
   hasFieldValue,
-  getIsSubmitted,
+  getIsValidateAvailable,
   register,
   validate
 } from './symbols';
@@ -17,7 +17,7 @@ export default {
     getFieldDefaultValue,
     getFieldValue,
     getFieldPristine,
-    getIsSubmitted,
+    getIsValidateAvailable,
     register,
     validate
   },
@@ -53,8 +53,8 @@ export default {
     providedValue() {
       return this.getFieldValue(this.name);
     },
-    submitted() {
-      return this.getIsSubmitted();
+    validateAvailable() {
+      return this.getIsValidateAvailable();
     },
     dirty() {
       return !this.isEqual(this.value, this.defaultValue);
@@ -63,7 +63,7 @@ export default {
       return this.errors[0];
     },
     invalid() {
-      return this.submitted && !!this.errors.length;
+      return !!this.errors.length;
     }
   },
   created() {
@@ -102,7 +102,7 @@ export default {
       this.pristine = false;
       this.$emit('change', value);
 
-      if (!this.submitted) {
+      if (!this.validateAvailable) {
         return;
       }
 
