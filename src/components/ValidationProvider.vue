@@ -96,10 +96,13 @@ const pristine = computed(() => {
   return !fieldComponents.value.some(({ pristine }) => !pristine);
 });
 const errors = computed(() => {
-  return fieldComponents.value.reduce((allErrors, { name, errors }) => {
-    allErrors[name] = errors;
-    return allErrors;
-  }, Object.assign({}, additionalErrors.value));
+  return fieldComponents.value.reduce(
+    (allErrors, { name, errors }) => {
+      allErrors[name] = errors;
+      return allErrors;
+    },
+    Object.assign({}, additionalErrors.value)
+  );
 });
 const existsErrors = computed(() => {
   return Object.values(errors.value).some((errors) => errors.length);
@@ -140,8 +143,8 @@ async function setDefaultData() {
   }
 
   await nextTick();
-  setErrorsList(defaultErrors.value, ON_FIELD_CHANGE);
   const { errors } = await validate();
+  setErrorsList(defaultErrors.value, ON_FIELD_CHANGE);
   setErrorsList(errors);
   if (hasErrors) {
     submitted.value = true;
@@ -179,7 +182,7 @@ async function validate(triggerFieldName?: string) {
   const { values, errors: errorsList } = await resolveSchema();
 
   fieldComponents.value.forEach(({ resetErrors, errors, name }) => {
-    if (triggerFieldName !== name) {
+    if (triggerFieldName && triggerFieldName !== name) {
       const actualErrors: ValidationError[] = errors.filter(
         ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
       );
@@ -187,6 +190,7 @@ async function validate(triggerFieldName?: string) {
     }
     resetErrors();
   });
+  additionalErrors.value = {};
   return { values, errors: errorsList };
 }
 function resolveSchema() {

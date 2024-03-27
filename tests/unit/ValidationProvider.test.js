@@ -121,6 +121,7 @@ describe('ValidationProvider', () => {
         }
       });
       await nextTick();
+      await nextTick();
 
       const formInfoWrapper = wrapper.findComponent(FormInfo);
 
@@ -190,6 +191,11 @@ describe('ValidationProvider', () => {
             'my.nested.value': [
               {
                 message: 'nested'
+              }
+            ],
+            common: [
+              {
+                message: 'common error'
               }
             ]
           }
