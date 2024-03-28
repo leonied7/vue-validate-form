@@ -41,6 +41,10 @@ export default {
       default: (values) => ({ values, errors: {} })
     },
     instantValidate: Boolean,
+    resetOnUpdate: {
+      type: Boolean,
+      default: true
+    },
     tag: {
       type: String,
       default: 'div'
@@ -93,11 +97,16 @@ export default {
     }
   },
   watch: {
-    defaultValues: {
-      immediate: true,
-      handler: 'setDefaultData'
+    defaultValues() {
+      if (this.resetOnUpdate) {
+        this.setDefaultData();
+      }
     },
-    defaultErrors: 'setDefaultData',
+    defaultErrors() {
+      if (this.resetOnUpdate) {
+        this.setDefaultData();
+      }
+    },
     dirty: {
       immediate: true,
       handler(dirty) {
@@ -108,6 +117,9 @@ export default {
       const { values } = await this.resolveSchema();
       this.$emit('change', values);
     }
+  },
+  created() {
+    this.setDefaultData();
   },
   methods: {
     async handleValidate(name) {
