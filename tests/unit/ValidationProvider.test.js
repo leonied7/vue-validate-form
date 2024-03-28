@@ -55,6 +55,148 @@ describe('ValidationProvider', () => {
     expect(wrapper.emitted().dirty[2]).toEqual([false]);
   });
 
+  describe('defaults reset logic', () => {
+    it('should reset form state on change defaultValues', async () => {
+      createComponent();
+      await nextTick();
+
+      const myInputWrapper = wrapper.findComponent(BaseInput);
+      myInputWrapper.vm.$emit('update:modelValue', 'new value');
+      await nextTick();
+      await nextTick();
+
+      const formInfo = wrapper.findComponent(FormInfo);
+
+      expect(formInfo.props().dirty).toBe(true);
+
+      await wrapper.setProps({
+        defaultValues: {
+          'my-input': 42
+        }
+      });
+      await nextTick();
+      await nextTick();
+
+      expect(formInfo.props().dirty).toBe(false);
+      expect(formInfo.props().values).toEqual({
+        'my-input': 42,
+        my: {
+          nested: {
+            value: undefined
+          }
+        },
+        arrayField: []
+      });
+    });
+
+    it('shouldn`t reset form state on change defaultValues without resetOnUpdate', async () => {
+      createComponent({
+        props: {
+          resetOnUpdate: false
+        }
+      });
+      await nextTick();
+
+      const myInputWrapper = wrapper.findComponent(BaseInput);
+      myInputWrapper.vm.$emit('update:modelValue', 'new value');
+      await nextTick();
+      await nextTick();
+
+      const formInfo = wrapper.findComponent(FormInfo);
+
+      expect(formInfo.props().dirty).toBe(true);
+
+      await wrapper.setProps({
+        defaultValues: {
+          'my-input': 42
+        }
+      });
+      await nextTick();
+      await nextTick();
+
+      expect(formInfo.props().dirty).toBe(true);
+      expect(formInfo.props().values).toEqual({
+        'my-input': 'new value',
+        my: {
+          nested: {
+            value: undefined
+          }
+        },
+        arrayField: []
+      });
+    });
+
+    it('should reset form state on change defaultErrors', async () => {
+      createComponent();
+      await nextTick();
+
+      const myInputWrapper = wrapper.findComponent(BaseInput);
+      myInputWrapper.vm.$emit('update:modelValue', 'new value');
+      await nextTick();
+      await nextTick();
+
+      const formInfo = wrapper.findComponent(FormInfo);
+
+      expect(formInfo.props().dirty).toBe(true);
+
+      await wrapper.setProps({
+        defaultErrors: {
+          'my-input': [{ message: 'new error' }]
+        }
+      });
+      await nextTick();
+      await nextTick();
+
+      expect(formInfo.props().dirty).toBe(false);
+      expect(formInfo.props().values).toEqual({
+        'my-input': undefined,
+        my: {
+          nested: {
+            value: undefined
+          }
+        },
+        arrayField: []
+      });
+    });
+
+    it('shouldn`t reset form state on change defaultErrors without resetOnUpdate', async () => {
+      createComponent({
+        props: {
+          resetOnUpdate: false
+        }
+      });
+      await nextTick();
+
+      const myInputWrapper = wrapper.findComponent(BaseInput);
+      myInputWrapper.vm.$emit('update:modelValue', 'new value');
+      await nextTick();
+      await nextTick();
+
+      const formInfo = wrapper.findComponent(FormInfo);
+
+      expect(formInfo.props().dirty).toBe(true);
+
+      await wrapper.setProps({
+        defaultErrors: {
+          'my-input': [{ message: 'new error' }]
+        }
+      });
+      await nextTick();
+      await nextTick();
+
+      expect(formInfo.props().dirty).toBe(true);
+      expect(formInfo.props().values).toEqual({
+        'my-input': 'new value',
+        my: {
+          nested: {
+            value: undefined
+          }
+        },
+        arrayField: []
+      });
+    });
+  });
+
   describe('defaultValues', () => {
     it('should submitted with defaultValues', async () => {
       createComponent({
@@ -119,6 +261,7 @@ describe('ValidationProvider', () => {
           }
         }
       });
+      await nextTick();
       await nextTick();
 
       const formInfoWrapper = wrapper.findComponent(FormInfo);
@@ -189,6 +332,11 @@ describe('ValidationProvider', () => {
             'my.nested.value': [
               {
                 message: 'nested'
+              }
+            ],
+            common: [
+              {
+                message: 'common error'
               }
             ]
           }

@@ -41,6 +41,10 @@ export default {
       default: (values) => ({ values, errors: {} })
     },
     instantValidate: Boolean,
+    resetOnUpdate: {
+      type: Boolean,
+      default: true
+    },
     tag: {
       type: String,
       default: 'div'
@@ -93,11 +97,16 @@ export default {
     }
   },
   watch: {
-    defaultValues: {
-      immediate: true,
-      handler: 'setDefaultData'
+    defaultValues() {
+      if (this.resetOnUpdate) {
+        this.setDefaultData();
+      }
     },
-    defaultErrors: 'setDefaultData',
+    defaultErrors() {
+      if (this.resetOnUpdate) {
+        this.setDefaultData();
+      }
+    },
     dirty: {
       immediate: true,
       handler(dirty) {
@@ -108,6 +117,9 @@ export default {
       const { values } = await this.resolveSchema();
       this.$emit('change', values);
     }
+  },
+  created() {
+    this.setDefaultData();
   },
   methods: {
     async handleValidate(name) {
@@ -134,8 +146,8 @@ export default {
         return;
       }
       await this.$nextTick();
-      this.setErrorsList(this.defaultErrors, ON_FIELD_CHANGE);
       const { errors } = await this.validate();
+      this.setErrorsList(this.defaultErrors, ON_FIELD_CHANGE);
       this.setErrorsList(errors);
       if (hasErrors) {
         this.submitted = true;
@@ -171,7 +183,7 @@ export default {
       const { values, errors: errorsList } = await this.resolveSchema();
 
       this.fieldComponents.forEach(({ resetErrors, errors, name }) => {
-        if (triggerFieldName !== name) {
+        if (triggerFieldName && triggerFieldName !== name) {
           const actualErrors = errors.filter(
             ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
           );
@@ -179,6 +191,7 @@ export default {
         }
         resetErrors();
       });
+      this.additionalErrors = {};
       return { values, errors: errorsList };
     },
     resolveSchema() {
