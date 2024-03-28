@@ -96,10 +96,13 @@ const pristine = computed(() => {
   return !fieldComponents.value.some(({ pristine }) => !pristine);
 });
 const errors = computed(() => {
-  return fieldComponents.value.reduce((allErrors, { name, errors }) => {
-    allErrors[name] = errors;
-    return allErrors;
-  }, Object.assign({}, additionalErrors.value));
+  return fieldComponents.value.reduce(
+    (allErrors, { name, errors }) => {
+      allErrors[name] = errors;
+      return allErrors;
+    },
+    Object.assign({}, additionalErrors.value)
+  );
 });
 const existsErrors = computed(() => {
   return Object.values(errors.value).some((errors) => errors.length);
@@ -277,6 +280,20 @@ provide(getErrorsSymbol, getErrors);
 provide(hasFieldValueSymbol, (name: string) => has(values.value, name));
 provide(getIsSubmittedSymbol, () => submitted.value);
 provide(getIsValidateAvailableSymbol, () => validateAvailable.value);
+
+defineExpose({
+  handleSubmit,
+  onFieldChange,
+  reset,
+  setError,
+  focusInvalidField,
+  values,
+  dirty,
+  pristine,
+  invalid,
+  errors,
+  submitted
+});
 </script>
 
 <script lang="ts">
