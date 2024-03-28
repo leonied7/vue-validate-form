@@ -8,9 +8,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      formats: ['cjs', 'es'],
-      name: 'vue-validate-form',
-      fileName: (format) => `vue-validate-form.${format}.js`
+      formats: ['es'],
+      name: 'vue-validate-form'
     },
     rollupOptions: {
       external: ['vue', 'nanoid']
