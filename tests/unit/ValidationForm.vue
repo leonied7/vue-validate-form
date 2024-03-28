@@ -3,6 +3,7 @@
     :default-values="defaultValues"
     :default-errors="defaultErrors"
     :resolver="resolver"
+    :reset-on-update="resetOnUpdate"
     @submit="onSubmit"
     @dirty="$emit('dirty', $event)"
     @change="$emit('change', $event)"
@@ -198,6 +199,10 @@ export default {
     resolver: {
       type: Function,
       default: undefined
+    },
+    resetOnUpdate: {
+      type: Boolean,
+      default: true
     }
   },
   emits: {
