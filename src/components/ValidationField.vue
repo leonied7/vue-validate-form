@@ -126,6 +126,18 @@ const field: Field = reactive({
   }
 });
 
+defineExpose({
+  name,
+  onChange,
+  setError,
+  modelValue: value,
+  errors,
+  firstError,
+  dirty,
+  invalid,
+  pristine
+});
+
 const unregister = register(field);
 onUnmounted(() => {
   unregister();
