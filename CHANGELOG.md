@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.13...v3.0.0) (2024-03-28)
+
+
+### Features
+
+* add resetOnUpdate props ([8ce28dd](https://github.com/leonied7/vue-validate-form/commit/8ce28ddd5ce4d2cb0589d20db3d6fac95d3b4cfc))
+* major release ([ceb5440](https://github.com/leonied7/vue-validate-form/commit/ceb5440d14f8113f94201e1ced732866acaab941))
+
+
+### Bug Fixes
+
+* fix types ([479ac9b](https://github.com/leonied7/vue-validate-form/commit/479ac9b6e17cb50455af0931e2ee6192270d7148))
+
 ## [3.0.0-alpha.13](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.12...v3.0.0-alpha.13) (2024-03-28)
 
 
