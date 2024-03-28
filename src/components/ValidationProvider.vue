@@ -47,13 +47,15 @@ export interface Props {
   defaultErrors?: ValidationsErrors;
   resolver?: Resolver;
   instantValidate?: boolean;
+  resetOnUpdate?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   defaultValues: () => ({}),
   defaultErrors: () => ({}),
   resolver: () => (values: Record<string, unknown>) => ({ values, errors: {} }),
-  instantValidate: false
+  instantValidate: false,
+  resetOnUpdate: true
 });
 const emit = defineEmits<{
   (
@@ -70,7 +72,7 @@ const emit = defineEmits<{
   (e: 'change', values: Values): void;
 }>();
 
-const { defaultValues, defaultErrors, resolver, instantValidate } = toRefs(props);
+const { defaultValues, defaultErrors, resolver, instantValidate, resetOnUpdate } = toRefs(props);
 
 const submitted = ref(false);
 const innerDefaultValues = ref<Values>({});
@@ -117,8 +119,16 @@ const invalid = computed(() => {
   return existsErrors.value;
 });
 
-watch(defaultValues, setDefaultData);
-watch(defaultErrors, setDefaultData);
+watch(defaultValues, () => {
+  if (resetOnUpdate.value) {
+    setDefaultData();
+  }
+});
+watch(defaultErrors, () => {
+  if (resetOnUpdate.value) {
+    setDefaultData();
+  }
+});
 watch(
   dirty,
   (dirty) => {
