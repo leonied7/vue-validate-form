@@ -8,4 +8,3 @@
 - [x] Выпилить rules, @vue-validate-form/validators используются через `resolver`
 - [x] Поменять формат параметров setError (из вне нужно передавать объект ошибки)
 - [ ] Описать в документации об ValidationFieldArray/ValidationErrors
-
