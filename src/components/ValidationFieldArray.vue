@@ -18,6 +18,7 @@ import type { Field } from '../types/field';
 import type { FocusOptions } from '../types/field-array';
 import {
   getFieldDefaultValueSymbol,
+  getFieldPristineSymbol,
   getFieldValueSymbol,
   hasFieldValueSymbol,
   registerSymbol
@@ -36,6 +37,9 @@ const props = withDefaults(defineProps<Props>(), {
 const { name, keyName } = toRefs(props);
 
 const focusOptions = ref<FocusOptions>();
+
+const getFieldPristine = inject(getFieldPristineSymbol)!;
+const pristine = ref<boolean>(getFieldPristine(name.value));
 
 const register = inject(registerSymbol)!;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -77,31 +81,41 @@ function getId(field: Record<string, unknown>) {
   return keyName.value in field ? field[keyName.value] : nanoid();
 }
 
+function touch() {
+  pristine.value = false;
+}
+
 function append(value: Record<string, unknown>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
   focusOptions.value = options;
   fields.value.push(value);
+  touch();
 }
 function prepend(value: Record<string, unknown>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
   focusOptions.value = options;
   fields.value.unshift(value);
+  touch();
 }
 function insert(index: number, value: Record<string, unknown>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
   focusOptions.value = options;
   fields.value.splice(index, 0, value);
+  touch();
 }
 function swap(from: number, to: number) {
   const temp = fields.value[from];
   fields.value[from] = fields.value[to];
   fields.value[to] = temp;
+  touch();
 }
 function move(from: number, to: number) {
   fields.value.splice(to, 0, fields.value.splice(from, 1)[0]);
+  touch();
 }
 function remove(index: number) {
   fields.value.splice(index, 1);
+  touch();
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onChange: Field['onChange'] = (value: any) => {
@@ -111,12 +125,14 @@ const onChange: Field['onChange'] = (value: any) => {
     fieldComponents.value.forEach(({ name, onChange }) => {
       const normalizedName = getNormalizedName(name);
       onChange(get(newFields, normalizedName));
+      touch();
     });
   });
 };
 
 const reset: Field['reset'] = () => {
   fields.value = getInitialFields();
+  pristine.value = true;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -125,7 +141,7 @@ const noop = () => {};
 const field: Field = reactive({
   name,
   dirty: false,
-  pristine: true,
+  pristine,
   errors: [],
   getValue: () => {
     return fields.value.map((field) => {
