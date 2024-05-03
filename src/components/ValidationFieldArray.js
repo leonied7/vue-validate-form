@@ -127,10 +127,10 @@ export default {
       const newFields = [...value];
       this.fields = newFields;
       this.$nextTick(() => {
+        this.touch();
         this.fieldComponents.forEach(({ name, onChange }) => {
           const normalizedName = this.getNormalizedName(name);
           onChange(get(newFields, normalizedName));
-          this.touch();
         });
       });
     },
