@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.1](https://github.com/leonied7/vue-validate-form/compare/v3.0.0...v3.0.1) (2024-05-03)
+
+
+### Bug Fixes
+
+* fix pristine in Validation-Field-Array ([1f170d0](https://github.com/leonied7/vue-validate-form/commit/1f170d0676a9ec04fdb075ebc6f5e73c471a5851))
+* fix pristine in Validation-Field-Array ([bcee2ac](https://github.com/leonied7/vue-validate-form/commit/bcee2ac4105a21851d2ec5a30e2d571969da8345))
+
 ## [3.0.0](https://github.com/leonied7/vue-validate-form/compare/v3.0.0-alpha.13...v3.0.0) (2024-03-28)
 
 
