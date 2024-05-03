@@ -122,10 +122,10 @@ const onChange: Field['onChange'] = (value: any) => {
   const newFields = [...value];
   fields.value = newFields;
   nextTick(() => {
+    touch();
     fieldComponents.value.forEach(({ name, onChange }) => {
       const normalizedName = getNormalizedName(name);
       onChange(get(newFields, normalizedName));
-      touch();
     });
   });
 };
