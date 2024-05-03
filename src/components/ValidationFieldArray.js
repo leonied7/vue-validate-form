@@ -87,7 +87,7 @@ export default {
       const normalizedName = this.getNormalizedName(name);
       return get(this.fields, normalizedName);
     },
-    touch(){
+    touch() {
       this.pristine = false;
     },
     handleRegister(fieldComponent) {
