@@ -87,6 +87,9 @@ export default {
       const normalizedName = this.getNormalizedName(name);
       return get(this.fields, normalizedName);
     },
+    touch() {
+      this.pristine = false;
+    },
     handleRegister(fieldComponent) {
       this.fieldComponents.push(fieldComponent);
       const unregister = this.register(fieldComponent);
@@ -124,6 +127,7 @@ export default {
       const newFields = [...value];
       this.fields = newFields;
       this.$nextTick(() => {
+        this.touch();
         this.fieldComponents.forEach(({ name, onChange }) => {
           const normalizedName = this.getNormalizedName(name);
           onChange(get(newFields, normalizedName));
@@ -141,6 +145,7 @@ export default {
     resetErrors() {},
     reset() {
       this.fields = this.getInitialFields();
+      this.pristine = true;
     },
     getId(field) {
       return this.keyName in field ? field[this.keyName] : nanoid();
@@ -148,6 +153,7 @@ export default {
     append(value, focusOptions = null) {
       value[this.keyName] = this.getId(value);
       this.fields.push(value);
+      this.touch();
       if (focusOptions) {
         this.handleFocus(focusOptions);
       }
@@ -155,6 +161,7 @@ export default {
     prepend(value, focusOptions = null) {
       value[this.keyName] = this.getId(value);
       this.fields.unshift(value);
+      this.touch();
       if (focusOptions) {
         this.handleFocus(focusOptions);
       }
@@ -162,6 +169,7 @@ export default {
     insert(index, value, focusOptions = null) {
       value[this.keyName] = this.getId(value);
       this.fields.splice(index, 0, value);
+      this.touch();
       if (focusOptions) {
         this.handleFocus(focusOptions);
       }
@@ -170,12 +178,15 @@ export default {
       const temp = this.fields[from];
       this.$set(this.fields, from, this.fields[to]);
       this.$set(this.fields, to, temp);
+      this.touch();
     },
     move(from, to) {
       this.fields.splice(to, 0, this.fields.splice(from, 1)[0]);
+      this.touch();
     },
     remove(index) {
       this.fields.splice(index, 1);
+      this.touch();
     }
   },
   render(h) {
