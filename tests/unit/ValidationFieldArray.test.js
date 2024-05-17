@@ -9,7 +9,7 @@ import BaseInput from './BaseInput';
 import { ON_FORM_CHANGE } from '../../src/components/constants';
 
 const resolver = yupResolver(
-  object().shape({
+  object({
     arrayField: array().of(
       object({
         firstName: string().required('invalid')
@@ -635,10 +635,45 @@ describe('ValidationFieldArray', () => {
     });
     await nextTick();
 
-    const formInfoWrapper = wrapper.findComponent(FormInfo);
+    await wrapper.find('button[type=submit]').trigger('click');
+    // wait async yup validate
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
 
     await wrapper.find('#arrayChange').trigger('click');
+    await nextTick();
 
+    const formInfoWrapper = wrapper.findComponent(FormInfo);
+    expect(formInfoWrapper.props().errors).toEqual({
+      arrayField: [],
+      'arrayField.0.firstName': [],
+      'arrayField.0.id': [],
+      'arrayField.0.type': [],
+      'arrayField.1.firstName': [
+        {
+          message: 'invalid',
+          resetBehaviour: 'onFormChange',
+          type: 'required'
+        }
+      ],
+      'arrayField.1.id': [],
+      'arrayField.1.type': [],
+      'arrayField.2.firstName': [
+        {
+          message: 'invalid',
+          resetBehaviour: 'onFormChange',
+          type: 'required'
+        }
+      ],
+      'arrayField.2.id': [],
+      'arrayField.2.type': [],
+      'my-input': [],
+      'my.nested.value': []
+    });
     expect(formInfoWrapper.props().values).toEqual({
       my: {
         nested: {
@@ -650,6 +685,14 @@ describe('ValidationFieldArray', () => {
         {
           id: 42,
           firstName: 'new name'
+        },
+        {
+          firstName: '',
+          id: 1
+        },
+        {
+          firstName: '',
+          id: 2
         }
       ]
     });

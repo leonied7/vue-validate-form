@@ -133,7 +133,13 @@
             <button
               id="arrayChange"
               type="button"
-              @click="onChange([{ id: 42, firstName: 'new name' }])"
+              @click="
+                onChange([
+                  { id: 42, firstName: 'new name' },
+                  { id: 1, firstName: '' },
+                  { id: 2, firstName: '' }
+                ])
+              "
             ></button>
           </template>
         </ValidationFieldArray>
