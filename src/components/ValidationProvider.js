@@ -124,6 +124,11 @@ export default {
   methods: {
     async handleValidate(name) {
       const { errors } = await this.validate(name);
+      // скидываем ошибки отдельно, т.к. одновременно могу валидироваться несколько полей
+      // валидация асинхронная ошибки могут наслаиваться друг на друга
+      this.fieldComponents.forEach(({ resetErrors }) => {
+        resetErrors();
+      });
       this.setErrorsList(errors);
     },
     getValueByFieldName(name) {
