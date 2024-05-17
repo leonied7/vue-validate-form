@@ -130,7 +130,11 @@
             <button id="swap" type="button" @click="swap(0, 2)">Swap</button>
             <button id="move" type="button" @click="move(0, 2)">Move</button>
             <button id="remove" type="button" @click="remove(1)">Remove</button>
-            <button id="arrayChange" type="button" @click="onChange([{ id: 42 }])">
+            <button
+              id="arrayChange"
+              type="button"
+              @click="onChange([{ id: 42 }, { id: 1, firstName: '' }, { id: 2, firstName: '' }])"
+            >
               Change array
             </button>
           </template>
