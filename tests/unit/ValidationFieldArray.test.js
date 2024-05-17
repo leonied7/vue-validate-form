@@ -640,11 +640,41 @@ describe('ValidationFieldArray', () => {
       }
     });
     await nextTick();
+    await wrapper.find('button[type=submit]').trigger('click');
+    // wait async yup validate
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
 
     const formInfoWrapper = wrapper.findComponent(FormInfo);
 
     await wrapper.find('#arrayChange').trigger('click');
+    await nextTick();
+    await nextTick();
 
+    expect(formInfoWrapper.props().errors).toEqual({
+      arrayField: [],
+      'arrayField.0.firstName': [
+        { message: 'invalid', resetBehaviour: ON_FORM_CHANGE, type: 'optionality' }
+      ],
+      'arrayField.0.id': [],
+      'arrayField.0.type': [],
+      'arrayField.1.firstName': [
+        { message: 'invalid', resetBehaviour: ON_FORM_CHANGE, type: 'required' }
+      ],
+      'arrayField.1.id': [],
+      'arrayField.1.type': [],
+      'arrayField.2.firstName': [
+        { message: 'invalid', resetBehaviour: ON_FORM_CHANGE, type: 'required' }
+      ],
+      'arrayField.2.id': [],
+      'arrayField.2.type': [],
+      'my-input': [],
+      'my.nested.value': []
+    });
     expect(formInfoWrapper.props().values).toEqual({
       my: {
         nested: {
@@ -656,6 +686,14 @@ describe('ValidationFieldArray', () => {
         {
           id: 42,
           firstName: undefined
+        },
+        {
+          firstName: '',
+          id: 1
+        },
+        {
+          firstName: '',
+          id: 2
         }
       ]
     });

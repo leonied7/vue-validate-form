@@ -281,6 +281,11 @@ onBeforeUnmount(() => {
 provide(registerSymbol, register);
 provide(validateSymbol, async (name: string) => {
   const { errors } = await validate(name);
+  // скидываем ошибки отдельно, т.к. одновременно могу валидироваться несколько полей
+  // валидация асинхронная ошибки могут наслаиваться друг на друга
+  fieldComponents.value.forEach(({ resetErrors }) => {
+    resetErrors();
+  });
   setErrorsList(errors);
 });
 provide(getFieldDefaultValueSymbol, getFieldDefaultValue);
