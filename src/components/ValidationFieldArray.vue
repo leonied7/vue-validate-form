@@ -36,8 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { name, keyName } = toRefs(props);
 
-const focusOptions = ref<FocusOptions>();
-
 const getFieldPristine = inject(getFieldPristineSymbol)!;
 const pristine = ref<boolean>(getFieldPristine(name.value));
 
@@ -87,21 +85,21 @@ function touch() {
 
 function append(value: Record<string, unknown>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
-  focusOptions.value = options;
   fields.value.push(value);
   touch();
+  handleFocus(options);
 }
 function prepend(value: Record<string, unknown>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
-  focusOptions.value = options;
   fields.value.unshift(value);
   touch();
+  handleFocus(options);
 }
 function insert(index: number, value: Record<string, unknown>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
-  focusOptions.value = options;
   fields.value.splice(index, 0, value);
   touch();
+  handleFocus(options);
 }
 function swap(from: number, to: number) {
   const temp = fields.value[from];
@@ -117,6 +115,20 @@ function remove(index: number) {
   fields.value.splice(index, 1);
   touch();
 }
+
+function handleFocus(options?: FocusOptions) {
+  if (!options) {
+    return;
+  }
+  nextTick(() => {
+    const fieldComponent = fieldComponents.value.find(({ name }) => name === options.focusName);
+    if (!fieldComponent) {
+      return;
+    }
+    fieldComponent.onFocus();
+  });
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onChange: Field['onChange'] = (value: any) => {
   const newFields = [...value];
@@ -193,12 +205,4 @@ function handleUnregister(fieldComponent: Field) {
 
   fieldComponents.value.splice(index, 1);
 }
-</script>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  inheritAttrs: false
-});
 </script>
