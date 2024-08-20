@@ -110,13 +110,11 @@ export default {
 
       this.fieldComponents.splice(index, 1);
     },
-    handleFocus({ focusName }) {
+    handleFocus({ field, index }) {
+      const itemName = `${this.name}.${index || 0}.${field}`;
       this.$nextTick(() => {
-        const fieldComponent = this.fieldComponents.find(({ name }) => name === focusName);
-        if (!fieldComponent) {
-          return;
-        }
-        fieldComponent.onFocus();
+        const fieldComponent = this.fieldComponents.find(({ name }) => name === itemName);
+        fieldComponent?.onFocus();
       });
     },
     getNormalizedName(name) {
@@ -155,7 +153,8 @@ export default {
       this.fields.push(value);
       this.touch();
       if (focusOptions) {
-        this.handleFocus(focusOptions);
+        // by default focus on last field
+        this.handleFocus({ index: this.fields.length - 1, ...focusOptions });
       }
     },
     prepend(value, focusOptions = null) {
@@ -163,6 +162,7 @@ export default {
       this.fields.unshift(value);
       this.touch();
       if (focusOptions) {
+        // by default focus on first field
         this.handleFocus(focusOptions);
       }
     },
@@ -171,22 +171,36 @@ export default {
       this.fields.splice(index, 0, value);
       this.touch();
       if (focusOptions) {
-        this.handleFocus(focusOptions);
+        // by default focus on inserted field
+        this.handleFocus({ index, ...focusOptions });
       }
     },
-    swap(from, to) {
+    swap(from, to, focusOptions = null) {
       const temp = this.fields[from];
       this.$set(this.fields, from, this.fields[to]);
       this.$set(this.fields, to, temp);
       this.touch();
+      if (focusOptions) {
+        // by default focus on swapped field
+        this.handleFocus({ index: to, ...focusOptions });
+      }
     },
-    move(from, to) {
+    move(from, to, focusOptions = null) {
       this.fields.splice(to, 0, this.fields.splice(from, 1)[0]);
       this.touch();
+      if (focusOptions) {
+        // by default focus on moved field
+        this.handleFocus({ index: to, ...focusOptions });
+      }
     },
-    remove(index) {
+    remove(index, focusOptions = null) {
       this.fields.splice(index, 1);
       this.touch();
+
+      if (focusOptions && this.fields.length) {
+        // by default focus on previous field, if there is no previous field focus on first field
+        this.handleFocus({ index: index - 1 || 0, ...focusOptions });
+      }
     }
   },
   render(h) {
