@@ -110,8 +110,12 @@ export default {
 
       this.fieldComponents.splice(index, 1);
     },
-    handleFocus({ field, index }) {
-      const itemName = `${this.name}.${index || 0}.${field}`;
+    handleFocus({ field, index = 0 }) {
+      if(!field) {
+        throw new Error(`Field name is required for focus, please provide field name in focus options`);
+      }
+
+      const itemName = `${this.name}.${index}.${field}`;
       this.$nextTick(() => {
         const fieldComponent = this.fieldComponents.find(({ name }) => name === itemName);
         fieldComponent?.onFocus();
@@ -199,7 +203,7 @@ export default {
 
       if (focusOptions && this.fields.length) {
         // by default focus on previous field, if there is no previous field focus on first field
-        this.handleFocus({ index: index - 1 || 0, ...focusOptions });
+        this.handleFocus({ index: Math.max(index - 1, 0), ...focusOptions });
       }
     }
   },
