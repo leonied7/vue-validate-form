@@ -111,8 +111,10 @@ export default {
       this.fieldComponents.splice(index, 1);
     },
     handleFocus({ field, index = 0 }) {
-      if(!field) {
-        throw new Error(`Field name is required for focus, please provide field name in focus options`);
+      if (!field) {
+        throw new Error(
+          `Field name is required for focus, please provide field name in focus options`
+        );
       }
 
       const itemName = `${this.name}.${index}.${field}`;
