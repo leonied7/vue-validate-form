@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/leonied7/vue-validate-form/compare/v2.3.2...v2.4.0) (2024-08-29)
+
+
+### Features
+
+* focusOptions changes, replaced focusName - with field and index, added focusOptions to all array methods ([ed61b40](https://github.com/leonied7/vue-validate-form/commit/ed61b40b6c958be5f1c48e7fe7072dc3eef8a1d4))
+* focusOptions changes, replaced focusName - with field and index, added focusOptions to all array methods ([a7afb67](https://github.com/leonied7/vue-validate-form/commit/a7afb679de28ac484e03c7e28fa8832b4da6641f))
+* focusOptions changes, replaced focusName - with field and index, added focusOptions to all array methods ([cf96ef3](https://github.com/leonied7/vue-validate-form/commit/cf96ef3e6f8d283d32d0804b9298a288798c4e52))
+
 ## [2.3.2](https://github.com/leonied7/vue-validate-form/compare/v2.3.1...v2.3.2) (2024-05-17)
 
 
