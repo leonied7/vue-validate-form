@@ -112,10 +112,7 @@
                     </template>
                   </ValidationField>
                 </div>
-                <button
-                  type="button"
-                  @click="prepend({ name: 'prepend' }, { focusName: 'bigArray.5.name' })"
-                >
+                <button type="button" @click="prepend({ name: 'prepend' }, { field: 'name' })">
                   Prepend
                 </button>
                 <button type="button" @click="append({ name: 'append' })">Append</button>

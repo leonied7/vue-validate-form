@@ -96,7 +96,10 @@
             <div v-for="(field, index) in fields" :key="field.id">
               <ValidationField :name="`${arrayName}.${index}.id`" />
               <ValidationField :name="`${arrayName}.${index}.type`" />
-              <ValidationField :name="`${arrayName}.${index}.firstName`">
+              <ValidationField
+                :name="`${arrayName}.${index}.firstName`"
+                @should-focus="handleFocus"
+              >
                 <template
                   #default="{
                     modelValue,
@@ -122,14 +125,36 @@
                 </template>
               </ValidationField>
             </div>
-            <button id="append" type="button" @click="append">Append</button>
-            <button id="prepend" type="button" @click="prepend">Prepend</button>
-            <button id="insert" type="button" @click="insert(1, { firstName: 'insert' })">
+            <button
+              id="append"
+              type="button"
+              @click="append({ firstName: 'new name' }, { field: 'firstName' })"
+            >
+              Append
+            </button>
+            <button
+              id="prepend"
+              type="button"
+              @click="prepend({ firstName: 'new name' }, { field: 'firstName' })"
+            >
+              Prepend
+            </button>
+            <button
+              id="insert"
+              type="button"
+              @click="insert(1, { firstName: 'insert' }, { field: 'firstName' })"
+            >
               Insert
             </button>
-            <button id="swap" type="button" @click="swap(0, 2)">Swap</button>
-            <button id="move" type="button" @click="move(0, 2)">Move</button>
-            <button id="remove" type="button" @click="remove(1)">Remove</button>
+            <button id="swap" type="button" @click="swap(0, 2, { field: 'firstName' })">
+              Swap
+            </button>
+            <button id="move" type="button" @click="move(0, 2, { field: 'firstName' })">
+              Move
+            </button>
+            <button id="remove" type="button" @click="remove(1, { field: 'firstName' })">
+              Remove
+            </button>
             <button
               id="arrayChange"
               type="button"
@@ -213,6 +238,9 @@ export default {
     }
   },
   methods: {
+    handleFocus({ name }) {
+      this.$el.querySelector(`[name="${name}"]`)?.focus();
+    },
     onSubmit(values, options) {
       this.$emit('submit', values, options);
     }
