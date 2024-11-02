@@ -38,6 +38,7 @@
     "yup": "^1.4.0"
   },
   "peerDependencies": {
+    "@vue-validate-form/resolvers": "^1.0.5",
     "vue": "^3.2.47"
   },
   "scripts": {
