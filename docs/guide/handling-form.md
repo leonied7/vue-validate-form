@@ -12,9 +12,9 @@
 </validation-provider>
 ```
 
-## Значения по умолчанию
+## Значения по-умолчанию
 
-`ValidationProvider` поддерживает передачу значений по умолчанию через параметр `defaultValues`
+`ValidationProvider` поддерживает передачу значений по-умолчанию через параметр `defaultValues`
 
 ```vue{2}
 <template>
@@ -36,3 +36,8 @@ export default {
 }
 </script>
 ```
+
+:::warning
+По-умолчанию `vue-validate-form` сбрасывает состояние `ValidationProvider` к начальному при изменении
+`defaultValues`. Это поведение может быть изменено с помощью параметра `resetOnUpdate` у `ValidationProvider`
+:::

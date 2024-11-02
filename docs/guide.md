@@ -8,4 +8,4 @@ npm install vue-validate-form
 
 ## Использование
 
-<<< @/.vitepress/components/VBasic.vue
+<<< @/.vitepress/components/QuickStart.vue

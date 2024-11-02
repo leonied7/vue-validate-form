@@ -1,14 +1,12 @@
 <template>
   <validation-provider :resolver="$options.resolver" @submit="onSubmit">
-    <template #default="{ handleSubmit, errors }">
+    <template #default="{ handleSubmit }">
       <form novalidate @submit.prevent="handleSubmit">
         <validation-field name="firstName">
           <template #default="{ modelValue, onChange }">
             <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
           </template>
         </validation-field>
-
-        <div>{{errors.firstName}}</div>
       </form>
     </template>
   </validation-provider>
@@ -16,7 +14,7 @@
 
 <script>
 import { ValidationProvider, ValidationField } from 'vue-validate-form'
-const required = (value) => !!value;
+import { minLength } from '@vue-validate-form/validators';
 
 export default {
   components: {ValidationProvider, ValidationField},
@@ -25,15 +23,13 @@ export default {
       values,
       errors: {}
     };
-    if(!required(values.firstName)) {
-      result.errors.firstName = [{message: 'field required'}]
+    if(!minLength(values.firstName, 5)) {
+      result.errors.firstName = [{message: 'min length 5'}]
     }
     return result;
   },
   methods: {
-    onSubmit(values) {
-      // обработка данных формы
-    }
+    onSubmit(values) {}
   }
 }
 </script>

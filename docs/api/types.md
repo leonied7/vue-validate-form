@@ -1,19 +1,19 @@
 # Типы данных
 
+#### ResetBehaviour
+<<< @/../src/types/error.ts#resetBehaviour
+
 #### Error
-```ts
-type Error = {
-  message: string;
-  type?: string;
-}
-```
+<<< @/../src/types/error.ts#error
 
 #### Errors
 ```ts
-type Errors = Error[];
+type Errors = ValidationError[];
 ```
 
 #### ErrorsMap
-```ts
-type ErrorsMap = Record<string, Errors>;
-```
+<<< @/../src/types/error.ts#errorsMap
+
+#### Resolver
+<<< @/../src/types/resolver.ts
+
