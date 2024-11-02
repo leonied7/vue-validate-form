@@ -17,3 +17,10 @@ type Errors = ValidationError[];
 #### Resolver
 <<< @/../src/types/resolver.ts
 
+#### ArrayField
+```ts
+type ArrayField = Record<string, any>
+```
+
+#### FocusOptions
+<<< @/../src/types/field-array.ts

@@ -9,6 +9,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Руководство', link: '/guide' },
+      { text: 'Продвинутые кейсы', link: '/advanced' },
       { text: 'Справочник API', link: '/api' },
     ],
 
@@ -17,16 +18,20 @@ export default defineConfig({
         { text: 'Установка', link: '/guide/installation' },
         { text: 'Быстрый старт', link: '/guide' },
         { text: 'Валидация', link: '/guide/validation' },
-        { text: 'Валидация с помощью библиотек', link: '/guide/library-validation' },
         { text: 'Работа с ошибками', link: '/guide/error-processing' },
         { text: 'Обработка форм', link: '/guide/handling-form' },
         { text: 'Работа с фокусом', link: '/guide/focusing-fields' },
         { text: 'Лучшие практики', link: '/guide/best-practices' },
       ],
-      '/api/': [
+      '/advanced': [
+        { text: 'Валидация с помощью библиотек', link: '/advanced/library-validation' },
+        { text: 'Динамические массивы', link: '/advanced/dynamic-array' },
+      ],
+      '/api': [
         { text: 'Validation Provider', link: '/api/validation-provider' },
         { text: 'Validation Field', link: '/api/validation-field' },
         { text: 'Validation Errors', link: '/api/validation-errors' },
+        { text: 'Validation Field Array', link: '/api/validation-field-array' },
         { text: 'Типы данных', link: '/api/types' },
       ]
     },
