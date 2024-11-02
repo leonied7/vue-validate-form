@@ -26,6 +26,7 @@ export default defineConfig({
       '/api/': [
         { text: 'Validation Provider', link: '/api/validation-provider' },
         { text: 'Validation Field', link: '/api/validation-field' },
+        { text: 'Validation Errors', link: '/api/validation-errors' },
         { text: 'Типы данных', link: '/api/types' },
       ]
     },
