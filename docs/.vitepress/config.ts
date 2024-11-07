@@ -9,7 +9,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Руководство', link: '/guide/getting-started' },
-      { text: 'Справочник API', link: '/api/validation-provider' },
+      { text: 'Справочник', link: '/reference/validation-provider' },
     ],
 
     sidebar: {
@@ -18,8 +18,8 @@ export default defineConfig({
           text: 'Введение',
           collapsed: false,
           items: [
-            { text: 'Установка', link: '/guide/installation' },
-            { text: 'Быстрый старт', link: '/guide/getting-started' },
+            { text: 'Что такое VueValidateForm?', link: '/guide/what-is-vue-validate-form' },
+            { text: 'Первые шаги', link: '/guide/getting-started' },
           ]
         },
         {
@@ -36,12 +36,12 @@ export default defineConfig({
         { text: 'Работа с фокусом', link: '/guide/focusing-fields' },
         { text: 'Лучшие практики', link: '/guide/best-practices' },
       ],
-      '/api': [
-        { text: 'Validation Provider', link: '/api/validation-provider' },
-        { text: 'Validation Field', link: '/api/validation-field' },
-        { text: 'Validation Errors', link: '/api/validation-errors' },
-        { text: 'Validation Field Array', link: '/api/validation-field-array' },
-        { text: 'Типы данных', link: '/api/types' },
+      '/reference': [
+        { text: 'Validation Provider', link: '/reference/validation-provider' },
+        { text: 'Validation Field', link: '/reference/validation-field' },
+        { text: 'Validation Errors', link: '/reference/validation-errors' },
+        { text: 'Validation Field Array', link: '/reference/validation-field-array' },
+        { text: 'Типы данных', link: '/reference/types' },
       ]
     },
 
