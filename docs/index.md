@@ -8,11 +8,11 @@ hero:
   tagline:
   actions:
     - theme: brand
-      text: Начать знакомство
-      link: /guide
+      text: Что такое VueValidateForm?
+      link: /guide/what-is-vue-validate-form
     - theme: alt
-      text: Справочник API
-      link: /api
+      text: Начать знакомство
+      link: /guide/getting-started
 
 features:
   - title: Простой

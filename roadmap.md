@@ -7,4 +7,5 @@
 - [x] Оптимизировать количество пересчётов вычисляемых полей в ValidationProvider
 - [x] Выпилить rules, @vue-validate-form/validators используются через `resolver`
 - [x] Поменять формат параметров setError (из вне нужно передавать объект ошибки)
-- [ ] Описать в документации об ValidationFieldArray/ValidationErrors
+- [x] Описать в документации об ValidationErrors
+- [ ] Описать в документации об ValidationFieldArray
