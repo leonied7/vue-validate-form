@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { yupResolver } from '@vue-validate-form/resolvers';
 import { nextTick } from 'vue';
@@ -21,12 +21,14 @@ const resolver = yupResolver(
 
 describe('ValidationFieldArray', () => {
   let wrapper;
+  let handleFocus;
 
   const createComponent = ({ props } = {}) => {
     wrapper = mount(ValidationForm, {
       props,
       attachTo: document.body
     });
+    handleFocus = vi.spyOn(wrapper.vm, 'handleFocus');
   };
 
   it('should render array fields', async () => {
@@ -146,7 +148,8 @@ describe('ValidationFieldArray', () => {
     await nextTick();
     expect(wrapper.findAllComponents(BaseInput).length).toBe(3);
 
-    await wrapper.find('#append').trigger('click', { firstName: 'new name' });
+    await wrapper.find('#append').trigger('click');
+    expect(handleFocus).toHaveBeenLastCalledWith({ name: 'arrayField.1.firstName' });
 
     const baseInputWrappers = wrapper.findAllComponents(BaseInput);
     expect(baseInputWrappers.length).toBe(4);
@@ -202,6 +205,7 @@ describe('ValidationFieldArray', () => {
     });
 
     await wrapper.find('#remove').trigger('click');
+    expect(handleFocus).toHaveBeenLastCalledWith({ name: 'arrayField.0.firstName' });
 
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
@@ -271,7 +275,8 @@ describe('ValidationFieldArray', () => {
       ]
     });
 
-    await wrapper.find('#prepend').trigger('click', { firstName: 'new name' });
+    await wrapper.find('#prepend').trigger('click');
+    expect(handleFocus).toHaveBeenLastCalledWith({ name: 'arrayField.0.firstName' });
 
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
@@ -354,6 +359,7 @@ describe('ValidationFieldArray', () => {
       ]
     });
     expect(wrapper.findComponent(FormInfo).props().values.arrayField[1].type).toEqual(undefined);
+    expect(handleFocus).toHaveBeenLastCalledWith({ name: 'arrayField.1.firstName' });
     expect(wrapper.findAllComponents(BaseInput).at(3).props().modelValue).toBe('insert');
   });
 
@@ -407,6 +413,7 @@ describe('ValidationFieldArray', () => {
     const formInfoWrapper = wrapper.findComponent(FormInfo);
 
     await wrapper.find('#swap').trigger('click');
+    expect(handleFocus).toHaveBeenLastCalledWith({ name: 'arrayField.2.firstName' });
 
     expect(formInfoWrapper.props().errors).toEqual({
       'my.nested.value': [],
@@ -539,6 +546,8 @@ describe('ValidationFieldArray', () => {
     const formInfoWrapper = wrapper.findComponent(FormInfo);
 
     await wrapper.find('#move').trigger('click');
+
+    expect(handleFocus).toHaveBeenLastCalledWith({ name: 'arrayField.2.firstName' });
 
     expect(formInfoWrapper.props().errors).toEqual({
       'my.nested.value': [],
