@@ -8,24 +8,33 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Руководство', link: '/guide' },
-      { text: 'Продвинутые кейсы', link: '/advanced' },
-      { text: 'Справочник API', link: '/api' },
+      { text: 'Руководство', link: '/guide/getting-started' },
+      { text: 'Справочник API', link: '/api/validation-provider' },
     ],
 
     sidebar: {
       '/guide': [
-        { text: 'Установка', link: '/guide/installation' },
-        { text: 'Быстрый старт', link: '/guide' },
-        { text: 'Валидация', link: '/guide/validation' },
+        {
+          text: 'Введение',
+          collapsed: false,
+          items: [
+            { text: 'Установка', link: '/guide/installation' },
+            { text: 'Быстрый старт', link: '/guide/getting-started' },
+          ]
+        },
+        {
+          text: 'Валидация',
+          collapsed: false,
+          items: [
+            { text: 'Кастомная валидация', link: '/guide/validation' },
+            { text: 'С помощью сторонних библиотек', link: '/guide/library-validation' },
+          ]
+        },
         { text: 'Работа с ошибками', link: '/guide/error-processing' },
         { text: 'Обработка форм', link: '/guide/handling-form' },
+        { text: 'Динамические массивы', link: '/guide/dynamic-array' },
         { text: 'Работа с фокусом', link: '/guide/focusing-fields' },
         { text: 'Лучшие практики', link: '/guide/best-practices' },
-      ],
-      '/advanced': [
-        { text: 'Валидация с помощью библиотек', link: '/advanced/library-validation' },
-        { text: 'Динамические массивы', link: '/advanced/dynamic-array' },
       ],
       '/api': [
         { text: 'Validation Provider', link: '/api/validation-provider' },

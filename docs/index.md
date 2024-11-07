@@ -9,10 +9,10 @@ hero:
   actions:
     - theme: brand
       text: Начать знакомство
-      link: /guide
+      link: /guide/getting-started
     - theme: alt
       text: Справочник API
-      link: /api
+      link: /api/validation-provider
 
 features:
   - title: Простой
