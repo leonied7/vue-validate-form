@@ -29,6 +29,11 @@ describe('ValidationFieldArray', () => {
     });
   };
 
+  const focusTest = (name) => {
+    const emits = wrapper.emitted().focus;
+    expect(emits[emits.length - 1]).toContainEqual({ name });
+  };
+
   it('should render array fields', async () => {
     createComponent({
       props: {
@@ -146,7 +151,8 @@ describe('ValidationFieldArray', () => {
     await nextTick();
     expect(wrapper.findAllComponents(BaseInput).length).toBe(3);
 
-    await wrapper.find('#append').trigger('click', { firstName: 'new name' });
+    await wrapper.find('#append').trigger('click');
+    focusTest('arrayField.1.firstName');
 
     const baseInputWrappers = wrapper.findAllComponents(BaseInput);
     expect(baseInputWrappers.length).toBe(4);
@@ -202,6 +208,8 @@ describe('ValidationFieldArray', () => {
     });
 
     await wrapper.find('#remove').trigger('click');
+
+    focusTest('arrayField.0.firstName');
 
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
@@ -271,7 +279,8 @@ describe('ValidationFieldArray', () => {
       ]
     });
 
-    await wrapper.find('#prepend').trigger('click', { firstName: 'new name' });
+    await wrapper.find('#prepend').trigger('click');
+    focusTest('arrayField.0.firstName');
 
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
@@ -354,6 +363,7 @@ describe('ValidationFieldArray', () => {
       ]
     });
     expect(wrapper.findComponent(FormInfo).props().values.arrayField[1].type).toEqual(undefined);
+    focusTest('arrayField.1.firstName');
     expect(wrapper.findAllComponents(BaseInput).at(3).props().modelValue).toBe('insert');
   });
 
@@ -407,6 +417,7 @@ describe('ValidationFieldArray', () => {
     const formInfoWrapper = wrapper.findComponent(FormInfo);
 
     await wrapper.find('#swap').trigger('click');
+    focusTest('arrayField.2.firstName');
 
     expect(formInfoWrapper.props().errors).toEqual({
       'my.nested.value': [],
@@ -539,6 +550,8 @@ describe('ValidationFieldArray', () => {
     const formInfoWrapper = wrapper.findComponent(FormInfo);
 
     await wrapper.find('#move').trigger('click');
+
+    focusTest('arrayField.2.firstName');
 
     expect(formInfoWrapper.props().errors).toEqual({
       'my.nested.value': [],

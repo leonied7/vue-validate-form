@@ -103,7 +103,10 @@
             >
               <ValidationField :name="`${arrayName}.${index}.id`" />
               <ValidationField :name="`${arrayName}.${index}.type`" />
-              <ValidationField :name="`${arrayName}.${index}.firstName`">
+              <ValidationField
+                :name="`${arrayName}.${index}.firstName`"
+                @should-focus="$emit('focus', $event)"
+              >
                 <template
                   #default="{
                     modelValue,
@@ -132,42 +135,42 @@
             <button
               id="append"
               type="button"
-              @click="append"
+              @click="append({ firstName: 'new name' }, { field: 'firstName' })"
             >
               Append
             </button>
             <button
               id="prepend"
               type="button"
-              @click="prepend"
+              @click="prepend({ firstName: 'new name' }, { field: 'firstName' })"
             >
               Prepend
             </button>
             <button
               id="insert"
               type="button"
-              @click="insert(1, { firstName: 'insert' })"
+              @click="insert(1, { firstName: 'insert' }, { field: 'firstName' })"
             >
               Insert
             </button>
             <button
               id="swap"
               type="button"
-              @click="swap(0, 2)"
+              @click="swap(0, 2, { field: 'firstName' })"
             >
               Swap
             </button>
             <button
               id="move"
               type="button"
-              @click="move(0, 2)"
+              @click="move(0, 2, { field: 'firstName' })"
             >
               Move
             </button>
             <button
               id="remove"
               type="button"
-              @click="remove(1)"
+              @click="remove(1, { field: 'firstName' })"
             >
               Remove
             </button>
@@ -267,7 +270,8 @@ export default {
   emits: {
     submit: null,
     dirty: null,
-    change: null
+    change: null,
+    focus: null
   },
   methods: {
     onSubmit(values, options) {
