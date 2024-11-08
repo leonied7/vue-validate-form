@@ -10,7 +10,7 @@
 Подробное описание и тип данных можно посмотреть [тут](../api/validation-field.md#параметры-слота-по-умолчанию-с-ограниченной-областью-видимости)
 :::
 
-<<< @/.vitepress/components/ErrorProcessingField.vue{3,6-11}
+<<< @/.vitepress/components/ErrorProcessingField.vue{3,10-17,20}
 
 ### Используя `ValidationProvider`
 
@@ -20,7 +20,7 @@
 Подробное описание и тип данных можно посмотреть [тут](../api/validation-provider.md#параметры-слота-по-умолчанию-с-ограниченной-областью-видимости)
 :::
 
-<<< @/.vitepress/components/ErrorProcessingProvider.vue{3,5-7}
+<<< @/.vitepress/components/ErrorProcessingProvider.vue{3,5,6,9}
 
 ### Используя `ValidationErrors`
 

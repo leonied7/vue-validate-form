@@ -8,7 +8,7 @@ npm install @vue-validate-form/resolvers yup
 
 Использование
 
-<<< @/.vitepress/components/YupSimple.vue{2,18,23-29}
+<<< @/.vitepress/components/YupSimple.vue{3,28,33-39}
 
 ::: tip
 Почему параметр `resolver` computed? `yupResolver` возвращает функцию для валидации, но при этом схема
@@ -19,4 +19,4 @@ npm install @vue-validate-form/resolvers yup
 :::
 
 
-<<< @/.vitepress/components/YupComputed.vue{23,26-34}
+<<< @/.vitepress/components/YupComputed.vue{33,36-44}

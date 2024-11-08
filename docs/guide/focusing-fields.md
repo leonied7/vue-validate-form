@@ -9,7 +9,7 @@
 Как конкретно фокусировать поле отдаётся на откуп разработчику, `vue-validate-form` только оповещает об необходимости
 :::
 
-<<< @/.vitepress/components/FieldFocusing.vue{5,10,15,48-50}
+<<< @/.vitepress/components/FieldFocusing.vue{13,25,37,75-77}
 
 ::: tip
 [Вариант](/guide/best-practices.html#работа-с-фокусом) использования фокуса

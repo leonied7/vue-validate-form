@@ -4,7 +4,7 @@
 
 Один из вариантов работы с фокусом полей - это компонент обёртка
 
-<<< @/.vitepress/components/FieldFocusWrapper.vue{2,19-23}
+<<< @/.vitepress/components/FieldFocusWrapper.vue{4,22-26}
 
 :::warning
 Такой вариант фокуса будет работать только при учёте, что на нужный элемент будет установлен атрибут `name`
