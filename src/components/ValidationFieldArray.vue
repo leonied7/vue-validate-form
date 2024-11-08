@@ -88,7 +88,7 @@ function touch() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function append(value: Record<string, any>, focusOptions: FocusOptions = null) {
+function append(value: Record<string, any>, focusOptions?: FocusOptions) {
   value[keyName.value] = getId(value);
   fields.value.push(value);
   touch();
@@ -98,7 +98,7 @@ function append(value: Record<string, any>, focusOptions: FocusOptions = null) {
   }
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function prepend(value: Record<string, any>, focusOptions: FocusOptions = null) {
+function prepend(value: Record<string, any>, focusOptions?: FocusOptions) {
   value[keyName.value] = getId(value);
   fields.value.unshift(value);
   touch();
@@ -108,7 +108,7 @@ function prepend(value: Record<string, any>, focusOptions: FocusOptions = null) 
   }
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function insert(index: number, value: Record<string, any>, focusOptions: FocusOptions = null) {
+function insert(index: number, value: Record<string, any>, focusOptions?: FocusOptions) {
   value[keyName.value] = getId(value);
   fields.value.splice(index, 0, value);
   touch();
@@ -117,7 +117,7 @@ function insert(index: number, value: Record<string, any>, focusOptions: FocusOp
     handleFocus({ index, ...focusOptions });
   }
 }
-function swap(from: number, to: number, focusOptions: FocusOptions = null) {
+function swap(from: number, to: number, focusOptions?: FocusOptions) {
   const temp = fields.value[from];
   fields.value[from] = fields.value[to];
   fields.value[to] = temp;
@@ -127,7 +127,7 @@ function swap(from: number, to: number, focusOptions: FocusOptions = null) {
     handleFocus({ index: to, ...focusOptions });
   }
 }
-function move(from: number, to: number, focusOptions: FocusOptions = null) {
+function move(from: number, to: number, focusOptions?: FocusOptions) {
   fields.value.splice(to, 0, fields.value.splice(from, 1)[0]);
   touch();
   if (focusOptions) {
@@ -135,7 +135,7 @@ function move(from: number, to: number, focusOptions: FocusOptions = null) {
     handleFocus({ index: to, ...focusOptions });
   }
 }
-function remove(index: number, focusOptions: FocusOptions = null) {
+function remove(index: number, focusOptions?: FocusOptions = null) {
   fields.value.splice(index, 1);
   touch();
 
