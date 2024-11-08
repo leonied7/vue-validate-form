@@ -43,7 +43,11 @@
             />
           </template>
         </ValidationField>
-        <ValidationField v-else key="2" name="my-input">
+        <ValidationField
+          v-else
+          key="2"
+          name="my-input"
+        >
           <template
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
@@ -83,7 +87,7 @@
           <template
             #default="{
               name: arrayName,
-              onChange,
+              onChange: onArrayChange,
               fields,
               append,
               prepend,
@@ -93,13 +97,13 @@
               remove
             }"
           >
-            <div v-for="(field, index) in fields" :key="field.id">
+            <div
+              v-for="(field, index) in fields"
+              :key="field.id"
+            >
               <ValidationField :name="`${arrayName}.${index}.id`" />
               <ValidationField :name="`${arrayName}.${index}.type`" />
-              <ValidationField
-                :name="`${arrayName}.${index}.firstName`"
-                @should-focus="handleFocus"
-              >
+              <ValidationField :name="`${arrayName}.${index}.firstName`">
                 <template
                   #default="{
                     modelValue,
@@ -146,19 +150,31 @@
             >
               Insert
             </button>
-            <button id="swap" type="button" @click="swap(0, 2, { field: 'firstName' })">
+            <button
+              id="swap"
+              type="button"
+              @click="swap(0, 2, { field: 'firstName' })"
+            >
               Swap
             </button>
-            <button id="move" type="button" @click="move(0, 2, { field: 'firstName' })">
+            <button
+              id="move"
+              type="button"
+              @click="move(0, 2, { field: 'firstName' })"
+            >
               Move
             </button>
-            <button id="remove" type="button" @click="remove(1, { field: 'firstName' })">
+            <button
+              id="remove"
+              type="button"
+              @click="remove(1, { field: 'firstName' })"
+            >
               Remove
             </button>
             <button
               id="arrayChange"
               type="button"
-              @click="onChange([{ id: 42 }, { id: 1, firstName: '' }, { id: 2, firstName: '' }])"
+              @click="onArrayChange([{ id: 42 }, { id: 1, firstName: '' }, { id: 2, firstName: '' }])"
             >
               Change array
             </button>
@@ -167,11 +183,18 @@
 
         <ValidationErrors name="common">
           <template #default="{ errors, submitted }">
-            <BaseErrors :errors="errors" :submitted="submitted" />
+            <BaseErrors
+              :errors="errors"
+              :submitted="submitted"
+            />
           </template>
         </ValidationErrors>
 
-        <button id="setError" type="button" @click="setError('common', { message: 'test' })">
+        <button
+          id="setError"
+          type="button"
+          @click="setError('common', { message: 'test' })"
+        >
           Set error
         </button>
 
@@ -184,14 +207,21 @@
           @set-field-value="onFieldChange"
         />
 
-        <button type="submit">Submit</button>
-        <button type="reset" @click="reset($event.payload)">Reset</button>
+        <button type="submit">
+          Submit
+        </button>
+        <button
+          type="reset"
+          @click="reset($event.payload)"
+        >
+          Reset
+        </button>
       </form>
     </template>
   </validation-provider>
 </template>
 
-<script>
+<script lang="ts">
 import {
   ValidationProvider,
   ValidationField,

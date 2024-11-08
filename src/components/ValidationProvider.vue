@@ -53,7 +53,7 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
   defaultValues: () => ({}),
   defaultErrors: () => ({}),
-  resolver: () => (values: Record<string, unknown>) => ({ values, errors: {} }),
+  resolver: (values: Record<string, unknown>) => ({ values, errors: {} }),
   instantValidate: false,
   resetOnUpdate: true
 });
@@ -163,7 +163,8 @@ async function setDefaultData() {
 
 const getFieldDefaultValue: GetFieldDefaultValue = (
   name: string,
-  defaultValue?: unknown
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  defaultValue?: any
 ): unknown => {
   return get(innerDefaultValues.value, name, defaultValue);
 };

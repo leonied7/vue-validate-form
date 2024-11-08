@@ -1,10 +1,20 @@
 <template>
-  <validation-provider @submit="onSubmit" :resolver="resolver">
+  <validation-provider
+    :resolver="resolver"
+    @submit="onSubmit"
+  >
     <template #default="{ handleSubmit }">
-      <form novalidate @submit.prevent="handleSubmit">
+      <form
+        novalidate
+        @submit.prevent="handleSubmit"
+      >
         <validation-field name="firstName">
           <template #default="{ modelValue, onChange }">
-            <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
+            <input
+              :value="modelValue"
+              type="text"
+              @input="onChange($event.target.value)"
+            >
           </template>
         </validation-field>
       </form>
@@ -12,9 +22,9 @@
   </validation-provider>
 </template>
 
-<script>
+<script lang="ts">
 import { object, string, number } from 'yup';
-import { ValidationProvider, ValidationField } from 'vue-validate-form'
+import { ValidationProvider, ValidationField } from 'vue-validate-form';
 import { yupResolver } from '@vue-validate-form/resolvers';
 
 export default {
@@ -27,7 +37,7 @@ export default {
       const fields = {
         firstName: string().required()
       };
-      if(this.isNew) {
+      if (this.isNew) {
         fields.id = number().required();
       }
       return yupResolver(object(fields));
@@ -36,5 +46,5 @@ export default {
   methods: {
     onSubmit(values) {}
   }
-}
+};
 </script>

@@ -39,5 +39,5 @@ export default {
 
 :::warning
 По-умолчанию `vue-validate-form` сбрасывает состояние `ValidationProvider` к начальному при изменении
-`defaultValues`. Это поведение может быть изменено с помощью параметра `resetOnUpdate` у `ValidationProvider`
+`defaultValues`. Это поведение может быть изменено с помощью параметра `resetOnUpdate` у [`ValidationProvider`](../api/validation-provider.md#входные-параметры)
 :::

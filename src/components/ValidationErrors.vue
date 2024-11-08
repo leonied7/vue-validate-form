@@ -1,5 +1,8 @@
 <template>
-  <slot :submitted="submitted" :errors="errors" />
+  <slot
+    :submitted="submitted"
+    :errors="errors"
+  />
 </template>
 
 <script lang="ts" setup>

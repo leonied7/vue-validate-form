@@ -19,29 +19,40 @@
           <pre>{{ errors }}</pre>
           <ValidationField name="my-input">
             <template #default="{ modelValue, onChange }">
-              <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
+              <input
+                :value="modelValue"
+                type="text"
+                @input="onChange($event.target.value)"
+              >
             </template>
           </ValidationField>
 
           <ValidationField name="my.nested.value">
             <template #default="{ modelValue, onChange }">
-              <input :value="modelValue" type="text" @input="onChange($event.target.value)" />
+              <input
+                :value="modelValue"
+                type="text"
+                @input="onChange($event.target.value)"
+              >
             </template>
           </ValidationField>
 
           <ValidationFieldArray name="arrayField">
             <template
-              #default="{ name, fields, onChange, append, prepend, insert, swap, move, remove }"
+              #default="{ name, fields, onChange: onArrayChange, append, prepend, insert, swap, move, remove }"
             >
               <div>
-                <div v-for="(field, index) in fields" :key="field.id">
+                <div
+                  v-for="(field, index) in fields"
+                  :key="field.id"
+                >
                   <ValidationField :name="`${name}.${index}.id`">
                     <template #default="{ modelValue, onChange }">
                       <input
                         :value="modelValue"
                         type="text"
                         @input="onChange($event.target.value)"
-                      />
+                      >
                     </template>
                   </ValidationField>
                   <ValidationField :name="`${name}.${index}.type`">
@@ -50,7 +61,7 @@
                         :value="modelValue"
                         type="text"
                         @input="onChange($event.target.value)"
-                      />
+                      >
                     </template>
                   </ValidationField>
                   <ValidationField :name="`${name}.${index}.firstName`">
@@ -59,7 +70,7 @@
                         :value="modelValue"
                         type="text"
                         @input="onChange($event.target.value)"
-                      />
+                      >
                     </template>
                   </ValidationField>
                 </div>
@@ -69,34 +80,72 @@
                 >
                   Prepend
                 </button>
-                <button type="button" @click="append({ firstName: 'append' })">Append</button>
-                <button type="button" @click="insert(1, { firstName: 'insert' })">Insert</button>
-                <button type="button" @click="swap(0, 2)">Swap</button>
-                <button type="button" @click="move(0, 2)">Move</button>
-                <button type="button" @click="remove(0)">Remove</button>
-                <button type="button" @click="reset()">Reset</button>
-                <button type="button" @click="onChange([{ id: 42, firstName: 'test' }])">
+                <button
+                  type="button"
+                  @click="append({ firstName: 'append' })"
+                >
+                  Append
+                </button>
+                <button
+                  type="button"
+                  @click="insert(1, { firstName: 'insert' })"
+                >
+                  Insert
+                </button>
+                <button
+                  type="button"
+                  @click="swap(0, 2)"
+                >
+                  Swap
+                </button>
+                <button
+                  type="button"
+                  @click="move(0, 2)"
+                >
+                  Move
+                </button>
+                <button
+                  type="button"
+                  @click="remove(0)"
+                >
+                  Remove
+                </button>
+                <button
+                  type="button"
+                  @click="reset()"
+                >
+                  Reset
+                </button>
+                <button
+                  type="button"
+                  @click="onArrayChange([{ id: 42, firstName: 'test' }])"
+                >
                   Change
                 </button>
               </div>
             </template>
           </ValidationFieldArray>
-          <button type="button" @click="onFieldChange('my-input', 123)">
+          <button
+            type="button"
+            @click="onFieldChange('my-input', 123)"
+          >
             Set 'my-input' field
           </button>
-          <button type="submit">Send</button>
+          <button type="submit">
+            Send
+          </button>
         </form>
 
         <div>All errors</div>
         <ValidationErrors>
-          <template #default="{ errors }">
-            <pre>{{ errors }}</pre>
+          <template #default="{ errors: allErrors }">
+            <pre>{{ allErrors }}</pre>
           </template>
         </ValidationErrors>
         <div>'my-input' errors</div>
         <ValidationErrors name="my-input">
-          <template #default="{ errors }">
-            <pre>{{ errors }}</pre>
+          <template #default="{ errors: inputErrors }">
+            <pre>{{ inputErrors }}</pre>
           </template>
         </ValidationErrors>
       </template>
@@ -178,7 +227,6 @@ export default {
         setError('common', { message: 'invalid common field', type: 'custom' });
       }, 250);
 
-      // eslint-disable-next-line no-console
       console.log(values);
     }
   }
