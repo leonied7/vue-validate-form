@@ -4,11 +4,11 @@
       :value="modelValue"
       type="text"
       @input="$emit('update:model-value', $event.target.value)"
-    />
+    >
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'BaseInput',
   model: {

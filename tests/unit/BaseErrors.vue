@@ -1,10 +1,15 @@
 <template>
   <div>
-    <div v-for="(error, index) in errors" :key="index">{{ error.message }}</div>
+    <div
+      v-for="(error, index) in errors"
+      :key="index"
+    >
+      {{ error.message }}
+    </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'BaseErrors',
   props: {

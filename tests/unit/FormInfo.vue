@@ -1,8 +1,8 @@
 <template>
-  <div></div>
+  <div />
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'FormInfo',
   props: {

@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
+import checker from 'vite-plugin-checker';
 
 export default defineConfig({
   build: {
@@ -15,7 +16,13 @@ export default defineConfig({
       external: ['vue', 'nanoid']
     }
   },
-  plugins: [vue(), dts()],
+  plugins: [
+    vue(),
+    dts(),
+    checker({
+      vueTsc: true
+    })
+  ],
   test: {
     setupFiles: ['./tests/unit/testSetup.ts'],
     environment: 'jsdom'

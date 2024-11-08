@@ -30,6 +30,7 @@ export interface Props {
   name: string;
   keyName?: string;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   keyName: 'id'
 });
@@ -51,13 +52,15 @@ const defaultValue = computed(() => getFieldDefaultValue(name.value, []));
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const providedValue = computed<Array<Record<string, any>>>(() => getFieldValue(name.value) || []);
 const providedValueMap = computed(() => {
-  const map: Record<string, Record<string, unknown>> = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const map: Record<string, Record<string, any>> = {};
   providedValue.value.forEach((field) => {
     map[field[keyName.value]] = field;
   });
   return map;
 });
-const actualValue = computed<Array<Record<string, unknown>>>(() => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const actualValue = computed<Array<Record<string, any>>>(() => {
   const map = providedValueMap.value;
   return fields.value.map((field) => ({
     ...map[field[keyName.value]],
@@ -75,7 +78,8 @@ function getInitialFields() {
   }));
 }
 
-function getId(field: Record<string, unknown>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getId(field: Record<string, any>) {
   return keyName.value in field ? field[keyName.value] : nanoid();
 }
 
@@ -83,19 +87,22 @@ function touch() {
   pristine.value = false;
 }
 
-function append(value: Record<string, unknown>, options?: FocusOptions) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function append(value: Record<string, any>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
   fields.value.push(value);
   touch();
   handleFocus(options);
 }
-function prepend(value: Record<string, unknown>, options?: FocusOptions) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function prepend(value: Record<string, any>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
   fields.value.unshift(value);
   touch();
   handleFocus(options);
 }
-function insert(index: number, value: Record<string, unknown>, options?: FocusOptions) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function insert(index: number, value: Record<string, any>, options?: FocusOptions) {
   value[keyName.value] = getId(value);
   fields.value.splice(index, 0, value);
   touch();
@@ -147,7 +154,6 @@ const reset: Field['reset'] = () => {
   pristine.value = true;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
 const field: Field = reactive({

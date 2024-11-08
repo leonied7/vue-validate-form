@@ -9,27 +9,24 @@ import { ON_FIELD_CHANGE } from '../../src/components/constants';
 describe('ValidationErrors', () => {
   let wrapper;
 
-  const createComponent = ({ props, attrs } = {}) => {
+  const createComponent = ({ props } = {}) => {
     wrapper = mount(ValidationForm, {
       props,
-      attrs,
       attachTo: document.body
     });
   };
 
   it('should submitted without settings', async () => {
-    createComponent({
-      attrs: {
-        onSubmit(values, { setError }) {
-          setError('common', { message: 'invalid', type: 'custom' });
-        }
-      }
-    });
+    createComponent();
 
     expect(wrapper.findComponent(BaseErrors).props().errors.length).toBe(0);
 
     await wrapper.find('button[type=submit]').trigger('click');
     await nextTick();
+    await nextTick();
+
+    const [, { setError }] = wrapper.emitted().submit[0];
+    setError('common', { message: 'invalid', type: 'custom' });
     await nextTick();
 
     const props = wrapper.findComponent(BaseErrors).props();

@@ -9,14 +9,14 @@
 `ValidationFieldArray` не поддерживает массив плоских полей, каждое поле массива должно быть объектом
 :::
 
-<<< @/.vitepress/components/FieldArray.vue{5-7,26,29-34}
+<<< @/.vitepress/components/FieldArray.vue{8-13,46,54-57}
 
 `ValidationFieldArray` предоставляет методы работы с массивом, такие как: Полное обновление(onChange), добавление вначало(prepend)/конец(append)/по индексу(insert), перемещение(move), свап(swap), удаление(remove) элементов.
-Более подробное описание методов можно найти [здесь](../reference/validation-field-array.md)
+Более подробное описание методов можно найти [здесь](../api/validation-field-array.md)
 
 ## Ключевое поле (`keyName`)
 
-Для корректной работы `ValidationFieldArray` обязательно должно быть зарегистировано это поле с помощью `ValidationField`, по-умолчанию используется поле `id`, но может быть изменено параметром [`keyName`](../reference/validation-field-array.md#входные-параметры)
+Для корректной работы `ValidationFieldArray` обязательно должно быть зарегистировано это поле с помощью `ValidationField`, по-умолчанию используется поле `id`, но может быть изменено параметром [`keyName`](../api/validation-field-array.md#входные-параметры)
 
 ::: danger
 При обходе `fields` обязательно указывать `key` со значением из поля переданного в `keyName`

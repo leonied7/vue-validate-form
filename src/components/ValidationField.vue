@@ -60,7 +60,7 @@ const defaultValue = computed(() => getFieldDefaultValue(name.value));
 const hasProvidedValue = computed(() => hasFieldValue(name.value));
 const providedValue = computed(() => getFieldValue(name.value));
 const validateAvailable = computed(() => getIsValidateAvailable());
-const value = ref<unknown>(hasProvidedValue.value ? providedValue.value : defaultValue.value);
+const value = ref(hasProvidedValue.value ? providedValue.value : defaultValue.value);
 const pristine = ref<boolean>(getFieldPristine(name.value));
 
 const dirty = computed(() => !isEqual.value(value.value, defaultValue.value));
