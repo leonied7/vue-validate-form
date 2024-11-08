@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/leonied7/vue-validate-form/compare/v3.0.3...v3.1.0) (2024-11-08)
+
+
+### Features
+
+* update all deps ([3da018a](https://github.com/leonied7/vue-validate-form/commit/3da018a03cfe8db9586f1aaf8eeb8e92bd2a0f67))
+
 ## [3.0.3](https://github.com/leonied7/vue-validate-form/compare/v3.0.2...v3.0.3) (2024-08-12)
 
 
