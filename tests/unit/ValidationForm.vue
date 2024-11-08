@@ -103,7 +103,10 @@
             >
               <ValidationField :name="`${arrayName}.${index}.id`" />
               <ValidationField :name="`${arrayName}.${index}.type`" />
-              <ValidationField :name="`${arrayName}.${index}.firstName`">
+              <ValidationField
+                :name="`${arrayName}.${index}.firstName`"
+                @should-focus="$emit('focus', $event)"
+              >
                 <template
                   #default="{
                     modelValue,
@@ -267,14 +270,12 @@ export default {
   emits: {
     submit: null,
     dirty: null,
-    change: null
+    change: null,
+    focus: null
   },
   methods: {
     onSubmit(values, options) {
       this.$emit('submit', values, options);
-    },
-    handleFocus({ name }) {
-      document.querySelector(`[name="${name}"]`)?.focus();
     }
   }
 };
