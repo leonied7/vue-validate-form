@@ -135,7 +135,7 @@ function move(from: number, to: number, focusOptions?: FocusOptions) {
     handleFocus({ index: to, ...focusOptions });
   }
 }
-function remove(index: number, focusOptions?: FocusOptions = null) {
+function remove(index: number, focusOptions?: FocusOptions) {
   fields.value.splice(index, 1);
   touch();
 
