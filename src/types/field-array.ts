@@ -1,3 +1,4 @@
 export interface FocusOptions {
-  focusName: string;
+  field: string;
+  index?: number;
 }

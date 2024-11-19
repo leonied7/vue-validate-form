@@ -76,9 +76,7 @@
                 </div>
                 <button
                   type="button"
-                  @click="
-                    prepend({ firstName: 'prepend' }, { focusName: 'arrayField.0.firstName' })
-                  "
+                  @click="prepend({ firstName: 'prepend' }, { name: 'firstName' })"
                 >
                   Prepend
                 </button>

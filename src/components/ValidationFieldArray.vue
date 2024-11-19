@@ -88,51 +88,72 @@ function touch() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function append(value: Record<string, any>, options?: FocusOptions) {
+function append(value: Record<string, any>, focusOptions?: FocusOptions) {
   value[keyName.value] = getId(value);
   fields.value.push(value);
   touch();
-  handleFocus(options);
+  if (focusOptions) {
+    // by default focus on last field
+    handleFocus({ index: fields.value.length - 1, ...focusOptions });
+  }
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function prepend(value: Record<string, any>, options?: FocusOptions) {
+function prepend(value: Record<string, any>, focusOptions?: FocusOptions) {
   value[keyName.value] = getId(value);
   fields.value.unshift(value);
   touch();
-  handleFocus(options);
+  if (focusOptions) {
+    // by default focus on first field
+    handleFocus(focusOptions);
+  }
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function insert(index: number, value: Record<string, any>, options?: FocusOptions) {
+function insert(index: number, value: Record<string, any>, focusOptions?: FocusOptions) {
   value[keyName.value] = getId(value);
   fields.value.splice(index, 0, value);
   touch();
-  handleFocus(options);
+  if (focusOptions) {
+    // by default focus on inserted field
+    handleFocus({ index, ...focusOptions });
+  }
 }
-function swap(from: number, to: number) {
+function swap(from: number, to: number, focusOptions?: FocusOptions) {
   const temp = fields.value[from];
   fields.value[from] = fields.value[to];
   fields.value[to] = temp;
   touch();
+  if (focusOptions) {
+    // by default focus on swapped field
+    handleFocus({ index: to, ...focusOptions });
+  }
 }
-function move(from: number, to: number) {
+function move(from: number, to: number, focusOptions?: FocusOptions) {
   fields.value.splice(to, 0, fields.value.splice(from, 1)[0]);
   touch();
+  if (focusOptions) {
+    // by default focus on moved field
+    handleFocus({ index: to, ...focusOptions });
+  }
 }
-function remove(index: number) {
+function remove(index: number, focusOptions?: FocusOptions) {
   fields.value.splice(index, 1);
   touch();
+
+  if (focusOptions && fields.value.length) {
+    // by default focus on previous field, if there is no previous field focus on first field
+    handleFocus({ index: Math.max(index - 1, 0), ...focusOptions });
+  }
 }
 
-function handleFocus(options?: FocusOptions) {
-  if (!options) {
-    return;
+function handleFocus({ field, index = 0 }: FocusOptions) {
+  if (!field) {
+    throw new Error(`Field name is required for focus, please provide field name in focus options`);
   }
+
+  const itemName = `${name.value}.${index || 0}.${field}`;
   nextTick(() => {
-    const fieldComponent = fieldComponents.value.find(({ name }) => name === options.focusName);
-    if (!fieldComponent) {
-      return;
-    }
-    fieldComponent.onFocus();
+    const fieldComponent = fieldComponents.value.find(({ name }) => name === itemName);
+    fieldComponent?.onFocus();
   });
 }
 
