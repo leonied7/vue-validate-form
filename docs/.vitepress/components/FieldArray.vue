@@ -43,7 +43,7 @@
 
               <button
                 type="button"
-                @click="remove(index)"
+                @click="remove(index, {field: 'firstName', index: 0})"
               >
                 Удалить
               </button>
@@ -54,7 +54,7 @@
               @click="append({
                 firstName: 'Заполните имя',
                 lastName: 'Заполните фамилию'
-              })"
+              }, {field: 'firstName'})"
             >
               Добавить
             </button>
