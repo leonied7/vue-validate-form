@@ -2,7 +2,7 @@
   "name": "vue-validate-form",
   "version": "3.1.0",
   "main": "./dist/vue-validate-form.js",
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/index.d.ts",
   "repository": "https://github.com/leonied7/vue-validate-form.git",
   "author": {
     "name": "Denis",
@@ -14,7 +14,8 @@
   },
   "homepage": "https://github.com/leonied7/vue-validate-form#readme",
   "dependencies": {
-    "nanoid": "^5.0.8"
+    "nanoid": "^5.0.8",
+    "type-fest": "^4.26.1"
   },
   "type": "module",
   "devDependencies": {
