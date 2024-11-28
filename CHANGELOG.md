@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.1](https://github.com/leonied7/vue-validate-form/compare/v3.1.0...v3.1.1) (2024-11-28)
+
+
+### Bug Fixes
+
+* fix path to types ([5d69cba](https://github.com/leonied7/vue-validate-form/commit/5d69cbabf53829e1fecc98862a1979ab2dc16749))
+* fix path to types ([7d50cca](https://github.com/leonied7/vue-validate-form/commit/7d50ccad00792d3e92a66aac6a2af71a2492a0bf))
+
 ## [3.1.0](https://github.com/leonied7/vue-validate-form/compare/v3.0.3...v3.1.0) (2024-11-08)
 
 
