@@ -105,7 +105,11 @@ function prepend(value: Record<string, any>, focusOptions?: FocusOptions) {
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function insert(index: number, value: Record<string, any>, focusOptions?: FocusOptions) {
-  value[keyName.value] = getId(value);
+  checkIndexOverflow({
+    index
+  });
+
+  value[keyName] = getId(value);
   fields.value.splice(index, 0, value);
   touch();
   if (focusOptions) {
@@ -114,6 +118,11 @@ function insert(index: number, value: Record<string, any>, focusOptions?: FocusO
   }
 }
 function swap(from: number, to: number, focusOptions?: FocusOptions) {
+  checkIndexOverflow({
+    from,
+    to
+  });
+
   const temp = fields.value[from];
   fields.value[from] = fields.value[to];
   fields.value[to] = temp;
@@ -124,6 +133,11 @@ function swap(from: number, to: number, focusOptions?: FocusOptions) {
   }
 }
 function move(from: number, to: number, focusOptions?: FocusOptions) {
+  checkIndexOverflow({
+    from,
+    to
+  });
+
   fields.value.splice(to, 0, fields.value.splice(from, 1)[0]);
   touch();
   if (focusOptions) {
@@ -139,6 +153,15 @@ function remove(index: number, focusOptions?: FocusOptions) {
     // by default focus on previous field, if there is no previous field focus on first field
     handleFocus({ index: Math.max(index - 1, 0), ...focusOptions });
   }
+}
+
+function checkIndexOverflow(values: Record<string, number>) {
+  const maxIndex = fields.value.length - 1;
+  Object.entries(values).forEach(([key, count]) => {
+    if (count < 0 || count > maxIndex) {
+      throw new Error(`'${key}' should be between 0 and ${maxIndex}`);
+    }
+  });
 }
 
 function handleFocus({ field, index = 0 }: FocusOptions) {
