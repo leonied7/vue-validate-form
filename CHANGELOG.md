@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/leonied7/vue-validate-form/compare/v3.1.1...v3.2.0) (2024-12-18)
+
+
+### Features
+
+* drop shims-vue.d.ts ([29ab320](https://github.com/leonied7/vue-validate-form/commit/29ab32093dc9ad1cc09337389414e8e5d8a61b2c))
+* up vue and node version ([da72495](https://github.com/leonied7/vue-validate-form/commit/da724950789a120b1ba2d8f7adac0e2a727e31f4))
+* use props destructuring instead of withDefaults and improve types for ValidationProvider ([e79d0b4](https://github.com/leonied7/vue-validate-form/commit/e79d0b43bf5325eafaeb0620306fc83d96d2eb9c))
+
+
+### Bug Fixes
+
+* add checkOverflow for field array actions ([f066fa2](https://github.com/leonied7/vue-validate-form/commit/f066fa20e9968a272c3eb41704f273239cdaa394))
+* fix package json ([884783a](https://github.com/leonied7/vue-validate-form/commit/884783a3eb00c0b50cac2ab76ede6505c8bc6e84))
+* fix vulnerabilities ([8e4099e](https://github.com/leonied7/vue-validate-form/commit/8e4099e5313f5ced25f27949a84770d79963ddb3))
+* fix vulnerabilities ([2e8ab6e](https://github.com/leonied7/vue-validate-form/commit/2e8ab6ea7571eb41f4cb620c919fe91ab2aa2e61))
+* revert ts to 5.6.x ([6ed298a](https://github.com/leonied7/vue-validate-form/commit/6ed298a5beb1caed9589a02de252e03ae864d494))
+* update packages ([aed5992](https://github.com/leonied7/vue-validate-form/commit/aed5992b47bb1f112a9b661d3163aa7fda357ab2))
+
 ## [3.1.1](https://github.com/leonied7/vue-validate-form/compare/v3.1.0...v3.1.1) (2024-11-28)
 
 
