@@ -6,7 +6,7 @@
         'my-input': [{ message: 'outer error' }],
         'my.nested.value': [{ message: 'qwe' }]
       }"
-      :resolver="$options.resolver"
+      :resolver="resolver"
       @submit="onSubmit"
     >
       <template #default="{ handleSubmit, values, dirty, errors, reset, onFieldChange }">
@@ -22,7 +22,7 @@
               <input
                 :value="modelValue"
                 type="text"
-                @input="onChange($event.target.value)"
+                @input="onChange(($event.target as HTMLInputElement).value)"
               >
             </template>
           </ValidationField>
@@ -32,7 +32,7 @@
               <input
                 :value="modelValue"
                 type="text"
-                @input="onChange($event.target.value)"
+                @input="onChange(($event.target as HTMLInputElement).value)"
               >
             </template>
           </ValidationField>
@@ -51,7 +51,7 @@
                       <input
                         :value="modelValue"
                         type="text"
-                        @input="onChange($event.target.value)"
+                        @input="onChange(($event.target as HTMLInputElement).value)"
                       >
                     </template>
                   </ValidationField>
@@ -60,7 +60,7 @@
                       <input
                         :value="modelValue"
                         type="text"
-                        @input="onChange($event.target.value)"
+                        @input="onChange(($event.target as HTMLInputElement).value)"
                       >
                     </template>
                   </ValidationField>
@@ -69,14 +69,14 @@
                       <input
                         :value="modelValue"
                         type="text"
-                        @input="onChange($event.target.value)"
+                        @input="onChange(($event.target as HTMLInputElement).value)"
                       >
                     </template>
                   </ValidationField>
                 </div>
                 <button
                   type="button"
-                  @click="prepend({ firstName: 'prepend' }, { name: 'firstName' })"
+                  @click="prepend({ firstName: 'prepend' }, { field: 'firstName' })"
                 >
                   Prepend
                 </button>
@@ -153,82 +153,72 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import {
   ValidationErrors,
   ValidationField,
   ValidationFieldArray,
   ValidationProvider,
-  get
+  get,
+  Resolver,
+  ResolverResult,
+  OnSubmit
 } from './index';
 
-function required(value) {
+const defaultValues = {
+  my: {
+    nested: {
+      value: 'test'
+    }
+  },
+  arrayField: [
+    {
+      id: '1',
+      firstName: '111',
+      type: 'user'
+    },
+    {
+      id: '2',
+      firstName: '222',
+      type: 'user'
+    },
+    {
+      id: '3',
+      firstName: '333',
+      type: null
+    }
+  ]
+};
+type V = typeof defaultValues;
+
+function required(value: unknown) {
   return !!value;
 }
-
-export default {
-  name: 'App',
-  components: {
-    ValidationProvider,
-    ValidationField,
-    ValidationFieldArray,
-    ValidationErrors
-  },
-  resolver(values) {
-    const result = {
-      values,
-      errors: {}
-    };
-    if (!required(get(values, 'my-input'))) {
-      result.errors['my-input'] = [{ message: 'field required' }];
-    }
-    if (!required(get(values, 'my.nested.value'))) {
-      result.errors['my.nested.value'] = [{ message: 'field required' }];
-    }
-    get(values, 'arrayField', []).forEach(({ firstName }, index) => {
-      if (!required(firstName)) {
-        result.errors[`arrayField.${index}.firstName`] = [{ message: 'field required' }];
-      }
-    });
-    return result;
-  },
-  data() {
-    return {
-      defaultValues: {
-        my: {
-          nested: {
-            value: 'test'
-          }
-        },
-        arrayField: [
-          {
-            id: '1',
-            firstName: '111',
-            type: 'user'
-          },
-          {
-            id: '2',
-            firstName: '222',
-            type: 'user'
-          },
-          {
-            id: '3',
-            firstName: '333',
-            type: null
-          }
-        ]
-      }
-    };
-  },
-  methods: {
-    onSubmit(values, { setError }) {
-      setTimeout(() => {
-        setError('my-input', { message: 'invalid field', type: 'custom' });
-        setError('common', { message: 'invalid common field', type: 'custom' });
-      }, 250);
-
-      console.log(values);
-    }
+const resolver: Resolver<V> = (values) => {
+  const result: ResolverResult<V> = {
+    values,
+    errors: {}
+  };
+  if (!required(get(values, 'my-input'))) {
+    result.errors['my-input'] = [{ message: 'field required' }];
   }
+  if (!required(get(values, 'my.nested.value'))) {
+    result.errors['my.nested.value'] = [{ message: 'field required' }];
+  }
+  get(values, 'arrayField', []).forEach(({ firstName }, index) => {
+    if (!required(firstName)) {
+      result.errors[`arrayField.${index}.firstName`] = [{ message: 'field required' }];
+    }
+  });
+  return result;
+};
+
+const onSubmit: OnSubmit<V> = (values, { setError }) => {
+  setTimeout(() => {
+    setError('my-input', { message: 'invalid field', type: 'custom' });
+    setError('common', { message: 'invalid common field', type: 'custom' });
+  }, 250);
+
+  console.log(values);
 };
 </script>

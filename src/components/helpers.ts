@@ -1,6 +1,8 @@
+import type { Get, LiteralUnion, IfUnknown } from 'type-fest';
 import type { Values } from '../types/values';
+import type { Paths } from '../types/paths';
 
-export function has(object: Values, path: string): boolean {
+export function has<V extends Values>(object: V, path: LiteralUnion<Paths<V>, string>): boolean {
   let tempObject = object;
   if (!isObject(tempObject)) {
     return false;
@@ -20,22 +22,22 @@ export function has(object: Values, path: string): boolean {
   return true;
 }
 
-export function get(object: Values, path: string, defaultValue?: unknown): unknown {
+export function get<V extends Values, Path extends LiteralUnion<Paths<V>, string>, DV, Res extends IfUnknown<DV, Get<V, Path>, DV>>(object: V, path: Path, defaultValue?: DV): Res {
   let tempObject = object;
   if (!isObject(tempObject)) {
-    return defaultValue;
+    return defaultValue as unknown as Res;
   }
 
   const pathParts = path.split('.');
   while (pathParts.length > 0) {
     const key = pathParts.shift() ?? '';
     if (!(key in tempObject)) {
-      return defaultValue;
+      return defaultValue as unknown as Res;
     }
 
     tempObject = tempObject[key];
   }
-  return tempObject;
+  return tempObject as unknown as Res;
 }
 
 export function set(object: Values, path: string, value: unknown): void {
