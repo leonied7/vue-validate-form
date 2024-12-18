@@ -39,7 +39,7 @@
     "yup": "^1.6.1"
   },
   "scripts": {
-    "build": "vite build ",
+    "build": "vite build",
     "dev": "vite",
     "lint": "eslint .",
     "test": "vitest run",
