@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref, toRefs } from 'vue';
+import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref } from 'vue';
 import type { Field } from '../types/field';
 import type { FocusOptions } from '../types/field-array';
 import {
@@ -31,14 +31,10 @@ export interface Props {
   keyName?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  keyName: 'id'
-});
-
-const { name, keyName } = toRefs(props);
+const { name, keyName = 'id' } = defineProps<Props>();
 
 const getFieldPristine = inject(getFieldPristineSymbol)!;
-const pristine = ref<boolean>(getFieldPristine(name.value));
+const pristine = ref<boolean>(getFieldPristine(name));
 
 const register = inject(registerSymbol)!;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,14 +44,14 @@ const getFieldDefaultValue = inject<(name: string, defaultValue?: any[]) => any[
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getFieldValue = inject<(name: string) => any[]>(getFieldValueSymbol)!;
 
-const defaultValue = computed(() => getFieldDefaultValue(name.value, []));
+const defaultValue = computed(() => getFieldDefaultValue(name, []));
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const providedValue = computed<Array<Record<string, any>>>(() => getFieldValue(name.value) || []);
+const providedValue = computed<Array<Record<string, any>>>(() => getFieldValue(name) || []);
 const providedValueMap = computed(() => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const map: Record<string, Record<string, any>> = {};
   providedValue.value.forEach((field) => {
-    map[field[keyName.value]] = field;
+    map[field[keyName]] = field;
   });
   return map;
 });
@@ -63,8 +59,8 @@ const providedValueMap = computed(() => {
 const actualValue = computed<Array<Record<string, any>>>(() => {
   const map = providedValueMap.value;
   return fields.value.map((field) => ({
-    ...map[field[keyName.value]],
-    [keyName.value]: field[keyName.value]
+    ...map[field[keyName]],
+    [keyName]: field[keyName]
   }));
 });
 
@@ -74,13 +70,13 @@ const fields = ref(getInitialFields());
 function getInitialFields() {
   return defaultValue.value.map((field) => ({
     ...field,
-    [keyName.value]: getId(field)
+    [keyName]: getId(field)
   }));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getId(field: Record<string, any>) {
-  return keyName.value in field ? field[keyName.value] : nanoid();
+  return keyName in field ? field[keyName] : nanoid();
 }
 
 function touch() {
@@ -89,7 +85,7 @@ function touch() {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function append(value: Record<string, any>, focusOptions?: FocusOptions) {
-  value[keyName.value] = getId(value);
+  value[keyName] = getId(value);
   fields.value.push(value);
   touch();
   if (focusOptions) {
@@ -99,7 +95,7 @@ function append(value: Record<string, any>, focusOptions?: FocusOptions) {
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function prepend(value: Record<string, any>, focusOptions?: FocusOptions) {
-  value[keyName.value] = getId(value);
+  value[keyName] = getId(value);
   fields.value.unshift(value);
   touch();
   if (focusOptions) {
@@ -150,7 +146,7 @@ function handleFocus({ field, index = 0 }: FocusOptions) {
     throw new Error(`Field name is required for focus, please provide field name in focus options`);
   }
 
-  const itemName = `${name.value}.${index || 0}.${field}`;
+  const itemName = `${name}.${index || 0}.${field}`;
   nextTick(() => {
     const fieldComponent = fieldComponents.value.find(({ name }) => name === itemName);
     fieldComponent?.onFocus();
@@ -178,14 +174,14 @@ const reset: Field['reset'] = () => {
 const noop = () => {};
 
 const field: Field = reactive({
-  name,
+  name: computed(() => name),
   dirty: false,
   pristine,
   errors: [],
   getValue: () => {
     return fields.value.map((field) => {
       return {
-        [keyName.value]: field[keyName.value]
+        [keyName]: field[keyName]
       };
     });
   },
@@ -203,7 +199,7 @@ onBeforeUnmount(() => {
 });
 
 function getNormalizedName(fieldName: string) {
-  return fieldName.replace(new RegExp(`^${name.value}.`), '');
+  return fieldName.replace(new RegExp(`^${name}.`), '');
 }
 
 provide(hasFieldValueSymbol, () => true);

@@ -7,6 +7,7 @@ import { get, has } from './components/helpers';
 
 export { type ValidationError, type ValidationsErrors } from './types/error';
 export { type Resolver, type ResolverResult } from './types/resolver';
+export { type OnSubmit, type OnChange } from './types/emit';
 
 export {
   ValidationProvider,

@@ -1,9 +1,9 @@
 import type { Values } from './values';
 import type { ValidationsErrors } from './error';
 
-export interface ResolverResult {
-  values: Values;
+export interface ResolverResult<V extends Values> {
+  values: Partial<V>;
   errors: ValidationsErrors;
 }
 
-export type Resolver = (values: Values) => Promise<ResolverResult> | ResolverResult;
+export type Resolver<V extends Values> = (values: Partial<V>) => Promise<ResolverResult<V>> | ResolverResult<V>;

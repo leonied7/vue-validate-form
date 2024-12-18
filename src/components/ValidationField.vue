@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, ref, toRefs, reactive, nextTick, onUnmounted } from 'vue';
+import { computed, inject, ref, reactive, nextTick, onUnmounted } from 'vue';
 
 import type { InnerValidationError } from '../types/error';
 import {
@@ -29,21 +29,15 @@ import {
 import type { Field } from '../types/field';
 import { ON_FIELD_CHANGE } from './constants';
 
-export interface Props {
+const { name, isEqual = (a, b) => a === b } = defineProps<{
   name: string;
   isEqual?: (a: unknown, b: unknown) => boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  isEqual: (a, b) => a === b
-});
+}>();
 
 const emit = defineEmits<{
   (e: 'should-focus', options: { name: string }): void;
   (e: 'change', value: unknown): void;
 }>();
-
-const { name, isEqual } = toRefs(props);
 
 const registered = ref(false);
 const errors = ref<InnerValidationError[]>([]);
@@ -56,14 +50,14 @@ const getIsValidateAvailable = inject(getIsValidateAvailableSymbol)!;
 const register = inject(registerSymbol)!;
 const validate = inject(validateSymbol)!;
 
-const defaultValue = computed(() => getFieldDefaultValue(name.value));
-const hasProvidedValue = computed(() => hasFieldValue(name.value));
-const providedValue = computed(() => getFieldValue(name.value));
+const defaultValue = computed(() => getFieldDefaultValue(name));
+const hasProvidedValue = computed(() => hasFieldValue(name));
+const providedValue = computed(() => getFieldValue(name));
 const validateAvailable = computed(() => getIsValidateAvailable());
 const value = ref(hasProvidedValue.value ? providedValue.value : defaultValue.value);
-const pristine = ref<boolean>(getFieldPristine(name.value));
+const pristine = ref<boolean>(getFieldPristine(name));
 
-const dirty = computed(() => !isEqual.value(value.value, defaultValue.value));
+const dirty = computed(() => !isEqual(value.value, defaultValue.value));
 const firstError = computed(() => errors.value[0]);
 const invalid = computed(() => !!errors.value.length);
 
@@ -76,7 +70,7 @@ const reset: Field['reset'] = () => {
 };
 
 const onChange: Field['onChange'] = (newValue: unknown) => {
-  if (isEqual.value(value.value, newValue)) {
+  if (isEqual(value.value, newValue)) {
     return;
   }
 
@@ -88,7 +82,7 @@ const onChange: Field['onChange'] = (newValue: unknown) => {
     return;
   }
 
-  validate(name.value);
+  validate(name);
 };
 
 const setError: Field['setError'] = ({
@@ -110,7 +104,7 @@ const resetErrors: Field['resetErrors'] = () => {
 };
 
 const field: Field = reactive({
-  name,
+  name: computed(() => name),
   dirty,
   pristine,
   errors,
@@ -121,7 +115,7 @@ const field: Field = reactive({
   reset,
   onFocus: () => {
     emit('should-focus', {
-      name: name.value
+      name
     });
   }
 });

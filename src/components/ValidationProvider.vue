@@ -14,8 +14,8 @@
   />
 </template>
 
-<script lang="ts" setup>
-import { computed, nextTick, provide, ref, toRefs, watch, onBeforeUnmount } from 'vue';
+<script lang="ts" setup generic="T extends Values">
+import { computed, nextTick, provide, ref, watch, onBeforeUnmount } from 'vue';
 
 import type { Values } from '../types/values';
 import type {
@@ -42,40 +42,35 @@ import {
 import { get, has, set } from './helpers';
 import { ON_FIELD_CHANGE, ON_FORM_CHANGE } from './constants';
 
-export interface Props {
-  defaultValues?: Values;
+export interface Props<V extends Values> {
+  defaultValues?: Partial<V>;
   defaultErrors?: ValidationsErrors;
-  resolver?: Resolver;
+  resolver?: Resolver<V>;
   instantValidate?: boolean;
   resetOnUpdate?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  defaultValues: () => ({}),
-  defaultErrors: () => ({}),
-  resolver: (values: Record<string, unknown>) => ({ values, errors: {} }),
-  instantValidate: false,
-  resetOnUpdate: true
-});
+const {
+  defaultValues = {},
+  defaultErrors = {},
+  resolver = (values) => ({ values, errors: {} as ValidationsErrors }),
+  instantValidate = false,
+  resetOnUpdate = true
+} = defineProps<Props<T>>();
+
 const emit = defineEmits<{
-  (
-    e: 'submit',
-    values: Values,
-    opt: {
-      setError: (name: string, error: ValidationError) => void;
-      reset: (defaultValue?: Values) => void;
-      onFieldChange: (name: string, value: unknown) => void;
-      focusInvalidField: () => void;
-    }
-  ): void;
-  (e: 'dirty', dirty: boolean): void;
-  (e: 'change', values: Values): void;
+  submit: [values: T, opt: {
+    setError: (name: string, error: ValidationError) => void;
+    reset: (defaultValue?: Partial<T>) => void;
+    onFieldChange: (name: string, value: unknown) => void;
+    focusInvalidField: () => void;
+  }];
+  dirty: [dirty: boolean];
+  change: [values: Partial<T>];
 }>();
 
-const { defaultValues, defaultErrors, resolver, instantValidate, resetOnUpdate } = toRefs(props);
-
 const submitted = ref(false);
-const innerDefaultValues = ref<Values>({});
+const innerDefaultValues = ref<Partial<T>>({});
 const fieldComponents = ref<Field[]>([]);
 const additionalErrors = ref<InnerValidationsErrors>({});
 
@@ -85,7 +80,7 @@ const fieldComponentMap = computed<Record<string, Field>>(() => {
     return map;
   }, {});
 });
-const values = computed<Values>(() => {
+const values = computed<Partial<T>>(() => {
   return fieldComponents.value.reduce((result, { name, getValue }) => {
     set(result, name, getValue());
     return result;
@@ -113,19 +108,19 @@ const firstInvalidFieldComponent = computed<Field | undefined>(() => {
   return fieldComponents.value.find(({ name }) => errors.value[name].length);
 });
 const validateAvailable = computed(() => {
-  return submitted.value || instantValidate.value;
+  return submitted.value || instantValidate;
 });
 const invalid = computed(() => {
   return existsErrors.value;
 });
 
-watch(defaultValues, () => {
-  if (resetOnUpdate.value) {
+watch(() => defaultValues, () => {
+  if (resetOnUpdate) {
     setDefaultData();
   }
 });
-watch(defaultErrors, () => {
-  if (resetOnUpdate.value) {
+watch(() => defaultErrors, () => {
+  if (resetOnUpdate) {
     setDefaultData();
   }
 });
@@ -145,15 +140,15 @@ watch(values, async () => {
 setDefaultData();
 
 async function setDefaultData() {
-  reset(defaultValues.value);
+  reset(defaultValues);
   additionalErrors.value = {};
-  const hasErrors = Object.values(defaultErrors.value).some((errors) => errors.length);
-  if (!instantValidate.value && !hasErrors) {
+  const hasErrors = Object.values(defaultErrors).some((errors) => errors.length);
+  if (!instantValidate && !hasErrors) {
     return;
   }
 
   await nextTick();
-  setErrorsList(defaultErrors.value, ON_FIELD_CHANGE);
+  setErrorsList(defaultErrors, ON_FIELD_CHANGE);
   const { errors } = await validate();
   setErrorsList(errors);
   if (hasErrors) {
@@ -182,7 +177,7 @@ async function handleSubmit(): Promise<void> {
     return focusInvalidField();
   }
 
-  emit('submit', values, {
+  emit('submit', values as T, {
     setError,
     reset,
     onFieldChange,
@@ -204,12 +199,12 @@ async function validate(triggerFieldName?: string) {
   return { values, errors: errorsList };
 }
 function resolveSchema() {
-  return resolver.value(values.value);
+  return resolver(values.value);
 }
 function onFieldChange(name: string, value: unknown) {
   fieldComponentMap.value[name].onChange(value);
 }
-function reset(values?: Values) {
+function reset(values?: Partial<T>) {
   submitted.value = false;
   if (values) {
     innerDefaultValues.value = JSON.parse(JSON.stringify(values));
@@ -290,10 +285,10 @@ provide(validateSymbol, async (name: string) => {
   setErrorsList(errors);
 });
 provide(getFieldDefaultValueSymbol, getFieldDefaultValue);
-provide(getFieldValueSymbol, (name: string) => get(values.value, name));
-provide(getFieldPristineSymbol, (name: string) => fieldComponentMap.value[name]?.pristine ?? true);
+provide(getFieldValueSymbol, (name) => get(values.value, name));
+provide(getFieldPristineSymbol, (name) => fieldComponentMap.value[name]?.pristine ?? true);
 provide(getErrorsSymbol, getErrors);
-provide(hasFieldValueSymbol, (name: string) => has(values.value, name));
+provide(hasFieldValueSymbol, (name) => has(values.value, name));
 provide(getIsSubmittedSymbol, () => submitted.value);
 provide(getIsValidateAvailableSymbol, () => validateAvailable.value);
 
