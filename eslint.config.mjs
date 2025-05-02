@@ -1,3 +1,14 @@
-import antfu from '@antfu/eslint-config'
+import antfu from '@antfu/eslint-config';
 
-export default antfu();
+export default antfu({
+  stylistic: {
+    semi: true,
+  },
+}, {
+  name: 'docs',
+  files: ['docs/**/*'],
+  rules: {
+    'unused-imports/no-unused-vars': 'off',
+    'no-alert': 'off',
+  },
+});

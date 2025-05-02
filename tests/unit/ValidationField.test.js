@@ -1,17 +1,17 @@
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
-import { mount } from '@vue/test-utils';
-import { ValidationField, get } from '../../src';
-import ValidationForm from './ValidationForm.vue';
+import { get, ValidationField } from '../../src';
 import BaseInput from './BaseInput.vue';
+import ValidationForm from './ValidationForm.vue';
 
-describe('ValidationField', () => {
+describe('validationField', () => {
   let wrapper;
 
   const createComponent = ({ props } = {}) => {
     wrapper = mount(ValidationForm, {
       props,
-      attachTo: document.body
+      attachTo: document.body,
     });
   };
 
@@ -19,23 +19,23 @@ describe('ValidationField', () => {
     createComponent({
       props: {
         defaultValues: {
-          'my-input': 42
+          'my-input': 42,
         },
         resolver(values) {
           if (!get(values, 'my-input')) {
             return {
               values,
               errors: {
-                'my-input': [{ message: 'field required' }]
-              }
+                'my-input': [{ message: 'field required' }],
+              },
             };
           }
           return {
             values,
-            errors: {}
+            errors: {},
           };
-        }
-      }
+        },
+      },
     });
     await nextTick();
     const myInputWrapper = wrapper.findComponent(BaseInput);
@@ -51,12 +51,12 @@ describe('ValidationField', () => {
     await nextTick();
     expect(myInputWrapper.props().invalid).toBe(true);
     expect(myInputWrapper.props().errors).toEqual([
-      expect.objectContaining({ message: 'field required' })
+      expect.objectContaining({ message: 'field required' }),
     ]);
     expect(myInputWrapper.props().firstError).toEqual(
       expect.objectContaining({
-        message: 'field required'
-      })
+        message: 'field required',
+      }),
     );
     expect(wrapper.emitted().submit).toBeUndefined();
   });
@@ -69,16 +69,16 @@ describe('ValidationField', () => {
             return {
               values,
               errors: {
-                'my-input': [{ message: 'field required' }]
-              }
+                'my-input': [{ message: 'field required' }],
+              },
             };
           }
           return {
             values,
-            errors: {}
+            errors: {},
           };
-        }
-      }
+        },
+      },
     });
     await nextTick();
     const myInputWrapper = wrapper.findComponent(BaseInput);
@@ -88,7 +88,7 @@ describe('ValidationField', () => {
     await nextTick();
     expect(myInputWrapper.props().invalid).toBe(true);
     expect(myInputWrapper.props().errors).toEqual([
-      expect.objectContaining({ message: 'field required' })
+      expect.objectContaining({ message: 'field required' }),
     ]);
 
     myInputWrapper.vm.$emit('update:model-value', 42);
@@ -102,9 +102,9 @@ describe('ValidationField', () => {
     createComponent({
       props: {
         defaultValues: {
-          'my-input': 42
-        }
-      }
+          'my-input': 42,
+        },
+      },
     });
     await nextTick();
 
@@ -143,9 +143,9 @@ describe('ValidationField', () => {
     createComponent({
       props: {
         defaultValues: {
-          'my-input': 42
-        }
-      }
+          'my-input': 42,
+        },
+      },
     });
     await nextTick();
 
@@ -161,9 +161,9 @@ describe('ValidationField', () => {
     createComponent({
       props: {
         defaultValues: {
-          'my-input': 42
-        }
-      }
+          'my-input': 42,
+        },
+      },
     });
     await nextTick();
 

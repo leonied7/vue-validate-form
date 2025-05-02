@@ -1,30 +1,16 @@
-<template>
-  <slot
-    v-bind="{ name }"
-    :on-change="onChange"
-    :fields="actualValue"
-    :append="append"
-    :prepend="prepend"
-    :insert="insert"
-    :swap="swap"
-    :move="move"
-    :remove="remove"
-  />
-</template>
-
 <script lang="ts" setup>
-import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref } from 'vue';
 import type { Field } from '../types/field';
 import type { FocusOptions } from '../types/field-array';
+import { nanoid } from 'nanoid';
+import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref } from 'vue';
+import { get } from './helpers';
 import {
   getFieldDefaultValueSymbol,
   getFieldPristineSymbol,
   getFieldValueSymbol,
   hasFieldValueSymbol,
-  registerSymbol
+  registerSymbol,
 } from './symbols';
-import { nanoid } from 'nanoid';
-import { get } from './helpers';
 
 export interface Props {
   name: string;
@@ -37,44 +23,39 @@ const getFieldPristine = inject(getFieldPristineSymbol)!;
 const pristine = ref<boolean>(getFieldPristine(name));
 
 const register = inject(registerSymbol)!;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getFieldDefaultValue = inject<(name: string, defaultValue?: any[]) => any[]>(
-  getFieldDefaultValueSymbol
+  getFieldDefaultValueSymbol,
 )!;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getFieldValue = inject<(name: string) => any[]>(getFieldValueSymbol)!;
 
 const defaultValue = computed(() => getFieldDefaultValue(name, []));
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const providedValue = computed<Array<Record<string, any>>>(() => getFieldValue(name) || []);
 const providedValueMap = computed(() => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const map: Record<string, Record<string, any>> = {};
   providedValue.value.forEach((field) => {
     map[field[keyName]] = field;
   });
   return map;
 });
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const actualValue = computed<Array<Record<string, any>>>(() => {
-  const map = providedValueMap.value;
-  return fields.value.map((field) => ({
-    ...map[field[keyName]],
-    [keyName]: field[keyName]
-  }));
-});
 
 const fieldComponents = ref<Field[]>([]);
 const fields = ref(getInitialFields());
 
+const actualValue = computed<Array<Record<string, any>>>(() => {
+  const map = providedValueMap.value;
+  return fields.value.map(field => ({
+    ...map[field[keyName]],
+    [keyName]: field[keyName],
+  }));
+});
+
 function getInitialFields() {
-  return defaultValue.value.map((field) => ({
+  return defaultValue.value.map(field => ({
     ...field,
-    [keyName]: getId(field)
+    [keyName]: getId(field),
   }));
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getId(field: Record<string, any>) {
   return keyName in field ? field[keyName] : nanoid();
 }
@@ -83,7 +64,6 @@ function touch() {
   pristine.value = false;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function append(value: Record<string, any>, focusOptions?: FocusOptions) {
   value[keyName] = getId(value);
   fields.value.push(value);
@@ -93,7 +73,6 @@ function append(value: Record<string, any>, focusOptions?: FocusOptions) {
     handleFocus({ index: fields.value.length - 1, ...focusOptions });
   }
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function prepend(value: Record<string, any>, focusOptions?: FocusOptions) {
   value[keyName] = getId(value);
   fields.value.unshift(value);
@@ -103,10 +82,9 @@ function prepend(value: Record<string, any>, focusOptions?: FocusOptions) {
     handleFocus(focusOptions);
   }
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function insert(index: number, value: Record<string, any>, focusOptions?: FocusOptions) {
   checkIndexOverflow({
-    index
+    index,
   });
 
   value[keyName] = getId(value);
@@ -120,7 +98,7 @@ function insert(index: number, value: Record<string, any>, focusOptions?: FocusO
 function swap(from: number, to: number, focusOptions?: FocusOptions) {
   checkIndexOverflow({
     from,
-    to
+    to,
   });
 
   const temp = fields.value[from];
@@ -135,7 +113,7 @@ function swap(from: number, to: number, focusOptions?: FocusOptions) {
 function move(from: number, to: number, focusOptions?: FocusOptions) {
   checkIndexOverflow({
     from,
-    to
+    to,
   });
 
   fields.value.splice(to, 0, fields.value.splice(from, 1)[0]);
@@ -176,7 +154,6 @@ function handleFocus({ field, index = 0 }: FocusOptions) {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onChange: Field['onChange'] = (value: any) => {
   const newFields = [...value];
   fields.value = newFields;
@@ -194,7 +171,7 @@ const reset: Field['reset'] = () => {
   pristine.value = true;
 };
 
-const noop = () => {};
+function noop() {}
 
 const field: Field = reactive({
   name: computed(() => name),
@@ -204,7 +181,7 @@ const field: Field = reactive({
   getValue: () => {
     return fields.value.map((field) => {
       return {
-        [keyName]: field[keyName]
+        [keyName]: field[keyName],
       };
     });
   },
@@ -212,7 +189,7 @@ const field: Field = reactive({
   setError: noop,
   resetErrors: noop,
   reset,
-  onFocus: noop
+  onFocus: noop,
 });
 
 const unregister = register(field);
@@ -252,3 +229,17 @@ function handleUnregister(fieldComponent: Field) {
   fieldComponents.value.splice(index, 1);
 }
 </script>
+
+<template>
+  <slot
+    v-bind="{ name }"
+    :on-change="onChange"
+    :fields="actualValue"
+    :append="append"
+    :prepend="prepend"
+    :insert="insert"
+    :swap="swap"
+    :move="move"
+    :remove="remove"
+  />
+</template>

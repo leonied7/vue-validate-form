@@ -1,22 +1,39 @@
 {
   "name": "vue-validate-form",
+  "type": "module",
   "version": "3.2.0",
-  "main": "./dist/vue-validate-form.js",
-  "types": "./dist/index.d.ts",
-  "repository": "https://github.com/leonied7/vue-validate-form.git",
   "author": {
     "name": "Denis",
     "email": "kdnn@mail.ru"
   },
   "license": "MIT",
+  "homepage": "https://github.com/leonied7/vue-validate-form#readme",
+  "repository": "https://github.com/leonied7/vue-validate-form.git",
   "bugs": {
     "url": "https://github.com/leonied7/vue-validate-form/issues"
   },
-  "homepage": "https://github.com/leonied7/vue-validate-form#readme",
+  "main": "./dist/vue-validate-form.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "lint": "eslint",
+    "test": "vitest",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "peerDependencies": {
+    "@vue-validate-form/resolvers": "^1.0.5",
+    "vue": "^3.5.13",
+    "yup": "^1.6.1"
+  },
   "dependencies": {
     "nanoid": "^5.0.9"
   },
-  "type": "module",
   "devDependencies": {
     "@antfu/eslint-config": "^4.12.0",
     "@vue/test-utils": "^2.4.6",
@@ -27,26 +44,9 @@
     "vite": "^6.3.4",
     "vite-plugin-checker": "^0.9.1",
     "vite-plugin-dts": "^4.5.3",
-    "vitepress": "^1.5.0",
+    "vitepress": "^1.6.3",
     "vitest": "^3.1.2",
     "vue-component-type-helpers": "^2.2.10",
     "vue-tsc": "^2.2.10"
-  },
-  "peerDependencies": {
-    "@vue-validate-form/resolvers": "^1.0.5",
-    "vue": "^3.5.13",
-    "yup": "^1.6.1"
-  },
-  "scripts": {
-    "build": "vite build",
-    "dev": "vite",
-    "lint": "eslint",
-    "test": "vitest",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
-  },
-  "files": [
-    "dist"
-  ]
+  }
 }

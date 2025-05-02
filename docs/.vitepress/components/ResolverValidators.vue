@@ -1,5 +1,27 @@
+<script lang="ts">
+import { minLength } from '@vue-validate-form/validators';
+import { ValidationField, ValidationProvider } from 'vue-validate-form';
+
+export default {
+  components: { ValidationProvider, ValidationField },
+  resolver(values) {
+    const result = {
+      values,
+      errors: {},
+    };
+    if (!minLength(values.firstName, 5)) {
+      result.errors.firstName = [{ message: 'min length 5' }];
+    }
+    return result;
+  },
+  methods: {
+    onSubmit(values) {},
+  },
+};
+</script>
+
 <template>
-  <validation-provider
+  <ValidationProvider
     :resolver="$options.resolver"
     @submit="onSubmit"
   >
@@ -8,7 +30,7 @@
         novalidate
         @submit.prevent="handleSubmit"
       >
-        <validation-field name="firstName">
+        <ValidationField name="firstName">
           <template #default="{ modelValue, onChange }">
             <input
               :value="modelValue"
@@ -16,30 +38,8 @@
               @input="onChange($event.target.value)"
             >
           </template>
-        </validation-field>
+        </ValidationField>
       </form>
     </template>
-  </validation-provider>
+  </ValidationProvider>
 </template>
-
-<script lang="ts">
-import { ValidationProvider, ValidationField } from 'vue-validate-form';
-import { minLength } from '@vue-validate-form/validators';
-
-export default {
-  components: { ValidationProvider, ValidationField },
-  resolver(values) {
-    const result = {
-      values,
-      errors: {}
-    };
-    if (!minLength(values.firstName, 5)) {
-      result.errors.firstName = [{ message: 'min length 5' }];
-    }
-    return result;
-  },
-  methods: {
-    onSubmit(values) {}
-  }
-};
-</script>

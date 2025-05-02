@@ -1,46 +1,30 @@
-<template>
-  <slot
-    :handle-submit="handleSubmit"
-    :on-field-change="onFieldChange"
-    :reset="reset"
-    :set-error="setError"
-    :focus-invalid-field="focusInvalidField"
-    :values="values"
-    :dirty="dirty"
-    :pristine="pristine"
-    :invalid="invalid"
-    :errors="errors"
-    :submitted="submitted"
-  />
-</template>
-
 <script lang="ts" setup generic="T extends Values">
-import { computed, nextTick, provide, ref, watch, onBeforeUnmount } from 'vue';
-
-import type { Values } from '../types/values';
 import type {
   InnerValidationError,
   InnerValidationsErrors,
   ResetBehaviour,
   ValidationError,
-  ValidationsErrors
+  ValidationsErrors,
 } from '../types/error';
+
 import type { Field } from '../types/field';
 import type { Resolver } from '../types/resolver';
+import type { Values } from '../types/values';
 import type { GetErrors, GetFieldDefaultValue, Register } from './symbols';
+import { computed, nextTick, onBeforeUnmount, provide, ref, watch } from 'vue';
+import { ON_FIELD_CHANGE, ON_FORM_CHANGE } from './constants';
+import { get, has, set } from './helpers';
 import {
   getErrorsSymbol,
   getFieldDefaultValueSymbol,
-  getFieldValueSymbol,
   getFieldPristineSymbol,
+  getFieldValueSymbol,
   getIsSubmittedSymbol,
   getIsValidateAvailableSymbol,
   hasFieldValueSymbol,
   registerSymbol,
-  validateSymbol
+  validateSymbol,
 } from './symbols';
-import { get, has, set } from './helpers';
-import { ON_FIELD_CHANGE, ON_FORM_CHANGE } from './constants';
 
 export interface Props<V extends Values> {
   defaultValues?: Partial<V>;
@@ -53,9 +37,9 @@ export interface Props<V extends Values> {
 const {
   defaultValues = {},
   defaultErrors = {},
-  resolver = (values) => ({ values, errors: {} as ValidationsErrors }),
+  resolver = values => ({ values, errors: {} as ValidationsErrors }),
   instantValidate = false,
-  resetOnUpdate = true
+  resetOnUpdate = true,
 } = defineProps<Props<T>>();
 
 const emit = defineEmits<{
@@ -98,11 +82,11 @@ const errors = computed(() => {
       allErrors[name] = errors;
       return allErrors;
     },
-    Object.assign({}, additionalErrors.value)
+    Object.assign({}, additionalErrors.value),
   );
 });
 const existsErrors = computed(() => {
-  return Object.values(errors.value).some((errors) => errors.length);
+  return Object.values(errors.value).some(errors => errors.length);
 });
 const firstInvalidFieldComponent = computed<Field | undefined>(() => {
   return fieldComponents.value.find(({ name }) => errors.value[name].length);
@@ -130,8 +114,8 @@ watch(
     emit('dirty', dirty);
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 );
 watch(values, async () => {
   const { values } = await resolveSchema();
@@ -142,7 +126,7 @@ setDefaultData();
 async function setDefaultData() {
   reset(defaultValues);
   additionalErrors.value = {};
-  const hasErrors = Object.values(defaultErrors).some((errors) => errors.length);
+  const hasErrors = Object.values(defaultErrors).some(errors => errors.length);
   if (!instantValidate && !hasErrors) {
     return;
   }
@@ -158,8 +142,7 @@ async function setDefaultData() {
 
 const getFieldDefaultValue: GetFieldDefaultValue = (
   name: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  defaultValue?: any
+  defaultValue?: any,
 ): unknown => {
   return get(innerDefaultValues.value, name, defaultValue);
 };
@@ -181,7 +164,7 @@ async function handleSubmit(): Promise<void> {
     setError,
     reset,
     onFieldChange,
-    focusInvalidField
+    focusInvalidField,
   });
 }
 async function validate(triggerFieldName?: string) {
@@ -190,7 +173,7 @@ async function validate(triggerFieldName?: string) {
   fieldComponents.value.forEach(({ resetErrors, errors, name }) => {
     if (triggerFieldName !== name) {
       const actualErrors: ValidationError[] = errors.filter(
-        ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE
+        ({ resetBehaviour }) => resetBehaviour !== ON_FORM_CHANGE,
       );
       errorsList[name] = actualErrors.concat(errorsList[name] || []);
     }
@@ -217,7 +200,7 @@ function reset(values?: Partial<T>) {
 
 function setErrorsList(
   errorsList: InnerValidationsErrors | ValidationsErrors,
-  defaultResetBehaviour: ResetBehaviour = ON_FORM_CHANGE
+  defaultResetBehaviour: ResetBehaviour = ON_FORM_CHANGE,
 ) {
   Object.entries(errorsList as InnerValidationsErrors).forEach(([name, errors]) => {
     errors.forEach(({ message, type, resetBehaviour = defaultResetBehaviour }) => {
@@ -239,7 +222,7 @@ function setError(name: string, error: InnerValidationError | ValidationError) {
   additionalErrors.value[name].push({
     type,
     message,
-    resetBehaviour
+    resetBehaviour,
   });
 }
 function focusInvalidField(): void {
@@ -285,10 +268,10 @@ provide(validateSymbol, async (name: string) => {
   setErrorsList(errors);
 });
 provide(getFieldDefaultValueSymbol, getFieldDefaultValue);
-provide(getFieldValueSymbol, (name) => get(values.value, name));
-provide(getFieldPristineSymbol, (name) => fieldComponentMap.value[name]?.pristine ?? true);
+provide(getFieldValueSymbol, name => get(values.value, name));
+provide(getFieldPristineSymbol, name => fieldComponentMap.value[name]?.pristine ?? true);
 provide(getErrorsSymbol, getErrors);
-provide(hasFieldValueSymbol, (name) => has(values.value, name));
+provide(hasFieldValueSymbol, name => has(values.value, name));
 provide(getIsSubmittedSymbol, () => submitted.value);
 provide(getIsValidateAvailableSymbol, () => validateAvailable.value);
 
@@ -303,6 +286,22 @@ defineExpose({
   pristine,
   invalid,
   errors,
-  submitted
+  submitted,
 });
 </script>
+
+<template>
+  <slot
+    :handle-submit="handleSubmit"
+    :on-field-change="onFieldChange"
+    :reset="reset"
+    :set-error="setError"
+    :focus-invalid-field="focusInvalidField"
+    :values="values"
+    :dirty="dirty"
+    :pristine="pristine"
+    :invalid="invalid"
+    :errors="errors"
+    :submitted="submitted"
+  />
+</template>

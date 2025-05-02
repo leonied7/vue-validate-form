@@ -1,3 +1,31 @@
+<script lang="ts">
+export default {
+  name: 'BaseInput',
+  props: {
+    modelValue: {
+      type: [String, Number],
+      default: undefined,
+    },
+    errors: {
+      type: Array,
+      required: true,
+    },
+    firstError: {
+      type: Object,
+      default: undefined,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    dirty: Boolean,
+    pristine: Boolean,
+    invalid: Boolean,
+  },
+  emits: ['update:model-value'],
+};
+</script>
+
 <template>
   <div>
     <input
@@ -7,35 +35,3 @@
     >
   </div>
 </template>
-
-<script lang="ts">
-export default {
-  name: 'BaseInput',
-  model: {
-    prop: 'modelValue',
-    event: 'update:model-value'
-  },
-  props: {
-    modelValue: {
-      type: [String, Number],
-      default: undefined
-    },
-    errors: {
-      type: Array,
-      required: true
-    },
-    firstError: {
-      type: Object,
-      default: undefined
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    dirty: Boolean,
-    pristine: Boolean,
-    invalid: Boolean
-  },
-  emits: ['update:model-value']
-};
-</script>

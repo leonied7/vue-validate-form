@@ -1,18 +1,18 @@
-import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
 
-import ValidationForm from './ValidationForm.vue';
-import BaseErrors from './BaseErrors.vue';
 import { ON_FIELD_CHANGE } from '../../src/components/constants';
+import BaseErrors from './BaseErrors.vue';
+import ValidationForm from './ValidationForm.vue';
 
-describe('ValidationErrors', () => {
+describe('validationErrors', () => {
   let wrapper;
 
   const createComponent = ({ props } = {}) => {
     wrapper = mount(ValidationForm, {
       props,
-      attachTo: document.body
+      attachTo: document.body,
     });
   };
 
@@ -34,8 +34,8 @@ describe('ValidationErrors', () => {
       {
         type: 'custom',
         message: 'invalid',
-        resetBehaviour: ON_FIELD_CHANGE
-      }
+        resetBehaviour: ON_FIELD_CHANGE,
+      },
     ]);
     expect(props.submitted).toBe(true);
   });
@@ -51,8 +51,8 @@ describe('ValidationErrors', () => {
       {
         type: undefined,
         message: 'test',
-        resetBehaviour: ON_FIELD_CHANGE
-      }
+        resetBehaviour: ON_FIELD_CHANGE,
+      },
     ]);
     expect(props.submitted).toBe(false);
   });
