@@ -11,4 +11,10 @@ export default antfu({
     'unused-imports/no-unused-vars': 'off',
     'no-alert': 'off',
   },
+}, {
+  name: 'test',
+  files: ['tests/unit/**/*'],
+  rules: {
+    'vue/no-unused-refs': 'off',
+  },
 });

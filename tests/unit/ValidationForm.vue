@@ -88,6 +88,7 @@ export default {
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
             <BaseInput
+              ref="myInputValueFirst"
               :name="name"
               :first-error="firstError"
               :errors="errors"
@@ -108,6 +109,7 @@ export default {
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
             <BaseInput
+              ref="myInputValueSecond"
               :name="name"
               :first-error="firstError"
               :errors="errors"
@@ -125,6 +127,7 @@ export default {
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
             <BaseInput
+              ref="myNestedValueInput"
               :name="name"
               :first-error="firstError"
               :errors="errors"
