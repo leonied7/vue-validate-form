@@ -19,7 +19,7 @@ type Errors = ValidationError[];
 
 #### ArrayField
 ```ts
-type ArrayField = Record<string, any>
+type ArrayField = Record<string, any>;
 ```
 
 #### FocusOptions

@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'vue-component-type-helpers';
+import type ValidationProvider from '../components/ValidationProvider.vue';
 import type { Values } from './values';
-import ValidationProvider from '../components/ValidationProvider.vue';
 
 type Props<V extends Values> = ComponentProps<typeof ValidationProvider<V>>;
 

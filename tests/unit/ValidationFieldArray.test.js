@@ -1,31 +1,31 @@
-import { describe, expect, it } from 'vitest';
-import { mount } from '@vue/test-utils';
 import { yupResolver } from '@vue-validate-form/resolvers';
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
 import { array, object, string } from 'yup';
 
-import ValidationForm from './ValidationForm.vue';
-import FormInfo from './FormInfo.vue';
-import BaseInput from './BaseInput.vue';
 import { ON_FORM_CHANGE } from '../../src/components/constants';
+import BaseInput from './BaseInput.vue';
+import FormInfo from './FormInfo.vue';
+import ValidationForm from './ValidationForm.vue';
 
 const resolver = yupResolver(
   object().shape({
     arrayField: array().of(
       object({
-        firstName: string().required('invalid')
-      })
-    )
-  })
+        firstName: string().required('invalid'),
+      }),
+    ),
+  }),
 );
 
-describe('ValidationFieldArray', () => {
+describe('validationFieldArray', () => {
   let wrapper;
 
   const createComponent = ({ props } = {}) => {
     wrapper = mount(ValidationForm, {
       props,
-      attachTo: document.body
+      attachTo: document.body,
     });
   };
 
@@ -41,19 +41,19 @@ describe('ValidationFieldArray', () => {
           arrayField: [
             {
               id: 1,
-              firstName: 'name 1'
+              firstName: 'name 1',
             },
             {
               id: 42,
-              firstName: 'name 2'
+              firstName: 'name 2',
             },
             {
               id: null,
-              firstName: 'name 3'
-            }
-          ]
-        }
-      }
+              firstName: 'name 3',
+            },
+          ],
+        },
+      },
     });
     await nextTick();
     const formInfoProps = wrapper.findComponent(FormInfo).props();
@@ -62,29 +62,29 @@ describe('ValidationFieldArray', () => {
     expect(formInfoProps.dirty).toBe(false);
     expect(formInfoProps.invalid).toBe(false);
     expect(formInfoProps.values).toEqual({
-      arrayField: [
+      'arrayField': [
         {
           id: 1,
           firstName: 'name 1',
-          type: undefined
+          type: undefined,
         },
         {
           id: 42,
           firstName: 'name 2',
-          type: undefined
+          type: undefined,
         },
         {
           id: null,
           firstName: 'name 3',
-          type: undefined
-        }
+          type: undefined,
+        },
       ],
-      my: {
+      'my': {
         nested: {
-          value: undefined
-        }
+          value: undefined,
+        },
       },
-      'my-input': undefined
+      'my-input': undefined,
     });
   });
 
@@ -95,16 +95,16 @@ describe('ValidationFieldArray', () => {
           arrayField: [
             {
               id: 1,
-              firstName: ''
+              firstName: '',
             },
             {
               id: 42,
-              firstName: 'name 2'
-            }
-          ]
+              firstName: 'name 2',
+            },
+          ],
         },
-        resolver
-      }
+        resolver,
+      },
     });
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
@@ -120,15 +120,15 @@ describe('ValidationFieldArray', () => {
     expect(formInfoProps.errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
       ],
       'arrayField.1.id': [],
       'arrayField.1.type': [],
-      'arrayField.1.firstName': []
+      'arrayField.1.firstName': [],
     });
     expect(formInfoProps.dirty).toBe(false);
     expect(formInfoProps.invalid).toBe(true);
@@ -141,12 +141,12 @@ describe('ValidationFieldArray', () => {
           arrayField: [
             {
               id: 42,
-              firstName: 'name 2'
-            }
-          ]
+              firstName: 'name 2',
+            },
+          ],
         },
-        resolver
-      }
+        resolver,
+      },
     });
     await nextTick();
     expect(wrapper.findAllComponents(BaseInput).length).toBe(3);
@@ -166,20 +166,20 @@ describe('ValidationFieldArray', () => {
           arrayField: [
             {
               id: 1,
-              firstName: 'name 1'
+              firstName: 'name 1',
             },
             {
               id: 2,
-              firstName: 'name 2'
+              firstName: 'name 2',
             },
             {
               id: 42,
-              firstName: ''
-            }
-          ]
+              firstName: '',
+            },
+          ],
         },
-        resolver
-      }
+        resolver,
+      },
     });
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
@@ -193,7 +193,7 @@ describe('ValidationFieldArray', () => {
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [],
@@ -203,8 +203,8 @@ describe('ValidationFieldArray', () => {
       'arrayField.2.id': [],
       'arrayField.2.type': [],
       'arrayField.2.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
-      ]
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
+      ],
     });
 
     await wrapper.find('#remove').trigger('click');
@@ -214,27 +214,27 @@ describe('ValidationFieldArray', () => {
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
       'arrayField.1.type': [],
       'arrayField.1.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
-      ]
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
+      ],
     });
     expect(wrapper.findComponent(FormInfo).props().values).toEqual({
-      my: {
+      'my': {
         nested: {
-          value: undefined
-        }
+          value: undefined,
+        },
       },
       'my-input': undefined,
-      arrayField: [
+      'arrayField': [
         { firstName: 'name 1', id: 1 },
-        { firstName: '', id: 42 }
-      ]
+        { firstName: '', id: 42 },
+      ],
     });
   });
 
@@ -245,16 +245,16 @@ describe('ValidationFieldArray', () => {
           arrayField: [
             {
               id: 1,
-              firstName: 'name 1'
+              firstName: 'name 1',
             },
             {
               id: 42,
-              firstName: ''
-            }
-          ]
+              firstName: '',
+            },
+          ],
         },
-        resolver
-      }
+        resolver,
+      },
     });
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
@@ -268,15 +268,15 @@ describe('ValidationFieldArray', () => {
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
       'arrayField.1.type': [],
       'arrayField.1.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
-      ]
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
+      ],
     });
 
     await wrapper.find('#prepend').trigger('click');
@@ -285,7 +285,7 @@ describe('ValidationFieldArray', () => {
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [],
@@ -295,8 +295,8 @@ describe('ValidationFieldArray', () => {
       'arrayField.2.id': [],
       'arrayField.2.type': [],
       'arrayField.2.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
-      ]
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
+      ],
     });
     expect(wrapper.findAllComponents(BaseInput).at(2).props().modelValue).toBe('new name');
   });
@@ -309,17 +309,17 @@ describe('ValidationFieldArray', () => {
             {
               id: 1,
               type: '1',
-              firstName: 'name 1'
+              firstName: 'name 1',
             },
             {
               id: 42,
               type: '42',
-              firstName: ''
-            }
-          ]
+              firstName: '',
+            },
+          ],
         },
-        resolver
-      }
+        resolver,
+      },
     });
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
@@ -333,15 +333,15 @@ describe('ValidationFieldArray', () => {
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
       'arrayField.1.type': [],
       'arrayField.1.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
-      ]
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
+      ],
     });
 
     await wrapper.find('#insert').trigger('click');
@@ -349,7 +349,7 @@ describe('ValidationFieldArray', () => {
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [],
@@ -359,8 +359,8 @@ describe('ValidationFieldArray', () => {
       'arrayField.2.id': [],
       'arrayField.2.type': [],
       'arrayField.2.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
-      ]
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
+      ],
     });
     expect(wrapper.findComponent(FormInfo).props().values.arrayField[1].type).toEqual(undefined);
     focusTest('arrayField.1.firstName');
@@ -374,20 +374,20 @@ describe('ValidationFieldArray', () => {
           arrayField: [
             {
               id: 1,
-              firstName: 'name 1'
+              firstName: 'name 1',
             },
             {
               id: 2,
-              firstName: 'name 2'
+              firstName: 'name 2',
             },
             {
               id: 42,
-              firstName: ''
-            }
-          ]
+              firstName: '',
+            },
+          ],
         },
-        resolver
-      }
+        resolver,
+      },
     });
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
@@ -401,7 +401,7 @@ describe('ValidationFieldArray', () => {
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [],
@@ -411,8 +411,8 @@ describe('ValidationFieldArray', () => {
       'arrayField.2.id': [],
       'arrayField.2.type': [],
       'arrayField.2.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
-      ]
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
+      ],
     });
     const formInfoWrapper = wrapper.findComponent(FormInfo);
 
@@ -422,40 +422,40 @@ describe('ValidationFieldArray', () => {
     expect(formInfoWrapper.props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
       ],
       'arrayField.1.id': [],
       'arrayField.1.type': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
       'arrayField.2.type': [],
-      'arrayField.2.firstName': []
+      'arrayField.2.firstName': [],
     });
     expect(formInfoWrapper.props().values).toEqual({
-      my: {
+      'my': {
         nested: {
-          value: undefined
-        }
+          value: undefined,
+        },
       },
       'my-input': undefined,
-      arrayField: [
+      'arrayField': [
         {
           id: 42,
-          firstName: ''
+          firstName: '',
         },
         {
           id: 2,
-          firstName: 'name 2'
+          firstName: 'name 2',
         },
         {
           id: 1,
-          firstName: 'name 1'
-        }
-      ]
+          firstName: 'name 1',
+        },
+      ],
     });
 
     await wrapper.find('#swap').trigger('click');
@@ -463,7 +463,7 @@ describe('ValidationFieldArray', () => {
     expect(formInfoWrapper.props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [],
@@ -473,30 +473,30 @@ describe('ValidationFieldArray', () => {
       'arrayField.2.id': [],
       'arrayField.2.type': [],
       'arrayField.2.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
-      ]
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
+      ],
     });
     expect(formInfoWrapper.props().values).toEqual({
-      my: {
+      'my': {
         nested: {
-          value: undefined
-        }
+          value: undefined,
+        },
       },
       'my-input': undefined,
-      arrayField: [
+      'arrayField': [
         {
           id: 1,
-          firstName: 'name 1'
+          firstName: 'name 1',
         },
         {
           id: 2,
-          firstName: 'name 2'
+          firstName: 'name 2',
         },
         {
           id: 42,
-          firstName: ''
-        }
-      ]
+          firstName: '',
+        },
+      ],
     });
   });
 
@@ -507,20 +507,20 @@ describe('ValidationFieldArray', () => {
           arrayField: [
             {
               id: 1,
-              firstName: 'name 1'
+              firstName: 'name 1',
             },
             {
               id: 2,
-              firstName: 'name 2'
+              firstName: 'name 2',
             },
             {
               id: 42,
-              firstName: ''
-            }
-          ]
+              firstName: '',
+            },
+          ],
         },
-        resolver
-      }
+        resolver,
+      },
     });
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
@@ -534,7 +534,7 @@ describe('ValidationFieldArray', () => {
     expect(wrapper.findComponent(FormInfo).props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [],
@@ -544,8 +544,8 @@ describe('ValidationFieldArray', () => {
       'arrayField.2.id': [],
       'arrayField.2.type': [],
       'arrayField.2.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
-      ]
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
+      ],
     });
     const formInfoWrapper = wrapper.findComponent(FormInfo);
 
@@ -556,40 +556,40 @@ describe('ValidationFieldArray', () => {
     expect(formInfoWrapper.props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [],
       'arrayField.1.id': [],
       'arrayField.1.type': [],
       'arrayField.1.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
       ],
       'arrayField.2.id': [],
       'arrayField.2.type': [],
-      'arrayField.2.firstName': []
+      'arrayField.2.firstName': [],
     });
     expect(formInfoWrapper.props().values).toEqual({
-      my: {
+      'my': {
         nested: {
-          value: undefined
-        }
+          value: undefined,
+        },
       },
       'my-input': undefined,
-      arrayField: [
+      'arrayField': [
         {
           id: 2,
-          firstName: 'name 2'
+          firstName: 'name 2',
         },
         {
           id: 42,
-          firstName: ''
+          firstName: '',
         },
         {
           id: 1,
-          firstName: 'name 1'
-        }
-      ]
+          firstName: 'name 1',
+        },
+      ],
     });
 
     await wrapper.find('#move').trigger('click');
@@ -597,40 +597,40 @@ describe('ValidationFieldArray', () => {
     expect(formInfoWrapper.props().errors).toEqual({
       'my.nested.value': [],
       'my-input': [],
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.0.firstName': [
-        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE }
+        { type: 'required', message: 'invalid', resetBehaviour: ON_FORM_CHANGE },
       ],
       'arrayField.1.id': [],
       'arrayField.1.type': [],
       'arrayField.1.firstName': [],
       'arrayField.2.id': [],
       'arrayField.2.type': [],
-      'arrayField.2.firstName': []
+      'arrayField.2.firstName': [],
     });
     expect(formInfoWrapper.props().values).toEqual({
-      my: {
+      'my': {
         nested: {
-          value: undefined
-        }
+          value: undefined,
+        },
       },
       'my-input': undefined,
-      arrayField: [
+      'arrayField': [
         {
           id: 42,
-          firstName: ''
+          firstName: '',
         },
         {
           id: 1,
-          firstName: 'name 1'
+          firstName: 'name 1',
         },
         {
           id: 2,
-          firstName: 'name 2'
-        }
-      ]
+          firstName: 'name 2',
+        },
+      ],
     });
   });
 
@@ -641,16 +641,16 @@ describe('ValidationFieldArray', () => {
           arrayField: [
             {
               id: 1,
-              firstName: 'name 1'
+              firstName: 'name 1',
             },
             {
               id: 2,
-              firstName: 'name 2'
-            }
-          ]
+              firstName: 'name 2',
+            },
+          ],
         },
-        resolver
-      }
+        resolver,
+      },
     });
     await nextTick();
     await wrapper.find('button[type=submit]').trigger('click');
@@ -669,46 +669,46 @@ describe('ValidationFieldArray', () => {
     await nextTick();
 
     expect(formInfoWrapper.props().errors).toEqual({
-      arrayField: [],
+      'arrayField': [],
       'arrayField.0.firstName': [
-        { message: 'invalid', resetBehaviour: ON_FORM_CHANGE, type: 'optionality' }
+        { message: 'invalid', resetBehaviour: ON_FORM_CHANGE, type: 'optionality' },
       ],
       'arrayField.0.id': [],
       'arrayField.0.type': [],
       'arrayField.1.firstName': [
-        { message: 'invalid', resetBehaviour: ON_FORM_CHANGE, type: 'required' }
+        { message: 'invalid', resetBehaviour: ON_FORM_CHANGE, type: 'required' },
       ],
       'arrayField.1.id': [],
       'arrayField.1.type': [],
       'arrayField.2.firstName': [
-        { message: 'invalid', resetBehaviour: ON_FORM_CHANGE, type: 'required' }
+        { message: 'invalid', resetBehaviour: ON_FORM_CHANGE, type: 'required' },
       ],
       'arrayField.2.id': [],
       'arrayField.2.type': [],
       'my-input': [],
-      'my.nested.value': []
+      'my.nested.value': [],
     });
     expect(formInfoWrapper.props().values).toEqual({
-      my: {
+      'my': {
         nested: {
-          value: undefined
-        }
+          value: undefined,
+        },
       },
       'my-input': undefined,
-      arrayField: [
+      'arrayField': [
         {
           id: 42,
-          firstName: undefined
+          firstName: undefined,
         },
         {
           firstName: '',
-          id: 1
+          id: 1,
         },
         {
           firstName: '',
-          id: 2
-        }
-      ]
+          id: 2,
+        },
+      ],
     });
   });
 });

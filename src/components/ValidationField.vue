@@ -1,22 +1,9 @@
-<template>
-  <slot
-    v-if="registered"
-    v-bind="{ name }"
-    :on-change="onChange"
-    :set-error="setError"
-    :model-value="value"
-    :errors="errors"
-    :first-error="firstError"
-    :dirty="dirty"
-    :invalid="invalid"
-    :pristine="pristine"
-  />
-</template>
-
 <script lang="ts" setup>
-import { computed, inject, ref, reactive, nextTick, onUnmounted } from 'vue';
-
 import type { InnerValidationError } from '../types/error';
+
+import type { Field } from '../types/field';
+import { computed, inject, nextTick, onUnmounted, reactive, ref } from 'vue';
+import { ON_FIELD_CHANGE } from './constants';
 import {
   getFieldDefaultValueSymbol,
   getFieldPristineSymbol,
@@ -24,10 +11,8 @@ import {
   getIsValidateAvailableSymbol,
   hasFieldValueSymbol,
   registerSymbol,
-  validateSymbol
+  validateSymbol,
 } from './symbols';
-import type { Field } from '../types/field';
-import { ON_FIELD_CHANGE } from './constants';
 
 const { name, isEqual = (a, b) => a === b } = defineProps<{
   name: string;
@@ -35,7 +20,7 @@ const { name, isEqual = (a, b) => a === b } = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'should-focus', options: { name: string }): void;
+  (e: 'shouldFocus', options: { name: string }): void;
   (e: 'change', value: unknown): void;
 }>();
 
@@ -61,14 +46,6 @@ const dirty = computed(() => !isEqual(value.value, defaultValue.value));
 const firstError = computed(() => errors.value[0]);
 const invalid = computed(() => !!errors.value.length);
 
-const reset: Field['reset'] = () => {
-  resetErrors();
-  nextTick(() => {
-    onChange(defaultValue.value);
-    pristine.value = true;
-  });
-};
-
 const onChange: Field['onChange'] = (newValue: unknown) => {
   if (isEqual(value.value, newValue)) {
     return;
@@ -88,12 +65,12 @@ const onChange: Field['onChange'] = (newValue: unknown) => {
 const setError: Field['setError'] = ({
   message,
   type,
-  resetBehaviour = ON_FIELD_CHANGE
+  resetBehaviour = ON_FIELD_CHANGE,
 }: InnerValidationError) => {
   errors.value.push({
     type,
     message,
-    resetBehaviour
+    resetBehaviour,
   });
 };
 
@@ -101,6 +78,14 @@ const resetErrors: Field['resetErrors'] = () => {
   if (errors.value.length) {
     errors.value = [];
   }
+};
+
+const reset: Field['reset'] = () => {
+  resetErrors();
+  nextTick(() => {
+    onChange(defaultValue.value);
+    pristine.value = true;
+  });
 };
 
 const field: Field = reactive({
@@ -114,10 +99,10 @@ const field: Field = reactive({
   resetErrors,
   reset,
   onFocus: () => {
-    emit('should-focus', {
-      name
+    emit('shouldFocus', {
+      name,
     });
-  }
+  },
 });
 
 defineExpose({
@@ -129,7 +114,7 @@ defineExpose({
   firstError,
   dirty,
   invalid,
-  pristine
+  pristine,
 });
 
 const unregister = register(field);
@@ -138,3 +123,18 @@ onUnmounted(() => {
 });
 registered.value = true;
 </script>
+
+<template>
+  <slot
+    v-if="registered"
+    v-bind="{ name }"
+    :on-change="onChange"
+    :set-error="setError"
+    :model-value="value"
+    :errors="errors"
+    :first-error="firstError"
+    :dirty="dirty"
+    :invalid="invalid"
+    :pristine="pristine"
+  />
+</template>

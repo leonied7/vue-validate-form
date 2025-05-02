@@ -1,5 +1,62 @@
+<script lang="ts">
+import {
+  get,
+  ValidationErrors,
+  ValidationField,
+  ValidationFieldArray,
+  ValidationProvider,
+} from '../../src';
+import BaseErrors from './BaseErrors.vue';
+import BaseInput from './BaseInput.vue';
+import FormInfo from './FormInfo.vue';
+
+export default {
+  name: 'ValidationForm',
+  get,
+  components: {
+    BaseErrors,
+    FormInfo,
+    ValidationProvider,
+    ValidationField,
+    ValidationFieldArray,
+    ValidationErrors,
+    BaseInput,
+  },
+  inheritAttrs: false,
+  props: {
+    defaultValues: {
+      type: Object,
+      default: () => ({}),
+    },
+    defaultErrors: {
+      type: Object,
+      default: () => ({}),
+    },
+    resolver: {
+      type: Function,
+      default: undefined,
+    },
+    resetOnUpdate: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  emits: {
+    submit: null,
+    dirty: null,
+    change: null,
+    focus: null,
+  },
+  methods: {
+    onSubmit(values, options) {
+      this.$emit('submit', values, options);
+    },
+  },
+};
+</script>
+
 <template>
-  <validation-provider
+  <ValidationProvider
     :default-values="defaultValues"
     :default-errors="defaultErrors"
     :resolver="resolver"
@@ -18,7 +75,7 @@
         pristine: formPristine,
         invalid: formInvalid,
         errors: formErrors,
-        setError
+        setError,
       }"
     >
       <form @submit.prevent="handleSubmit">
@@ -30,7 +87,7 @@
           <template
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
-            <base-input
+            <BaseInput
               ref="myInputValueFirst"
               :name="name"
               :first-error="firstError"
@@ -51,7 +108,7 @@
           <template
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
-            <base-input
+            <BaseInput
               ref="myInputValueSecond"
               :name="name"
               :first-error="firstError"
@@ -69,7 +126,7 @@
           <template
             #default="{ modelValue, name, firstError, errors, dirty, pristine, invalid, onChange }"
           >
-            <base-input
+            <BaseInput
               ref="myNestedValueInput"
               :name="name"
               :first-error="firstError"
@@ -94,7 +151,7 @@
               insert,
               swap,
               move,
-              remove
+              remove,
             }"
           >
             <div
@@ -116,10 +173,10 @@
                     dirty,
                     pristine,
                     invalid,
-                    onChange
+                    onChange,
                   }"
                 >
-                  <base-input
+                  <BaseInput
                     :name="name"
                     :first-error="firstError"
                     :errors="errors"
@@ -221,62 +278,5 @@
         </button>
       </form>
     </template>
-  </validation-provider>
+  </ValidationProvider>
 </template>
-
-<script lang="ts">
-import {
-  ValidationProvider,
-  ValidationField,
-  ValidationFieldArray,
-  ValidationErrors,
-  get
-} from '../../src';
-import BaseInput from './BaseInput.vue';
-import FormInfo from './FormInfo.vue';
-import BaseErrors from './BaseErrors.vue';
-
-export default {
-  name: 'ValidationForm',
-  get,
-  components: {
-    BaseErrors,
-    FormInfo,
-    ValidationProvider,
-    ValidationField,
-    ValidationFieldArray,
-    ValidationErrors,
-    BaseInput
-  },
-  inheritAttrs: false,
-  props: {
-    defaultValues: {
-      type: Object,
-      default: () => ({})
-    },
-    defaultErrors: {
-      type: Object,
-      default: () => ({})
-    },
-    resolver: {
-      type: Function,
-      default: undefined
-    },
-    resetOnUpdate: {
-      type: Boolean,
-      default: true
-    }
-  },
-  emits: {
-    submit: null,
-    dirty: null,
-    change: null,
-    focus: null
-  },
-  methods: {
-    onSubmit(values, options) {
-      this.$emit('submit', values, options);
-    }
-  }
-};
-</script>

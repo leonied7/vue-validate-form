@@ -1,6 +1,6 @@
-import type { Get, LiteralUnion, IfUnknown } from 'type-fest';
-import type { Values } from '../types/values';
+import type { Get, IfUnknown, LiteralUnion } from 'type-fest';
 import type { Paths } from '../types/paths';
+import type { Values } from '../types/values';
 
 export function has<V extends Values>(object: V, path: LiteralUnion<Paths<V>, string>): boolean {
   let tempObject = object;

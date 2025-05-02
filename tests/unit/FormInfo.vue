@@ -1,22 +1,22 @@
-<template>
-  <div />
-</template>
-
 <script lang="ts">
 export default {
   name: 'FormInfo',
   props: {
     values: {
       type: Object,
-      required: true
+      required: true,
     },
     errors: {
       type: Object,
-      required: true
+      required: true,
     },
     dirty: Boolean,
     pristine: Boolean,
-    invalid: Boolean
-  }
+    invalid: Boolean,
+  },
 };
 </script>
+
+<template>
+  <div />
+</template>

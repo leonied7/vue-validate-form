@@ -1,35 +1,20 @@
-import pluginVue from 'eslint-plugin-vue';
-import vueTsEslintConfig from '@vue/eslint-config-typescript';
-import stylistic from '@stylistic/eslint-plugin';
+import antfu from '@antfu/eslint-config';
 
-export default [
-  {
-    name: 'app/files-to-lint',
-    files: ['**/*.{ts,vue}']
-  },
-  {
-    name: 'app/files-to-ignore',
-    ignores: ['coverage', 'dist', 'node_modules', 'docs/.vitepress/cache']
-  },
-  stylistic.configs.customize({
-    indent: 2,
-    quotes: 'single',
+export default antfu({
+  stylistic: {
     semi: true,
-    commaDangle: 'never',
-    arrowParens: true,
-    quoteProps: 'as-needed'
-  }),
-  ...pluginVue.configs['flat/recommended'],
-  ...vueTsEslintConfig(),
-  {
-    files: ['docs/**/*'],
-    rules: {
-      '@typescript-eslint/no-unused-vars': 'off'
-    }
   },
-  {
-    rules: {
-      'vue/block-lang': 'off'
-    }
-  }
-];
+}, {
+  name: 'docs',
+  files: ['docs/**/*'],
+  rules: {
+    'unused-imports/no-unused-vars': 'off',
+    'no-alert': 'off',
+  },
+}, {
+  name: 'test',
+  files: ['tests/unit/**/*'],
+  rules: {
+    'vue/no-unused-refs': 'off',
+  },
+});

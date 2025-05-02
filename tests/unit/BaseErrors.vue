@@ -1,3 +1,16 @@
+<script lang="ts">
+export default {
+  name: 'BaseErrors',
+  props: {
+    errors: {
+      type: Array,
+      required: true,
+    },
+    submitted: Boolean,
+  },
+};
+</script>
+
 <template>
   <div>
     <div
@@ -8,16 +21,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-export default {
-  name: 'BaseErrors',
-  props: {
-    errors: {
-      type: Array,
-      required: true
-    },
-    submitted: Boolean
-  }
-};
-</script>

@@ -1,10 +1,83 @@
+<script setup lang="ts">
+import type {
+  OnSubmit,
+  Resolver,
+  ResolverResult,
+} from './index';
+import {
+  get,
+  ValidationErrors,
+  ValidationField,
+  ValidationFieldArray,
+  ValidationProvider,
+} from './index';
+
+const defaultValues = {
+  my: {
+    nested: {
+      value: 'test',
+    },
+  },
+  arrayField: [
+    {
+      id: '1',
+      firstName: '111',
+      type: 'user',
+    },
+    {
+      id: '2',
+      firstName: '222',
+      type: 'user',
+    },
+    {
+      id: '3',
+      firstName: '333',
+      type: null,
+    },
+  ],
+};
+type V = typeof defaultValues;
+
+function required(value: unknown) {
+  return !!value;
+}
+const resolver: Resolver<V> = (values) => {
+  const result: ResolverResult<V> = {
+    values,
+    errors: {},
+  };
+  if (!required(get(values, 'my-input'))) {
+    result.errors['my-input'] = [{ message: 'field required' }];
+  }
+  if (!required(get(values, 'my.nested.value'))) {
+    result.errors['my.nested.value'] = [{ message: 'field required' }];
+  }
+  get(values, 'arrayField', []).forEach(({ firstName }, index) => {
+    if (!required(firstName)) {
+      result.errors[`arrayField.${index}.firstName`] = [{ message: 'field required' }];
+    }
+  });
+  return result;
+};
+
+const onSubmit: OnSubmit<V> = (values, { setError }) => {
+  setTimeout(() => {
+    setError('my-input', { message: 'invalid field', type: 'custom' });
+    setError('common', { message: 'invalid common field', type: 'custom' });
+  }, 250);
+
+  // eslint-disable-next-line no-console
+  console.log(values);
+};
+</script>
+
 <template>
   <div id="app">
     <ValidationProvider
       :default-values="defaultValues"
       :default-errors="{
         'my-input': [{ message: 'outer error' }],
-        'my.nested.value': [{ message: 'qwe' }]
+        'my.nested.value': [{ message: 'qwe' }],
       }"
       :resolver="resolver"
       @submit="onSubmit"
@@ -152,73 +225,3 @@
     </ValidationProvider>
   </div>
 </template>
-
-<script setup lang="ts">
-import {
-  ValidationErrors,
-  ValidationField,
-  ValidationFieldArray,
-  ValidationProvider,
-  get,
-  Resolver,
-  ResolverResult,
-  OnSubmit
-} from './index';
-
-const defaultValues = {
-  my: {
-    nested: {
-      value: 'test'
-    }
-  },
-  arrayField: [
-    {
-      id: '1',
-      firstName: '111',
-      type: 'user'
-    },
-    {
-      id: '2',
-      firstName: '222',
-      type: 'user'
-    },
-    {
-      id: '3',
-      firstName: '333',
-      type: null
-    }
-  ]
-};
-type V = typeof defaultValues;
-
-function required(value: unknown) {
-  return !!value;
-}
-const resolver: Resolver<V> = (values) => {
-  const result: ResolverResult<V> = {
-    values,
-    errors: {}
-  };
-  if (!required(get(values, 'my-input'))) {
-    result.errors['my-input'] = [{ message: 'field required' }];
-  }
-  if (!required(get(values, 'my.nested.value'))) {
-    result.errors['my.nested.value'] = [{ message: 'field required' }];
-  }
-  get(values, 'arrayField', []).forEach(({ firstName }, index) => {
-    if (!required(firstName)) {
-      result.errors[`arrayField.${index}.firstName`] = [{ message: 'field required' }];
-    }
-  });
-  return result;
-};
-
-const onSubmit: OnSubmit<V> = (values, { setError }) => {
-  setTimeout(() => {
-    setError('my-input', { message: 'invalid field', type: 'custom' });
-    setError('common', { message: 'invalid common field', type: 'custom' });
-  }, 250);
-
-  console.log(values);
-};
-</script>

@@ -9,7 +9,7 @@
 `ValidationFieldArray` не поддерживает массив плоских полей, каждое поле массива должно быть объектом
 :::
 
-<<< @/.vitepress/components/FieldArray.vue{8-13,46,54-57}
+<<< @/.vitepress/components/FieldArray.vue{24-29,62,70-73}
 
 `ValidationFieldArray` предоставляет методы работы с массивом, такие как: Полное обновление(onChange), добавление вначало(prepend)/конец(append)/по индексу(insert), перемещение(move), свап(swap), удаление(remove) элементов.
 Более подробное описание методов можно найти [здесь](../api/validation-field-array.md)

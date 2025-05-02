@@ -4,11 +4,9 @@ import type { Field } from '../types/field';
 
 export const hasFieldValueSymbol: InjectionKey<(name: string) => boolean> = Symbol('hasFieldValue');
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GetFieldValue = (name: string) => any;
 export const getFieldValueSymbol: InjectionKey<GetFieldValue> = Symbol('getFieldValue');
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GetFieldDefaultValue = (name: string, defaultValue?: any) => any;
 export const getFieldDefaultValueSymbol: InjectionKey<GetFieldDefaultValue>
   = Symbol('getFieldDefaultValue');

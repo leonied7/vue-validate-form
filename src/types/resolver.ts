@@ -1,5 +1,5 @@
-import type { Values } from './values';
 import type { ValidationsErrors } from './error';
+import type { Values } from './values';
 
 export interface ResolverResult<V extends Values> {
   values: Partial<V>;

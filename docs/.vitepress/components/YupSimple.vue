@@ -1,5 +1,27 @@
+<script lang="ts">
+import { yupResolver } from '@vue-validate-form/resolvers';
+import { ValidationField, ValidationProvider } from 'vue-validate-form';
+import { object, string } from 'yup';
+
+export default {
+  components: { ValidationProvider, ValidationField },
+  computed: {
+    resolver() {
+      return yupResolver(
+        object({
+          firstName: string().required(),
+        }),
+      );
+    },
+  },
+  methods: {
+    onSubmit(values) {},
+  },
+};
+</script>
+
 <template>
-  <validation-provider
+  <ValidationProvider
     :resolver="resolver"
     @submit="onSubmit"
   >
@@ -8,7 +30,7 @@
         novalidate
         @submit.prevent="handleSubmit"
       >
-        <validation-field name="firstName">
+        <ValidationField name="firstName">
           <template #default="{ modelValue, onChange }">
             <input
               :value="modelValue"
@@ -16,30 +38,8 @@
               @input="onChange($event.target.value)"
             >
           </template>
-        </validation-field>
+        </ValidationField>
       </form>
     </template>
-  </validation-provider>
+  </ValidationProvider>
 </template>
-
-<script lang="ts">
-import { object, string } from 'yup';
-import { ValidationProvider, ValidationField } from 'vue-validate-form';
-import { yupResolver } from '@vue-validate-form/resolvers';
-
-export default {
-  components: { ValidationProvider, ValidationField },
-  computed: {
-    resolver() {
-      return yupResolver(
-        object({
-          firstName: string().required()
-        })
-      );
-    }
-  },
-  methods: {
-    onSubmit(values) {}
-  }
-};
-</script>

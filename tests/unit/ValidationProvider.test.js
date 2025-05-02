@@ -1,20 +1,20 @@
-import { describe, expect, it } from 'vitest';
-import { mount } from '@vue/test-utils';
-import { nextTick } from 'vue';
 import { yupResolver } from '@vue-validate-form/resolvers';
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
+import { nextTick } from 'vue';
 import * as yup from 'yup';
 
-import ValidationForm from './ValidationForm.vue';
-import FormInfo from './FormInfo.vue';
 import BaseInput from './BaseInput.vue';
+import FormInfo from './FormInfo.vue';
+import ValidationForm from './ValidationForm.vue';
 
-describe('ValidationProvider', () => {
+describe('validationProvider', () => {
   let wrapper;
 
   const createComponent = ({ props } = {}) => {
     wrapper = mount(ValidationForm, {
       props,
-      attachTo: document.body
+      attachTo: document.body,
     });
   };
 
@@ -27,16 +27,16 @@ describe('ValidationProvider', () => {
     expect(wrapper.emitted().submit[0]).toEqual(
       expect.arrayContaining([
         {
-          my: {
+          'my': {
             nested: {
-              value: undefined
-            }
+              value: undefined,
+            },
           },
           'my-input': undefined,
-          arrayField: []
+          'arrayField': [],
         },
-        expect.any(Object)
-      ])
+        expect.any(Object),
+      ]),
     );
   });
 
@@ -71,8 +71,8 @@ describe('ValidationProvider', () => {
 
       await wrapper.setProps({
         defaultValues: {
-          'my-input': 42
-        }
+          'my-input': 42,
+        },
       });
       await nextTick();
       await nextTick();
@@ -80,20 +80,20 @@ describe('ValidationProvider', () => {
       expect(formInfo.props().dirty).toBe(false);
       expect(formInfo.props().values).toEqual({
         'my-input': 42,
-        my: {
+        'my': {
           nested: {
-            value: undefined
-          }
+            value: undefined,
+          },
         },
-        arrayField: []
+        'arrayField': [],
       });
     });
 
     it('shouldn`t reset form state on change defaultValues without resetOnUpdate', async () => {
       createComponent({
         props: {
-          resetOnUpdate: false
-        }
+          resetOnUpdate: false,
+        },
       });
 
       const myInputWrapper = wrapper.findComponent(BaseInput);
@@ -107,8 +107,8 @@ describe('ValidationProvider', () => {
 
       await wrapper.setProps({
         defaultValues: {
-          'my-input': 42
-        }
+          'my-input': 42,
+        },
       });
       await nextTick();
       await nextTick();
@@ -116,12 +116,12 @@ describe('ValidationProvider', () => {
       expect(formInfo.props().dirty).toBe(true);
       expect(formInfo.props().values).toEqual({
         'my-input': 'new value',
-        my: {
+        'my': {
           nested: {
-            value: undefined
-          }
+            value: undefined,
+          },
         },
-        arrayField: []
+        'arrayField': [],
       });
     });
 
@@ -139,8 +139,8 @@ describe('ValidationProvider', () => {
 
       await wrapper.setProps({
         defaultErrors: {
-          'my-input': [{ message: 'new error' }]
-        }
+          'my-input': [{ message: 'new error' }],
+        },
       });
       await nextTick();
       await nextTick();
@@ -148,20 +148,20 @@ describe('ValidationProvider', () => {
       expect(formInfo.props().dirty).toBe(false);
       expect(formInfo.props().values).toEqual({
         'my-input': undefined,
-        my: {
+        'my': {
           nested: {
-            value: undefined
-          }
+            value: undefined,
+          },
         },
-        arrayField: []
+        'arrayField': [],
       });
     });
 
     it('shouldn`t reset form state on change defaultErrors without resetOnUpdate', async () => {
       createComponent({
         props: {
-          resetOnUpdate: false
-        }
+          resetOnUpdate: false,
+        },
       });
 
       const myInputWrapper = wrapper.findComponent(BaseInput);
@@ -175,8 +175,8 @@ describe('ValidationProvider', () => {
 
       await wrapper.setProps({
         defaultErrors: {
-          'my-input': [{ message: 'new error' }]
-        }
+          'my-input': [{ message: 'new error' }],
+        },
       });
       await nextTick();
       await nextTick();
@@ -184,12 +184,12 @@ describe('ValidationProvider', () => {
       expect(formInfo.props().dirty).toBe(true);
       expect(formInfo.props().values).toEqual({
         'my-input': 'new value',
-        my: {
+        'my': {
           nested: {
-            value: undefined
-          }
+            value: undefined,
+          },
         },
-        arrayField: []
+        'arrayField': [],
       });
     });
   });
@@ -200,14 +200,14 @@ describe('ValidationProvider', () => {
         props: {
           defaultValues: {
             'my-input': 42,
-            my: {
+            'my': {
               nested: {
-                value: 'wqe'
+                value: 'wqe',
               },
-              unused: 1
-            }
-          }
-        }
+              unused: 1,
+            },
+          },
+        },
       });
 
       await wrapper.find('button[type=submit]').trigger('click');
@@ -216,16 +216,16 @@ describe('ValidationProvider', () => {
       expect(wrapper.emitted().submit[0]).toEqual(
         expect.arrayContaining([
           {
-            my: {
+            'my': {
               nested: {
-                value: 'wqe'
-              }
+                value: 'wqe',
+              },
             },
             'my-input': 42,
-            arrayField: []
+            'arrayField': [],
           },
-          expect.any(Object)
-        ])
+          expect.any(Object),
+        ]),
       );
     });
 
@@ -233,9 +233,9 @@ describe('ValidationProvider', () => {
       createComponent({
         props: {
           defaultValues: {
-            'my-input': 42
-          }
-        }
+            'my-input': 42,
+          },
+        },
       });
 
       const formInfoProps = wrapper.findComponent(FormInfo).props();
@@ -252,11 +252,11 @@ describe('ValidationProvider', () => {
           defaultErrors: {
             'my-input': [
               {
-                message: 'outer error'
-              }
-            ]
-          }
-        }
+                message: 'outer error',
+              },
+            ],
+          },
+        },
       });
       await nextTick();
 
@@ -265,11 +265,11 @@ describe('ValidationProvider', () => {
       expect(formInfoWrapper.props().errors).toEqual({
         'my-input': [
           expect.objectContaining({
-            message: 'outer error'
-          })
+            message: 'outer error',
+          }),
         ],
-        arrayField: [],
-        'my.nested.value': []
+        'arrayField': [],
+        'my.nested.value': [],
       });
     });
 
@@ -279,18 +279,18 @@ describe('ValidationProvider', () => {
           defaultValues: {
             my: {
               nested: {
-                value: 'wqe'
-              }
-            }
+                value: 'wqe',
+              },
+            },
           },
           defaultErrors: {
             'my-input': [
               {
-                message: 'outer error'
-              }
-            ]
-          }
-        }
+                message: 'outer error',
+              },
+            ],
+          },
+        },
       });
       await nextTick();
       await nextTick();
@@ -300,11 +300,11 @@ describe('ValidationProvider', () => {
       expect(formInfoWrapper.props().errors).toEqual({
         'my-input': [
           expect.objectContaining({
-            message: 'outer error'
-          })
+            message: 'outer error',
+          }),
         ],
-        arrayField: [],
-        'my.nested.value': []
+        'arrayField': [],
+        'my.nested.value': [],
       });
     });
 
@@ -313,25 +313,25 @@ describe('ValidationProvider', () => {
         props: {
           defaultValues: {
             'my-input': 'test',
-            my: {
+            'my': {
               nested: {
-                value: 'wqe'
-              }
-            }
+                value: 'wqe',
+              },
+            },
           },
           defaultErrors: {
             'my-input': [
               {
-                message: 'outer error'
-              }
+                message: 'outer error',
+              },
             ],
             'my.nested.value': [
               {
-                message: 'nested'
-              }
-            ]
-          }
-        }
+                message: 'nested',
+              },
+            ],
+          },
+        },
       });
       await nextTick();
       await nextTick();
@@ -345,11 +345,11 @@ describe('ValidationProvider', () => {
       expect(formInfoWrapper.props().errors).toEqual({
         'my-input': [
           expect.objectContaining({
-            message: 'outer error'
-          })
+            message: 'outer error',
+          }),
         ],
-        arrayField: [],
-        'my.nested.value': []
+        'arrayField': [],
+        'my.nested.value': [],
       });
     });
   });
@@ -360,12 +360,12 @@ describe('ValidationProvider', () => {
       const UNUSED_MESSAGE = 'required unused field';
       const schema = yup.object().shape({
         'my-input': yup.string().required(MESSAGE),
-        unused: yup.string().required(UNUSED_MESSAGE)
+        'unused': yup.string().required(UNUSED_MESSAGE),
       });
       createComponent({
         props: {
-          resolver: yupResolver(schema)
-        }
+          resolver: yupResolver(schema),
+        },
       });
 
       await wrapper.find('button[type=submit]').trigger('click');
@@ -380,8 +380,8 @@ describe('ValidationProvider', () => {
       expect(formInfoProps.errors).toEqual({
         'my.nested.value': [],
         'my-input': [expect.objectContaining({ message: MESSAGE })],
-        unused: [expect.objectContaining({ message: UNUSED_MESSAGE })],
-        arrayField: []
+        'unused': [expect.objectContaining({ message: UNUSED_MESSAGE })],
+        'arrayField': [],
       });
       expect(formInfoProps.dirty).toBe(false);
       expect(formInfoProps.invalid).toBe(true);
@@ -394,10 +394,10 @@ describe('ValidationProvider', () => {
         props: {
           resolver: yupResolver(
             yup.object({
-              'my-input': yup.string().required().default(myInputDefault)
-            })
-          )
-        }
+              'my-input': yup.string().required().default(myInputDefault),
+            }),
+          ),
+        },
       });
 
       await nextTick();
@@ -407,24 +407,24 @@ describe('ValidationProvider', () => {
       const values = wrapper.emitted().change[0][0];
       expect(values).toEqual({
         'my-input': myInputDefault,
-        my: {
+        'my': {
           nested: {
-            value: undefined
-          }
+            value: undefined,
+          },
         },
-        arrayField: []
+        'arrayField': [],
       });
     });
 
     it('should set default values', async () => {
       const MESSAGE = 'required field';
       const schema = yup.object({
-        'my-input': yup.string().required(MESSAGE).default('42')
+        'my-input': yup.string().required(MESSAGE).default('42'),
       });
       createComponent({
         props: {
-          resolver: yupResolver(schema)
-        }
+          resolver: yupResolver(schema),
+        },
       });
 
       await wrapper.find('button[type=submit]').trigger('click');
@@ -438,21 +438,21 @@ describe('ValidationProvider', () => {
       expect(formInfoProps.errors).toEqual({
         'my.nested.value': [],
         'my-input': [],
-        arrayField: []
+        'arrayField': [],
       });
       expect(wrapper.emitted().submit[0]).toEqual(
         expect.arrayContaining([
           {
-            my: {
+            'my': {
               nested: {
-                value: undefined
-              }
+                value: undefined,
+              },
             },
             'my-input': '42',
-            arrayField: []
+            'arrayField': [],
           },
-          expect.any(Object)
-        ])
+          expect.any(Object),
+        ]),
       );
     });
   });
@@ -467,12 +467,12 @@ describe('ValidationProvider', () => {
       const formInfo = wrapper.findComponent(FormInfo);
       expect(formInfo.props().values).toEqual({
         'my-input': 42,
-        my: {
+        'my': {
           nested: {
-            value: undefined
-          }
+            value: undefined,
+          },
         },
-        arrayField: []
+        'arrayField': [],
       });
       expect(formInfo.props().dirty).toBe(true);
 
@@ -480,12 +480,12 @@ describe('ValidationProvider', () => {
 
       expect(formInfo.props().values).toEqual({
         'my-input': undefined,
-        my: {
+        'my': {
           nested: {
-            value: undefined
-          }
+            value: undefined,
+          },
         },
-        arrayField: []
+        'arrayField': [],
       });
       expect(formInfo.props().dirty).toBe(false);
     });
@@ -499,35 +499,35 @@ describe('ValidationProvider', () => {
       const formInfo = wrapper.findComponent(FormInfo);
       expect(formInfo.props().values).toEqual({
         'my-input': 42,
-        my: {
+        'my': {
           nested: {
-            value: undefined
-          }
+            value: undefined,
+          },
         },
-        arrayField: []
+        'arrayField': [],
       });
       expect(formInfo.props().dirty).toBe(true);
 
       await wrapper.find('button[type=reset]').trigger('click', {
         payload: {
           'my-input': 'qwe',
-          my: {
+          'my': {
             nested: {
-              value: 42
+              value: 42,
             },
-            unused: 'test'
-          }
-        }
+            unused: 'test',
+          },
+        },
       });
 
       expect(formInfo.props().values).toEqual({
         'my-input': 'qwe',
-        my: {
+        'my': {
           nested: {
-            value: 42
-          }
+            value: 42,
+          },
         },
-        arrayField: []
+        'arrayField': [],
       });
       expect(formInfo.props().dirty).toBe(false);
     });
@@ -539,19 +539,19 @@ describe('ValidationProvider', () => {
             arrayField: [
               {
                 id: 1,
-                firstName: 'name 1'
+                firstName: 'name 1',
               },
               {
                 id: 2,
-                firstName: 'name 2'
+                firstName: 'name 2',
               },
               {
                 id: 3,
-                firstName: 'name 2'
-              }
-            ]
-          }
-        }
+                firstName: 'name 2',
+              },
+            ],
+          },
+        },
       });
       await nextTick();
 
@@ -573,12 +573,12 @@ describe('ValidationProvider', () => {
 
     expect(wrapper.findComponent(FormInfo).props().values).toEqual({
       'my-input': undefined,
-      my: {
+      'my': {
         nested: {
-          value: 'new value'
-        }
+          value: 'new value',
+        },
       },
-      arrayField: []
+      'arrayField': [],
     });
   });
 
@@ -586,9 +586,9 @@ describe('ValidationProvider', () => {
     createComponent({
       props: {
         defaultValues: {
-          'my-input': 42
-        }
-      }
+          'my-input': 42,
+        },
+      },
     });
     await nextTick();
 
